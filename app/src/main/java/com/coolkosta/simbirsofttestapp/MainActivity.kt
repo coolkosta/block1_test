@@ -1,4 +1,4 @@
-package com.coolkosta.block1_test
+package com.coolkosta.simbirsofttestapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,13 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.coolkosta.block1_test.ui.theme.Block1_testTheme
+import com.coolkosta.simbirsofttestapp.ui.theme.SimbirSoftTestAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Block1_testTheme {
+            SimbirSoftTestAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -40,7 +40,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    Block1_testTheme {
+    SimbirSoftTestAppTheme {
         Greeting("Android")
     }
 }

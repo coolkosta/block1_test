@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.coolkosta.block1_test"
+    namespace = "com.coolkosta.simbirsofttestapp"
     compileSdk = 34
 
     defaultConfig {
@@ -68,5 +68,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation (libs.retrofit)
 }

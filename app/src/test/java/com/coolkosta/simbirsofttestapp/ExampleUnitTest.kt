@@ -1,4 +1,4 @@
-package com.coolkosta.block1_test
+package com.coolkosta.simbirsofttestapp
 
 import org.junit.Test
 

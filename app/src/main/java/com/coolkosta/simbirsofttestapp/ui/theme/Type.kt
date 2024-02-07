@@ -1,4 +1,4 @@
-package com.coolkosta.block1_test.ui.theme
+package com.coolkosta.simbirsofttestapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

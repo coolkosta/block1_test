@@ -1,4 +1,4 @@
-package com.coolkosta.block1_test
+package com.coolkosta.simbirsofttestapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
