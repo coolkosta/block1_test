@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "block1_test"
+rootProject.name = "SimbirSoftTestApp"
 include(":app")
