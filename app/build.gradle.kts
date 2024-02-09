@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.coolkosta.block1_test"
+        applicationId = "com.coolkosta.simbirsofttestapp"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
