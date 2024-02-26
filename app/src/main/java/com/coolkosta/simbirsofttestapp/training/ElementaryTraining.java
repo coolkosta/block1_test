@@ -103,9 +103,9 @@ public class ElementaryTraining {
                 digit = 0;
             }
 
-            result += digit*multiplier;
-            multiplier *=10;
-            value/=10;
+            result += digit * multiplier;
+            multiplier *= 10;
+            value /= 10;
         }
         return result;
     }
