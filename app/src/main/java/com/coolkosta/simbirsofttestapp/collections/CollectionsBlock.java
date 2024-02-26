@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Набор тренингов по работе со строками в java.
@@ -30,6 +31,9 @@ public class CollectionsBlock<T extends Comparable> {
      * @throws NullPointerException если один из параметров null
      */
     public List<T> collectionTask0(@NonNull List<T> firstList, @NonNull List<T> secondList) {
+        Objects.requireNonNull(firstList);
+        Objects.requireNonNull(secondList);
+
         List<T> mergedList = new ArrayList<>(firstList);
         mergedList.addAll(secondList);
         mergedList.sort(Collections.reverseOrder());
@@ -44,6 +48,8 @@ public class CollectionsBlock<T extends Comparable> {
      * @throws NullPointerException если один из параметров null
      */
     public List<T> collectionTask1(@NonNull List<T> inputList) {
+        Objects.requireNonNull(inputList);
+
         List<T> resultList = new ArrayList<>();
         for (int i = 0; i < inputList.size(); i++) {
             T element = inputList.get(i);
@@ -62,6 +68,8 @@ public class CollectionsBlock<T extends Comparable> {
      * @throws NullPointerException если один из параметров null
      */
     public boolean collectionTask2(@NonNull List<T> firstList, @NonNull List<T> secondList) {
+        Objects.requireNonNull(firstList);
+        Objects.requireNonNull(secondList);
         HashSet<T> set1 = new HashSet<>(firstList);
         HashSet<T> set2 = new HashSet<>(secondList);
 
@@ -80,6 +88,7 @@ public class CollectionsBlock<T extends Comparable> {
      * @throws NullPointerException если один из параметров null
      */
     public List<T> collectionTask3(@NonNull List<T> inputList, int n) {
+        Objects.requireNonNull(inputList);
         List<T> resultList = new ArrayList<>(inputList);
         Collections.rotate(resultList, n);
         return resultList;
@@ -97,9 +106,9 @@ public class CollectionsBlock<T extends Comparable> {
      */
     public List<String> collectionTask4(@NonNull List<String> inputList, @NonNull String a,
                                         @NonNull String b) {
-        if (b == null) {
-            throw new NullPointerException("Lists cannot be null");
-        }
+        Objects.requireNonNull(inputList);
+        Objects.requireNonNull(a);
+        Objects.requireNonNull(b);
         List<String> resultList = new ArrayList<>();
         for (String word : inputList) {
             if (word.equals(a)) {
@@ -130,16 +139,16 @@ public class CollectionsBlock<T extends Comparable> {
         private int birthYear;
         private int course;
         private int groupNumber;
-        private List<Integer> grades;
+        private List<Subject> subjects;
 
-        public Student(String lastName, String firstName, String middleName, int birthYear, int course, int groupNumber, List<Integer> grades) {
+        public Student(String lastName, String firstName, String middleName, int birthYear, int course, int groupNumber, List<Subject> subjects) {
             this.lastName = lastName;
             this.firstName = firstName;
             this.middleName = middleName;
             this.birthYear = birthYear;
             this.course = course;
             this.groupNumber = groupNumber;
-            this.grades = grades;
+            this.subjects = subjects;
         }
 
         // Геттеры и сеттеры для всех атрибутов
@@ -158,12 +167,30 @@ public class CollectionsBlock<T extends Comparable> {
             return groupNumber;
         }
 
-        public List<Integer> getGrades() {
-            return grades;
+        public List<Subject> getSubjects() {
+            return subjects;
         }
 
         public int getBirthYear() {
             return birthYear;
+        }
+    }
+
+    public class Subject {
+        private String name;
+        private int score;
+
+        public Subject(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getScore() {
+            return score;
         }
     }
 
@@ -186,7 +213,7 @@ public class CollectionsBlock<T extends Comparable> {
             List<Integer> grades = new ArrayList<>();
             for (Student student : students) {
                 if (student.getGroupNumber() == groupNumber) {
-                    grades.add(student.getGrades().get(subjectIndex));
+                    grades.add(student.subjects.get(subjectIndex).getScore());
                 }
             }
             double sum = 0;
@@ -234,11 +261,10 @@ public class CollectionsBlock<T extends Comparable> {
 
         private double calculateAverageGrade(Student student) {
             double sum = 0;
-            for (int grade : student.getGrades()) {
-                sum += grade;
+            for (Subject subject : student.getSubjects()) {
+                sum += subject.getScore();
             }
-            return sum / student.getGrades().size();
+            return sum / student.getSubjects().size();
         }
     }
-
 }

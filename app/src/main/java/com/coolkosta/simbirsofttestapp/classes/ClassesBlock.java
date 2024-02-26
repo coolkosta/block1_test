@@ -75,6 +75,10 @@ public interface ClassesBlock {
             return arrayList;
         }
 
+        void displayArrayList() {
+            System.out.println("Массив чисел: " + arrayList.toString());
+        }
+
         void fillArrayRandomNumbers() {
             for (int i = 0; i < capacity; i++) {
                 arrayList.add(i, random.nextInt(101));
@@ -195,22 +199,15 @@ public interface ClassesBlock {
         private int minute;
         private int second;
 
-        Clock(int hour, int minute, int second) {
-            try {
-                if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
-                    throw new InvalidTimeException(
-                            "Введен неверный часовой формат. Время будет сброшено до 00:00:00"
-                    );
-                }
-                this.hour = hour;
-                this.minute = minute;
-                this.second = second;
-            } catch (InvalidTimeException ex) {
-                System.out.println(ex.getMessage());
-                this.hour = 0;
-                this.minute = 0;
-                this.second = 0;
+        Clock(int hour, int minute, int second) throws InvalidTimeException {
+            if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
+                throw new InvalidTimeException(
+                        "Введен неверный часовой формат"
+                );
             }
+            this.hour = hour;
+            this.minute = minute;
+            this.second = second;
         }
 
         public String getCurrentTime() {
@@ -222,53 +219,41 @@ public interface ClassesBlock {
         }
 
         void addHour(int hours) {
-            try {
-                if (hours < 0) {
-                    throw new IllegalArgumentException("Количество часов должно быть положительным числом");
-                }
-
-                this.hour = (this.hour + hours) % 24;
-            } catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
+            if (hours < 0) {
+                throw new IllegalArgumentException("Количество часов должно быть положительным числом");
             }
+
+            this.hour = (this.hour + hours) % 24;
         }
 
         void addMinute(int minutes) {
-            try {
-                if (minutes < 0) {
-                    throw new IllegalArgumentException(
-                            "Количество минут должно быть положительным числом"
-                    );
-                }
-                int totalMinutes = this.hour * 60 + this.minute + minutes;
-                int newHour = (totalMinutes / 60) % 24;
-                int newMinute = totalMinutes % 60;
-
-                this.hour = newHour;
-                this.minute = newMinute;
-            } catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
+            if (minutes < 0) {
+                throw new IllegalArgumentException(
+                        "Количество минут должно быть положительным числом"
+                );
             }
+            int totalMinutes = this.hour * 60 + this.minute + minutes;
+            int newHour = (totalMinutes / 60) % 24;
+            int newMinute = totalMinutes % 60;
+
+            this.hour = newHour;
+            this.minute = newMinute;
         }
 
         void addSecond(int seconds) {
-            try {
-                if (seconds < 0) {
-                    throw new IllegalArgumentException(
-                            "Количество секунд должно быть положительным числом"
-                    );
-                }
-                int totalSeconds = this.hour * 3600 + this.minute * 60 + this.second + seconds;
-                int newHour = (totalSeconds / 3600) % 24;
-                int newMinute = (totalSeconds / 60) % 60;
-                int newSecond = totalSeconds % 60;
-
-                this.hour = newHour;
-                this.minute = newMinute;
-                this.second = newSecond;
-            } catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
+            if (seconds < 0) {
+                throw new IllegalArgumentException(
+                        "Количество секунд должно быть положительным числом"
+                );
             }
+            int totalSeconds = this.hour * 3600 + this.minute * 60 + this.second + seconds;
+            int newHour = (totalSeconds / 3600) % 24;
+            int newMinute = (totalSeconds / 60) % 60;
+            int newSecond = totalSeconds % 60;
+
+            this.hour = newHour;
+            this.minute = newMinute;
+            this.second = newSecond;
         }
 
         static class InvalidTimeException extends Exception {
@@ -467,6 +452,7 @@ public interface ClassesBlock {
             exam.score = score;
         }
     }
+
     /*
       VII
 
@@ -569,6 +555,7 @@ public interface ClassesBlock {
             return blacklist;
         }
     }
+
     class Blacklist {
         private List<Customer> customers;
 
