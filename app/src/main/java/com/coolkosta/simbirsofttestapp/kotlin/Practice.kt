@@ -75,7 +75,9 @@ fun main() {
             buy(it)
         }
     }
-    fullNullPublication.let { buy(it!!) }
+    // fullNullPublication.let { buy(it!!) }
+    sum(45, 66)
+    sum(33, 67)
 }
 
 /**
@@ -88,3 +90,13 @@ fun main() {
 fun buy(publication: Publication) {
     println("The purchase is complete. The purchase amount was ${publication.price}€")
 }
+
+/**
+ * Создать переменную sum и присвоить ей лямбда-выражение,
+ * которое будет складывать два переданных ей числа и выводить результат в лог.
+ * Вызвать данное лямбда-выражение с произвольными параметрами.
+ */
+val sum: (Int, Int) -> Unit = { a, b ->
+    println("Результат сложения: ${a + b}")
+}
+
