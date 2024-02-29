@@ -19,9 +19,27 @@ class Book(override val price: Int, override val wordCount: Int) : Publication {
     override fun getType(): String {
         if (wordCount < 1000) {
             return "Flash Fiction"
-        } else if (wordCount == 7500) {
+        } else if (wordCount < 7500) {
             return "Short Story"
         } else return "Novel"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Book
+
+        if (price != other.price) return false
+        if (wordCount != other.wordCount) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = price
+        result = 31 * result + wordCount
+        return result
     }
 }
 
@@ -30,3 +48,23 @@ class Magazine(override val price: Int, override val wordCount: Int) : Publicati
         return "Magazine"
     }
 }
+
+/**
+ * Создать два объекта класса Book и один объект Magazine.
+ * Вывести в лог для каждого объекта тип, количество строк и цену в евро в отформатированном виде.
+ * У класса Book переопределить метод equals и произвести сравнение сначала по ссылке,
+ * затем используя метод equals. Результаты сравнений вывести в лог.
+ */
+
+fun main() {
+    val shortStoryBook = Book(price = 45, wordCount = 3000)
+    val novelBook = Book(price = 150, wordCount = 8000)
+    val magazine = Magazine(price = 20, wordCount = 1500)
+
+    println("shortStoryBook type: ${shortStoryBook.getType()}, word count: ${shortStoryBook.wordCount}, price: ${shortStoryBook.price}€")
+    println("novelBook type: ${novelBook.getType()}, word count: ${novelBook.wordCount}, price: ${novelBook.price}€")
+    println("magazine type: ${magazine.getType()}, word count: ${magazine.wordCount}, price: ${magazine.price}€")
+    println(shortStoryBook === novelBook)
+    println(shortStoryBook.equals(novelBook))
+}
+
