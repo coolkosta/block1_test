@@ -66,5 +66,25 @@ fun main() {
     println("magazine type: ${magazine.getType()}, word count: ${magazine.wordCount}, price: ${magazine.price}€")
     println(shortStoryBook === novelBook)
     println(shortStoryBook.equals(novelBook))
+
+    val fullNullPublication: Book? = null
+    val notNullPublication: Book? = Book(price = 45, wordCount = 6000)
+
+    notNullPublication.let {
+        if (it != null) {
+            buy(it)
+        }
+    }
+    fullNullPublication.let { buy(it!!) }
 }
 
+/**
+ * Создать метод buy, который в качестве параметра принимает Publication (notnull - значения)
+ * и выводит в лог “The purchase is complete. The purchase amount was [цена издания]”.
+ * Создать две переменных класса Book, в которых могут находиться null значения.
+ * Присвоить одной null, а второй любое notnull значение.
+ * Используя функцию let, попробуйте вызвать метод buy с каждой из переменных.
+ */
+fun buy(publication: Publication) {
+    println("The purchase is complete. The purchase amount was ${publication.price}€")
+}
