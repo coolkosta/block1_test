@@ -17,11 +17,11 @@ interface Publication {
 
 class Book(override val price: Int, override val wordCount: Int) : Publication {
     override fun getType(): String {
-        if (wordCount < 1000) {
-            return "Flash Fiction"
-        } else if (wordCount < 7500) {
-            return "Short Story"
-        } else return "Novel"
+        return when {
+            wordCount < 1000 -> "Flash Fiction"
+            wordCount < 7500 -> "Short Story"
+            else -> "Novel"
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -61,21 +61,22 @@ fun main() {
     val novelBook = Book(price = 150, wordCount = 8000)
     val magazine = Magazine(price = 20, wordCount = 1500)
 
-    println("shortStoryBook type: ${shortStoryBook.getType()}, word count: ${shortStoryBook.wordCount}, price: ${shortStoryBook.price}€")
-    println("novelBook type: ${novelBook.getType()}, word count: ${novelBook.wordCount}, price: ${novelBook.price}€")
-    println("magazine type: ${magazine.getType()}, word count: ${magazine.wordCount}, price: ${magazine.price}€")
+    fun printPublicationInfo(publication: Publication) {
+        println("${publication::class.simpleName} type: ${publication.getType()}, word count: ${publication.wordCount}, price: ${publication.price}€")
+    }
+
+    printPublicationInfo(shortStoryBook)
+    printPublicationInfo(novelBook)
+    printPublicationInfo(magazine)
+
     println(shortStoryBook === novelBook)
-    println(shortStoryBook.equals(novelBook))
+    println(shortStoryBook == novelBook)
 
     val fullNullPublication: Book? = null
     val notNullPublication: Book? = Book(price = 45, wordCount = 6000)
 
-    notNullPublication.let {
-        if (it != null) {
-            buy(it)
-        }
-    }
-    // fullNullPublication.let { buy(it!!) }
+    notNullPublication?.let { buy(it) }
+    fullNullPublication?.let { buy(it) }
     sum(45, 66)
     sum(33, 67)
 }
