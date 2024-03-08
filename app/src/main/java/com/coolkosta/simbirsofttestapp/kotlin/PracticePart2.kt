@@ -65,6 +65,9 @@ fun main() {
         "Первый элемент списка имен: ${newListUser.first()}." +
                 " Последний элемент: ${newListUser.last()}"
     )
+
+    val updateCache = { println("Обновление кэша") }
+    auth(user, updateCache, authCallback)
 }
 
 /**
@@ -99,5 +102,27 @@ val authCallback = object : AuthCallback {
 
     override fun authFailed() {
         println("Ошибка авторизации")
+    }
+}
+
+/**
+ * 10
+ * Реализовать inline функцию auth,
+ * принимающую в качестве параметра функцию updateCache.
+ * Функция updateCache должна выводить в лог информацию об обновлении кэша.
+ *
+ * 11
+ * Внутри функции auth вызвать метод коллбека authSuccess и переданный updateCache,
+ * если проверка возраста пользователя произошла без ошибки.
+ * В случае получения ошибки вызвать authFailed.
+ */
+
+inline fun auth(user: User, updateCache: () -> Unit, authCallback: AuthCallback) {
+    try {
+        user.checkAge()
+        updateCache()
+        authCallback.authSuccess()
+    } catch (e: Exception) {
+        authCallback.authFailed()
     }
 }
