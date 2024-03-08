@@ -52,4 +52,17 @@ fun main() {
 
     val usersListFullType = usersList.filter { it.type == Type.FULL }
     println(usersListFullType)
+
+    /**
+     * Преобразовать список User в список имен пользователей.
+     * Получить первый и последний элементы списка и вывести их в лог.
+     */
+    val newListUser = usersList.map {
+        it.name
+    }
+    println(newListUser)
+    println(
+        "Первый элемент списка имен: ${newListUser.first()}." +
+                " Последний элемент: ${newListUser.last()}"
+    )
 }
