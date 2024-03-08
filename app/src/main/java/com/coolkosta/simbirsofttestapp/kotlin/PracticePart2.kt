@@ -20,3 +20,16 @@ data class User(val id: Int, val name: String, val age: Int, val type: Type) {
         Date()
     }
 }
+
+fun main() {
+
+    /**
+     * Создать объект класса User, вывести в лог startTime данного юзера,
+     * после вызвать Thread.sleep(1000) и повторно вывести в лог startTime.
+     */
+
+    val user = User(id = 1, name = "Konstantin", age = 24, type = Type.DEMO)
+    println(user.startTime)
+    Thread.sleep(1000)
+    println(user.startTime)
+}
