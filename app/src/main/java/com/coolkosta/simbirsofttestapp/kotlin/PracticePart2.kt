@@ -44,4 +44,12 @@ fun main() {
         add(User(id = 1, name = "Vlad", age = 19, type = Type.DEMO))
         add(User(id = 3, name = "Ivan", age = 13, type = Type.FULL))
     }
+
+    /**
+     * Получить список пользователей, у которых имеется полный доступ
+     * (поле type имеет значение FULL).
+     */
+
+    val usersListFullType = usersList.filter { it.type == Type.FULL }
+    println(usersListFullType)
 }
