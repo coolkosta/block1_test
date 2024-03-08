@@ -32,4 +32,16 @@ fun main() {
     println(user.startTime)
     Thread.sleep(1000)
     println(user.startTime)
+
+    /**
+     * Создать список пользователей, содержащий в себе один объект класса User.
+     * Используя функцию apply, добавить ещё несколько объектов класса User в список пользователей.
+     */
+    val usersList = mutableListOf(User(id = 0, name = "Stas", age = 14, type = Type.DEMO))
+
+    usersList.apply {
+        add(User(id = 2, name = "Igor", age = 34, type = Type.FULL))
+        add(User(id = 1, name = "Vlad", age = 19, type = Type.DEMO))
+        add(User(id = 3, name = "Ivan", age = 13, type = Type.FULL))
+    }
 }
