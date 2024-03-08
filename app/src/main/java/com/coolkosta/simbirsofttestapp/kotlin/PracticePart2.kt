@@ -80,3 +80,24 @@ fun User.checkAge() {
         throw IllegalArgumentException("$name не достиг 18 лет")
     }
 }
+
+/**
+ * Создать интерфейс AuthCallback с методами authSuccess,
+ * authFailed и реализовать анонимный объект данного интерфейса.
+ * В методах необходимо вывести в лог информацию о статусе авторизации.
+ */
+
+interface AuthCallback {
+    fun authSuccess()
+    fun authFailed()
+}
+
+val authCallback = object : AuthCallback {
+    override fun authSuccess() {
+        println("Авторизация успешна")
+    }
+
+    override fun authFailed() {
+        println("Ошибка авторизации")
+    }
+}
