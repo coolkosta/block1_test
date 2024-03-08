@@ -68,6 +68,19 @@ fun main() {
 
     val updateCache = { println("Обновление кэша") }
     auth(user, updateCache, authCallback)
+
+    /**
+     * Реализовать метод doAction, принимающий экземпляр класса Action.
+     * В зависимости от переданного действия выводить в лог текст,
+     * к примеру “Auth started”. Для действия Login вызывать метод auth.
+     */
+    fun doAction(action: Action) {
+        when (action) {
+            is Registration -> println("Пройдите регистрацию")
+            is Login -> auth(action.user, updateCache, authCallback)
+            is Logout -> println("Выход из системы")
+        }
+    }
 }
 
 /**
