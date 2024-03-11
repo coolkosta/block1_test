@@ -145,6 +145,6 @@ inline fun auth(user: User, updateCache: () -> Unit, authCallback: AuthCallback)
  * Login должен принимать в качестве параметра экземпляр класса User.
  */
 sealed class Action
-class Registration : Action()
+data object Registration : Action()
 class Login(val user: User) : Action()
-class Logout : Action()
+data object Logout : Action()
