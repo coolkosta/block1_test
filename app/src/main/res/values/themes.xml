@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SimbirSoftTestApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/turtle_green</item>
+        <!-- Customize your light theme here. -->
+    </style>
 
-    <style name="Theme.SimbirSoftTestApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SimbirSoftTestApp" parent="Base.Theme.SimbirSoftTestApp" />
 </resources>
