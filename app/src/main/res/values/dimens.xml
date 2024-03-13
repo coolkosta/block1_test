@@ -8,7 +8,7 @@
     <dimen name="spacing_xl">24dp</dimen>
     <dimen name="spacing_xxl">28dp</dimen>
     <dimen name="spacing_xxl_2">32dp</dimen>
-    <dimen name="margin_top_xl">180dp</dimen>
-    <dimen name="margin_top_l">136dp</dimen>
     <dimen name="margin_top_m">84dp</dimen>
+    <dimen name="margin_top_l">136dp</dimen>
+    <dimen name="margin_top_xl">180dp</dimen>
 </resources>
