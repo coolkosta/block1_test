@@ -3,4 +3,25 @@
     <string name="app_logo">App logo</string>
     <string name="loading_title">Загрузка…</string>
     <string name="dev_app_logo">Dev App Logo</string>
+    <string name="edit">Edit</string>
+    <string name="profile_text">Профиль</string>
+    <string name="nested_scroll_description">Страница прокрутки</string>
+    <string name="profile_picture">Фотография профиля</string>
+    <string name="profile_name">Константинов Денис</string>
+    <string name="date_birth_label">Дата рождения</string>
+    <string name="date_birth_text">01 февраля 1980</string>
+    <string name="work_label">Сфера деятельности</string>
+    <string name="work_text">Хирургия, травмотология</string>
+    <string name="push_label">Получать push-уведомления</string>
+    <string name="your_friends_label">Ваши друзья</string>
+    <string name="icon">Icon</string>
+    <string name="name_person_3">Дмитрий Валерьевич</string>
+    <string name="name_person_2">Евгений Александров</string>
+    <string name="name_person_1">Виктор Кузнецов</string>
+    <string name="exit_btn">Выйти из аккаунта</string>
+    <string name="news">Новости</string>
+    <string name="search">Поиск</string>
+    <string name="help">Помочь</string>
+    <string name="history">История</string>
+    <string name="profile">Профиль</string>
 </resources>

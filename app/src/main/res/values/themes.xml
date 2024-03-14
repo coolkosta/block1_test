@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.SimbirSoftTestApp" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/turtle_green</item>
+        <item name="colorPrimaryDark">@color/leaf</item>
         <!-- Customize your light theme here. -->
     </style>
 
