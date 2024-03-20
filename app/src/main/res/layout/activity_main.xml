@@ -54,9 +54,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_anchor="@+id/nestedScrollView"
-            app:layout_anchorGravity="center">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/profile_name_tv"
@@ -117,7 +115,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_m"
-                    android:checked="true" />
+                    android:checked="true"
+                    app:thumbTint="@color/leaf"
+                    app:trackTint="@color/light_olive_green" />
 
             </LinearLayout>
 
