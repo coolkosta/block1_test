@@ -1,17 +1,37 @@
 package com.coolkosta.simbirsofttestapp
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.profile
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HelpFragment())
+                .commit()
+        }
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            val fragment = when (item.itemId) {
+                R.id.help -> HelpFragment()
+                R.id.profile -> ProfileFragment()
+                R.id.search -> SearchFragment()
+                else -> null
+            }
+            // Переключение фрагмента
+            fragment?.let {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, it)
+                    .commit()
+            }
+            true
+        }
     }
 }
