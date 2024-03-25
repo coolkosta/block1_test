@@ -24,4 +24,9 @@
     <string name="help">Помочь</string>
     <string name="history">История</string>
     <string name="profile">Профиль</string>
+    <string name="children">Дети</string>
+    <string name="adult">Взрослые</string>
+    <string name="old">Пожилые</string>
+    <string name="animals">Животные</string>
+    <string name="events">Мероприятия</string>
 </resources>
