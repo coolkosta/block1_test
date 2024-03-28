@@ -29,4 +29,6 @@
     <string name="old">Пожилые</string>
     <string name="animals">Животные</string>
     <string name="events">Мероприятия</string>
+    <string name="event_tab_label">По мероприятиям</string>
+    <string name="nko_tab_label">По НКО</string>
 </resources>
