@@ -14,21 +14,22 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         if (savedInstanceState == null) {
+            bottomNavigationView.selectedItemId = R.id.help
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HelpFragment())
+                .replace(R.id.fragment_container, HelpFragment.newInstance())
                 .commit()
         }
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
-                R.id.help -> HelpFragment()
-                R.id.profile -> ProfileFragment()
-                R.id.search -> SearchFragment()
+                R.id.help -> HelpFragment.newInstance()
+                R.id.profile -> ProfileFragment.newInstance()
+                R.id.search -> SearchFragment.newInstance()
                 else -> null
             }
             // Переключение фрагмента
             fragment?.let {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, it)
+                    .replace(R.id.fragment_container,it)
                     .commit()
             }
             true

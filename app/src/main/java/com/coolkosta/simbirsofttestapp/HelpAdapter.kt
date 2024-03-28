@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class HelpAdapter : RecyclerView.Adapter<HelpItemViewHolder>() {
 
-    private val items: List<HelpItem> = Generator().generate()
+    private val items: List<HelpItem> = Generator().generateHelpList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HelpItemViewHolder {
         val view =
@@ -25,10 +25,9 @@ class HelpAdapter : RecyclerView.Adapter<HelpItemViewHolder>() {
         val content = items[holder.adapterPosition]
         holder.populate(content)
     }
-
 }
 
-class HelpItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class HelpItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val image: ImageView = view.findViewById(R.id.icon_iv)
     private val tittle: TextView = view.findViewById(R.id.card_label_tv)
@@ -37,5 +36,4 @@ class HelpItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
         image.setImageResource(helpItem.imageId)
         tittle.setText(helpItem.title)
     }
-
 }

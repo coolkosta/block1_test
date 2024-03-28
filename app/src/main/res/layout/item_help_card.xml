@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_xxs"
     android:backgroundTint="@color/light_grey"
     app:cardElevation="0dp">
 
@@ -29,6 +30,5 @@
             android:layout_marginBottom="@dimen/spacing_s"
             tools:text="@string/children" />
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
