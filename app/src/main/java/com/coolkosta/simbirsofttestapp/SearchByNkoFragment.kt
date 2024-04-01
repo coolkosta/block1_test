@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchByNkoFragment : Fragment() {
 
@@ -12,8 +14,14 @@ class SearchByNkoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_by_nko, container, false)
+        val view = inflater.inflate(R.layout.fragment_search_by_nko, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_container)
+        val adapter = SearchByNkoAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(
+            context, LinearLayoutManager.VERTICAL, false
+        )
+        recyclerView.adapter = adapter
+        return view
     }
 
     companion object {

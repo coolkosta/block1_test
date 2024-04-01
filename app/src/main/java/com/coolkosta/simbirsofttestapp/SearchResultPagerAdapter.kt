@@ -5,8 +5,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class SearchResultPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     private val fragments= listOf(
-        SearchByEventFragment(),
-        SearchByNkoFragment()
+        SearchByEventFragment.newInstance(),
+        SearchByNkoFragment.newInstance()
     )
     override fun getItemCount(): Int {
         return fragments.size

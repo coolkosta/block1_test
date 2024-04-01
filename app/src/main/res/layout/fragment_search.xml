@@ -20,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_xs"
-            android:background="@color/white" />
+            android:background="@color/white"
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/enter_name_org_hint_lable" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"

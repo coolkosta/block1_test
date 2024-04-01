@@ -31,4 +31,8 @@
     <string name="events">Мероприятия</string>
     <string name="event_tab_label">По мероприятиям</string>
     <string name="nko_tab_label">По НКО</string>
+    <string name="enter_name_org_hint_lable">Введите название организации</string>
+    <string name="choose_photo_label">Выбрать фото</string>
+    <string name="make_photo_label">Сделать снимок</string>
+    <string name="delete">Удалить</string>
 </resources>
