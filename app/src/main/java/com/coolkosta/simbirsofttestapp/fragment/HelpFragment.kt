@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.adapter.HelpAdapter
 
 
 class HelpFragment : Fragment() {
@@ -31,7 +33,6 @@ class HelpFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance() = HelpFragment()
     }
 }

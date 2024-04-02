@@ -1,13 +1,16 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.coolkosta.simbirsofttestapp.fragment.SearchByEventFragment
 
 class SearchResultPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    private val fragments= listOf(
+
+    private val fragments = listOf(
         SearchByEventFragment.newInstance(),
-        SearchByNkoFragment.newInstance()
+        SearchByEventFragment.newInstance()
     )
+
     override fun getItemCount(): Int {
         return fragments.size
     }

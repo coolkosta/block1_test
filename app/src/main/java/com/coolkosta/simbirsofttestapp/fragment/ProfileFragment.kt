@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.fragment
 
 import android.Manifest
 import android.app.AlertDialog
@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.coolkosta.simbirsofttestapp.R
 
 class ProfileFragment : Fragment() {
 
@@ -38,7 +39,7 @@ class ProfileFragment : Fragment() {
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Для съемки фото необходимо разрешение на использование камеры",
+                    getString(R.string.reminder_photo_permission_toast),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -95,8 +96,11 @@ class ProfileFragment : Fragment() {
 
     private fun createImageUri(): Uri? {
         val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, "JPEG_${System.currentTimeMillis()}.jpg")
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(
+                MediaStore.MediaColumns.DISPLAY_NAME,
+                String.format(FILE_NAME, System.currentTimeMillis())
+            )
+            put(MediaStore.MediaColumns.MIME_TYPE, MIME_TYPE_IMAGE_JPEG)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }
@@ -115,7 +119,8 @@ class ProfileFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
+        const val FILE_NAME = "JPEG_%s.jpg"
+        const val MIME_TYPE_IMAGE_JPEG = "image/jpeg"
         fun newInstance() = ProfileFragment()
     }
 }

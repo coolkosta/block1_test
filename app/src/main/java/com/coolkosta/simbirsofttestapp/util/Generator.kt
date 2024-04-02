@@ -1,4 +1,6 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.util
+
+import com.coolkosta.simbirsofttestapp.R
 
 class Generator {
 

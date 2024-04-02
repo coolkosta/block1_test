@@ -24,9 +24,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Во имя жизни" />
+        tools:text="@string/preview_customer_event" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/item_div"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_l"

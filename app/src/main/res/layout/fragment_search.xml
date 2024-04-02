@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
+    tools:context=".fragment.SearchFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -26,11 +26,9 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
+            style="@style/MyTabLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:tabIndicatorColor="@color/macaroni_and_cheese"
-            app:tabTextColor="@color/tab_text_color_selector">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/first_tab"

@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.adapter.SearchResultPagerAdapter
+import com.coolkosta.simbirsofttestapp.util.Generator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -31,11 +34,28 @@ class SearchFragment : Fragment() {
                 else -> null
             }
         }.attach()
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                updateListForPosition(position)
+            }
+        })
         return view
     }
 
+    private fun updateListForPosition(position: Int) {
+        val currentFragment = childFragmentManager.findFragmentByTag("f$position")
+        if (currentFragment is SearchByEventFragment) {
+            when (position) {
+                0 -> currentFragment.updateList(Generator().generateEventList())
+
+                1 -> currentFragment.updateList(Generator().generateNkoList())
+            }
+        }
+    }
+
     companion object {
-        @JvmStatic
         fun newInstance() = SearchFragment()
     }
 }

@@ -1,8 +1,12 @@
-package com.coolkosta.simbirsofttestapp
+package com.coolkosta.simbirsofttestapp.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
+import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
+import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             // Переключение фрагмента
             fragment?.let {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container,it)
+                    .replace(R.id.fragment_container, it)
                     .commit()
             }
             true

@@ -35,4 +35,8 @@
     <string name="choose_photo_label">Выбрать фото</string>
     <string name="make_photo_label">Сделать снимок</string>
     <string name="delete">Удалить</string>
+    <string name="reminder_photo_permission_toast">Для съемки фото необходимо разрешение на использование камеры</string>
+    <string name="choose_category_label">Выберите категорию помощи</string>
+    <string name="search_event_result_label">Ключевые слова: мастер-класс, помощь \nРезультаты поиска: 109 мероприятий</string>
+    <string name="preview_customer_event">Во имя жизни</string>
 </resources>
