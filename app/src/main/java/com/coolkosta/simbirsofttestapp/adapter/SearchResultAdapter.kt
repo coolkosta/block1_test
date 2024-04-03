@@ -13,29 +13,38 @@ class SearchResultAdapter(private var items: List<String>) :
 
     fun updateList(newItems: List<String>) {
 
-        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = items.size
-
-            override fun getNewListSize(): Int = newItems.size
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition] == newItems[newItemPosition]
-            }
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition] == newItems[newItemPosition]
-            }
-        })
+        val diffUtilCallback = DiffUtilCallback(items, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
 
         this.items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
 
+    inner class DiffUtilCallback(
+        private val oldItems: List<String>,
+        private val newItems: List<String>,
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldItems.size
+
+        override fun getNewListSize(): Int = newItems.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
+    }
+
     inner class SearchItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.search_item_result_tv)
-        val div: View = view.findViewById(R.id.item_div)
+        private val div: View = view.findViewById(R.id.item_div)
         fun bind(title: String) {
             textView.text = title
+            div.visibility =
+                if (bindingAdapterPosition == items.size - 1) View.GONE else View.VISIBLE
         }
     }
 
@@ -51,8 +60,7 @@ class SearchResultAdapter(private var items: List<String>) :
     }
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
-        val content = items[holder.adapterPosition]
+        val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
-        if (position == items.size - 1) holder.div.visibility = View.GONE
     }
 }

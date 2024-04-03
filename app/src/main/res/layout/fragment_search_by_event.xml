@@ -29,6 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search_result_tv" />
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/recycler_view_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"

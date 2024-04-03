@@ -72,7 +72,7 @@ class ProfileFragment : Fragment() {
 
     private fun showChooseDialog() {
         val dialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.cusom_dialog_view, null)
+            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_view, null)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()

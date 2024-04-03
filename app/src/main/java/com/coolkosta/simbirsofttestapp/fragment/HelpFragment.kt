@@ -18,7 +18,12 @@ class HelpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_help, container, false)
+        return inflater.inflate(R.layout.fragment_help, container, false)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view_container)
         val adapter = HelpAdapter()
         recyclerView.layoutManager =
@@ -29,7 +34,6 @@ class HelpFragment : Fragment() {
                 false
             )
         recyclerView.adapter = adapter
-        return view
     }
 
     companion object {

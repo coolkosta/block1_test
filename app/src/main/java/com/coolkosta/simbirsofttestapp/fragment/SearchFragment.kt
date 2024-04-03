@@ -21,7 +21,11 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewPager = view.findViewById(R.id.viewpager_container)
         tabLayout = view.findViewById(R.id.tabLayout)
 
@@ -41,7 +45,6 @@ class SearchFragment : Fragment() {
                 updateListForPosition(position)
             }
         })
-        return view
     }
 
     private fun updateListForPosition(position: Int) {
