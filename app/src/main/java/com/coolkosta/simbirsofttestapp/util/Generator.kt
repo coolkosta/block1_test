@@ -47,4 +47,13 @@ class Generator {
         val result = init.shuffled().take(6)
         return result
     }
+
+    fun generateFilterList(): List<FilterItem>{
+        return listOf(
+            FilterItem(title = "Деньгами", isAvailable = true),
+            FilterItem(title = "Вещами", isAvailable = false),
+            FilterItem(title = "Проф. помощью", isAvailable = true),
+            FilterItem(title = "Волонтерством", isAvailable = true),
+        )
+    }
 }

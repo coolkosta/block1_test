@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/top_app_bar"
+                app:menu="@menu/profile_menu"
                 app:title="@string/profile_text"
                 app:titleCentered="true"
                 app:titleTextAppearance="@style/TextStyle2" />

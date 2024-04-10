@@ -36,7 +36,7 @@ class HelpAdapter : RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: HelpItemViewHolder, position: Int) {
-        val content = items[holder.adapterPosition]
+        val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
     }
 }
