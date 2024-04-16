@@ -12,9 +12,10 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/news_event_iv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="222dp"
             android:layout_marginStart="@dimen/spacing_xxs"
             android:layout_marginTop="@dimen/spacing_xxs"
             android:layout_marginEnd="@dimen/spacing_xxs"
@@ -22,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/img_child" />
+            android:src="@drawable/image_charity" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -34,6 +35,8 @@
             app:layout_constraintStart_toStartOf="@id/news_event_iv" />
 
         <TextView
+            android:layout_marginStart="@dimen/spacing_xxl_2"
+            android:layout_marginEnd="@dimen/spacing_xxl_2"
             android:id="@+id/news_title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

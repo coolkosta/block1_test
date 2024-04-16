@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.EventDetailFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/news_filter_toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/event_detail_top_bar_menu"
+            app:title="Спонсоры отремонтируют школу-интернат"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/TextStyle2" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:contentDescription="@string/nested_scroll_description"
+        android:paddingBottom="?attr/actionBarSize"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/event_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:fontFamily="@font/officina_sans_scc_extrabold"
+                android:gravity="start"
+                android:maxLines="2"
+                android:textColor="@color/blue_grey"
+                android:textSize="@dimen/text_size_l"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Спонсоры отремонтируют школу-интернат" />
+
+            <TextView
+                android:id="@+id/event_datetime_tv"
+                style="@style/TextStyle18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:drawablePadding="@dimen/spacing_xxs"
+                android:text="Осталось 13 дней (21.09 – 20.10)"
+                android:textColor="@color/grey"
+                app:drawableStartCompat="@drawable/ic_calendar"
+                app:drawableTint="@color/grey"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/event_title_tv" />
+
+            <TextView
+                android:id="@+id/foundation_tv"
+                style="@style/TextStyle9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:text="Благотворительный Фонд «Счастливый Мир»"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/event_datetime_tv" />
+
+            <ImageView
+                android:id="@+id/nav_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_s"
+                android:src="@drawable/ic_nav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/foundation_tv"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_m"
+                android:text="Санкт-Петербург, Кирочная улица,\nд. 50А, каб. 208"
+                app:layout_constraintStart_toEndOf="@id/nav_iv"
+                app:layout_constraintTop_toTopOf="@id/nav_iv" />
+
+            <ImageView
+                android:id="@+id/phone_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_s"
+                android:src="@drawable/ic_phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/address_tv"
+                app:tint="@color/blue_grey" />
+
+            <TextView
+                android:id="@+id/contact_phone_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_m"
+                android:text="+7 (937) 037 37-73\n+7 (937) 016 16-16"
+                app:layout_constraintStart_toEndOf="@id/phone_iv"
+                app:layout_constraintTop_toTopOf="@id/phone_iv" />
+
+            <TextView
+                android:id="@+id/question_label_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_s"
+                android:drawableStart="@drawable/ic_mail"
+                android:drawablePadding="@dimen/spacing_m"
+                android:gravity="center_vertical"
+                android:text="У вас есть вопросы?"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contact_phone_tv" />
+
+            <TextView
+                android:id="@+id/contact_us_tv"
+                style="@style/TextStyle7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_xs"
+                android:text="@string/contact_us_label"
+                app:layout_constraintBottom_toBottomOf="@id/question_label_tv"
+                app:layout_constraintStart_toEndOf="@id/question_label_tv"
+                app:layout_constraintTop_toTopOf="@id/question_label_tv" />
+
+            <ImageView
+                android:id="@+id/card_image_1"
+                android:layout_width="240dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_l"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_child"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/question_label_tv" />
+
+            <ImageView
+                android:id="@+id/card_image_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cardimage_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/card_image_1"
+                app:layout_constraintTop_toTopOf="@id/card_image_1" />
+
+            <ImageView
+                android:id="@+id/card_image_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_s"
+                android:src="@drawable/cardimage_3"
+                app:layout_constraintBottom_toBottomOf="@id/card_image_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/card_image_1"
+                app:layout_constraintTop_toBottomOf="@id/card_image_2" />
+
+            <TextView
+                android:id="@+id/event_description_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_l"
+                android:layout_marginEnd="@dimen/spacing_l"
+                android:text="Участники и болельщики смогли весело и активно провести время на «Петербургском благотворительном марафоне» и при этом\nфинансово поучаствовать в помощи детям.\n\nПри этом финансово поучаствовать в помощи\nдетям. При этом финансово поучаствовать в\nпомощи детям."
+                android:textAlignment="textStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_image_1" />
+
+            <TextView
+                android:id="@+id/org_site_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_l"
+                android:layout_marginTop="@dimen/spacing_l"
+                android:text="Перейти на сайт организаии"
+                android:textColor="@color/leaf"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/event_description_tv" />
+
+            <LinearLayout
+                android:id="@+id/participants_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxl_2"
+                android:background="@color/light_grey_two"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_l"
+                android:paddingBottom="@dimen/spacing_l"
+                app:layout_constraintBottom_toTopOf="@id/donation_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/org_site_tv">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginStart="@dimen/spacing_l"
+                    android:src="@drawable/avatar_1" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:src="@drawable/avatar_2" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:src="@drawable/avatar_3" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:src="@drawable/avatar_4" />
+
+                <TextView
+                    android:id="@+id/ppl_count_tv"
+                    style="@style/TextStyle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/spacing_s"
+                    android:text="+120" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/donation_container"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/donation_clothes"
+                    style="@style/TextStyle11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="Помочь\nвещами"
+                    app:drawableTopCompat="@drawable/ic_shirt" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_xl"
+                    android:layout_marginTop="@dimen/spacing_xxs"
+                    android:layout_marginEnd="@dimen/spacing_xl"
+                    android:src="@drawable/separator" />
+
+                <TextView
+                    android:id="@+id/become_volunteer"
+                    style="@style/TextStyle11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="Стать\nволонтером"
+                    app:drawableTopCompat="@drawable/ic_hands" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_xl"
+                    android:layout_marginTop="@dimen/spacing_xxs"
+                    android:layout_marginEnd="@dimen/spacing_xl"
+                    android:src="@drawable/separator" />
+
+                <TextView
+                    android:id="@+id/prof_help"
+                    style="@style/TextStyle11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="Проф.\nпомощь"
+                    app:drawableTopCompat="@drawable/ic_tools" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_xl"
+                    android:layout_marginTop="@dimen/spacing_xxs"
+                    android:layout_marginEnd="@dimen/spacing_xl"
+                    android:src="@drawable/separator" />
+
+                <TextView
+                    android:id="@+id/donation"
+                    style="@style/TextStyle11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="Помочь\nденьгами"
+                    app:drawableTopCompat="@drawable/ic_coins" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

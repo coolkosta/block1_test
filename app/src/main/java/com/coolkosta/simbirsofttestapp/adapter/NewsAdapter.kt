@@ -7,30 +7,29 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.util.NewsItem
+import com.coolkosta.simbirsofttestapp.util.Event
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
+    private var items: List<Event> = listOf()
 
-    val list: List<NewsItem> = listOf(
-        NewsItem(
-            imageId = R.drawable.img_child,
-            title = "Конкурс по вокальному пению в детском доме №6",
-            description = "Дубовская школа-интернат для детей\n" +
-                    "с ограниченными возможностями здоровья стала первой в области …",
-            dateTime = "Октябрь 20, 2016"
-        ),
-    )
+    fun submitList(list: List<Event>): List<Event> {
+        items = list
+        return items
+    }
 
-    inner class NewsItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class NewsItemViewHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
         private val imageView: ImageView = view.findViewById(R.id.news_event_iv)
         private val title: TextView = view.findViewById(R.id.news_title_tv)
         private val eventDescription: TextView = view.findViewById(R.id.news_description_tv)
         private val eventDate: TextView = view.findViewById(R.id.news_datetime_tv)
-        fun bind(newsItem: NewsItem) {
-            imageView.setImageResource(newsItem.imageId)
-            title.text = newsItem.title
-            eventDescription.text = newsItem.description
-            eventDate.text = newsItem.dateTime
+
+        fun bind(item: Event) {
+            title.text = item.title
+            eventDescription.text = item.description
+            val imageResource = ImageResource.from(item.imageName)
+            imageView.setImageResource(imageResource.resourceId)
+            eventDate.text = item.date
         }
     }
 
@@ -43,12 +42,36 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return items.size
     }
 
     override fun onBindViewHolder(holder: NewsItemViewHolder, position: Int) {
-        val content = list[holder.bindingAdapterPosition]
+        val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
+    }
+
+    enum class ImageResource(val resourceId: Int) {
+        IMAGE_CHILD(R.drawable.img_child),
+        IMAGE_KID(R.drawable.image_kid),
+        IMAGE_ANIMAL(R.drawable.image_animal),
+        IMAGE_OLD(R.drawable.image_old),
+        IMAGE_WORLD(R.drawable.image_world),
+        IMAGE_RUNNER(R.drawable.image_runner),
+        DEFAULT_IMAGE(R.drawable.image_charity);
+
+        companion object {
+            fun from(name: String): ImageResource {
+                return when (name) {
+                    "image_child" -> IMAGE_CHILD
+                    "image_kid" -> IMAGE_KID
+                    "image_animal" -> IMAGE_ANIMAL
+                    "image_old" -> IMAGE_OLD
+                    "image_world" -> IMAGE_WORLD
+                    "image_runner" -> IMAGE_RUNNER
+                    else -> DEFAULT_IMAGE
+                }
+            }
+        }
     }
 
 }

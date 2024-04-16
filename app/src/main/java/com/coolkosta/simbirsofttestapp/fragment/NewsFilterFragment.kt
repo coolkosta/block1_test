@@ -9,16 +9,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.FilterAdapter
+import com.coolkosta.simbirsofttestapp.util.JsonHelper
 
 class NewsFilterFragment : Fragment() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
+    private lateinit var adapter: FilterAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +45,15 @@ class NewsFilterFragment : Fragment() {
             }
         }
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        val adapter = FilterAdapter()
+        adapter = FilterAdapter()
         recyclerView.adapter = adapter
+        loadCategories()
+    }
+
+    private fun loadCategories(){
+        val inputStream = requireContext().assets.open("categories.json")
+        val categories = JsonHelper().getCategoryFromJson(inputStream)
+        adapter.submitList(categories)
     }
 
     companion object {

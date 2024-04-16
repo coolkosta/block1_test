@@ -74,4 +74,15 @@ dependencies {
 
     //Retrofit
     implementation(libs.retrofit)
+    //Gson
+    implementation(libs.gson)
+    //Kotlin Datetime
+    implementation (libs.kotlinx.datetime)
+    //ViewModel
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    //LiveData
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    //Fragment
+    implementation (libs.androidx.fragment.ktx)
+
 }

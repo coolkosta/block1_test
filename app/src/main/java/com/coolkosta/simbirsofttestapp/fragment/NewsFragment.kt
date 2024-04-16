@@ -5,16 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
+import com.coolkosta.simbirsofttestapp.util.JsonHelper
 
 
 class NewsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
 
     override fun onCreateView(
@@ -40,9 +41,16 @@ class NewsFragment : Fragment() {
             }
         }
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        val adapter = NewsAdapter()
+        adapter = NewsAdapter()
         recyclerView.adapter = adapter
+        loadEvents()
 
+    }
+
+    private fun loadEvents(){
+        val inputStream = requireContext().assets.open("events.json")
+        val events = JsonHelper().getEventsFromJson(inputStream)
+        adapter.submitList(events)
     }
 
     private fun openNewsFilterFragment() {

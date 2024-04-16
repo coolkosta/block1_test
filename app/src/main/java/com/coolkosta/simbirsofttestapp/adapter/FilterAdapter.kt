@@ -6,21 +6,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.util.FilterItem
-import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.simbirsofttestapp.util.EventCategory
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class FilterAdapter() : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>() {
 
-    private val items: List<FilterItem> = Generator().generateFilterList()
+    private var items: List<EventCategory> = listOf()
+
+    fun submitList(list: List<EventCategory>): List<EventCategory> {
+        items = list
+        return items
+    }
 
     inner class FilterItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.filter_item_tv)
         private val isAvailable: SwitchMaterial = view.findViewById(R.id.filter_check)
         private val div: View = view.findViewById(R.id.item_div)
-        fun bind(filterItem: FilterItem) {
-            title.text = filterItem.title
-            isAvailable.isChecked = filterItem.isAvailable
+        fun bind(category: EventCategory) {
+            title.text = category.title
+            //isAvailable.isChecked = filterItem.isAvailable
             div.visibility =
                 if (bindingAdapterPosition == items.size - 1) View.GONE else View.VISIBLE
         }
