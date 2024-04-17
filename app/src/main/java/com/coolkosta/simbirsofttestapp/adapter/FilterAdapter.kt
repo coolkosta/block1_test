@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.util.EventCategory
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 class FilterAdapter() : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>() {
 
@@ -20,11 +19,9 @@ class FilterAdapter() : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>
 
     inner class FilterItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.filter_item_tv)
-        private val isAvailable: SwitchMaterial = view.findViewById(R.id.filter_check)
         private val div: View = view.findViewById(R.id.item_div)
         fun bind(category: EventCategory) {
             title.text = category.title
-            //isAvailable.isChecked = filterItem.isAvailable
             div.visibility =
                 if (bindingAdapterPosition == items.size - 1) View.GONE else View.VISIBLE
         }
@@ -45,5 +42,4 @@ class FilterAdapter() : RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>
         val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
     }
-
 }
