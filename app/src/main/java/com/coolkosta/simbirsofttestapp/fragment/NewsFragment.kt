@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
@@ -35,7 +34,7 @@ class NewsFragment : Fragment() {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
-                        openNewsFilterFragment()
+                        openFragment(NewsFilterFragment.newInstance())
                         true
                     }
 
@@ -46,15 +45,19 @@ class NewsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view_container)
         adapter = NewsAdapter()
         recyclerView.adapter = adapter
-        viewModel.eventList.observe(viewLifecycleOwner, Observer {
+        viewModel.eventList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
 
+        adapter.onItemClick = {
+            viewModel.getCurrentEvent(it)
+            openFragment(EventDetailFragment.newInstance())
+        }
     }
 
-    private fun openNewsFilterFragment() {
+    private fun openFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, NewsFilterFragment.newInstance())
+            .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
     }

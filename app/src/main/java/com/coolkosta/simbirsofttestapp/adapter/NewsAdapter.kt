@@ -8,10 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.util.Event
+import com.coolkosta.simbirsofttestapp.util.ImageResource
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
     private var items: List<Event> = listOf()
-
+    var onItemClick: ((Event) -> Unit)? = null
     fun submitList(list: List<Event>): List<Event> {
         items = list
         return items
@@ -48,30 +49,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
     override fun onBindViewHolder(holder: NewsItemViewHolder, position: Int) {
         val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
-    }
-
-    enum class ImageResource(val resourceId: Int) {
-        IMAGE_CHILD(R.drawable.img_child),
-        IMAGE_KID(R.drawable.image_kid),
-        IMAGE_ANIMAL(R.drawable.image_animal),
-        IMAGE_OLD(R.drawable.image_old),
-        IMAGE_WORLD(R.drawable.image_world),
-        IMAGE_RUNNER(R.drawable.image_runner),
-        DEFAULT_IMAGE(R.drawable.image_charity);
-
-        companion object {
-            fun from(name: String): ImageResource {
-                return when (name) {
-                    "image_child" -> IMAGE_CHILD
-                    "image_kid" -> IMAGE_KID
-                    "image_animal" -> IMAGE_ANIMAL
-                    "image_old" -> IMAGE_OLD
-                    "image_world" -> IMAGE_WORLD
-                    "image_runner" -> IMAGE_RUNNER
-                    else -> DEFAULT_IMAGE
-                }
-            }
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(content)
         }
     }
-
 }

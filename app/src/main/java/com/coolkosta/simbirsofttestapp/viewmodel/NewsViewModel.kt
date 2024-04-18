@@ -21,9 +21,30 @@ class NewsViewModel(
     private var _categories = MutableLiveData<List<EventCategory>>()
     val categories: LiveData<List<EventCategory>> get() = _categories
 
+    private var _currentEvent = MutableLiveData<Event>()
+    val currentEvent: LiveData<Event> get() = _currentEvent
+
+    private var _filteredCategories = MutableLiveData<MutableList<Int>>()
+    val filteredCategories: LiveData<MutableList<Int>> get() = _filteredCategories
+    private var tempFilterCategory = mutableListOf<Int>()
+
     init {
         getEvents()
         getCategories()
+        _filteredCategories.value = _categories.value?.map { it.id } as MutableList<Int>?
+    }
+
+    fun onSwitchChanged(idCategory: Int, isSwitchEnable: Boolean) {
+        val currentFilteredCategories = _filteredCategories.value
+        if (isSwitchEnable) {
+            if (currentFilteredCategories?.contains(idCategory) != true) {
+                currentFilteredCategories?.add(idCategory)
+            }
+        } else {
+            currentFilteredCategories?.remove(idCategory)
+        }
+
+        tempFilterCategory = currentFilteredCategories ?: mutableListOf()
     }
 
     private fun getEvents() {
@@ -36,14 +57,20 @@ class NewsViewModel(
         _categories.value = jsonHelper.getCategoryFromJson(inputStream)
     }
 
-    fun filteredList(categories: List<EventCategory>) {
+    fun filteredList(categories: List<Int>) {
+        _filteredCategories.value = tempFilterCategory
+        getEvents()
         val currentEvents = _eventList.value
         val filteredList = currentEvents?.filter { event ->
             categories.any {
-                event.categoryIds.contains(it.id)
+                event.categoryIds.contains(it)
             }
         }
         _eventList.value = filteredList ?: emptyList()
+    }
+
+    fun getCurrentEvent(event: Event) {
+        _currentEvent.value = event
     }
 
 }
