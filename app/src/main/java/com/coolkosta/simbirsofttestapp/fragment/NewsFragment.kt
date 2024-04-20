@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
@@ -18,7 +19,15 @@ class NewsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
-    private val viewModel: NewsViewModel by activityViewModels()
+    private val viewModel: NewsViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFragmentResultListener("request_key") {_, bundle ->
+            val filteredList = bundle.getIntegerArrayList("extra_key") as List<Int>
+            viewModel.filteredList(filteredList)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +46,6 @@ class NewsFragment : Fragment() {
                         openFragment(NewsFilterFragment.newInstance())
                         true
                     }
-
                     else -> false
                 }
             }

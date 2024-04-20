@@ -5,20 +5,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.FilterAdapter
-import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
+import com.coolkosta.simbirsofttestapp.util.EventCategory
+import com.coolkosta.simbirsofttestapp.viewmodel.NewsFilterViewModel
+import java.util.ArrayList
 
 class NewsFilterFragment : Fragment() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FilterAdapter
-    private val viewModel: NewsViewModel by activityViewModels()
+    private lateinit var categories: List<EventCategory>
+    private var filteredList: List<Int>? = null
 
+    private val viewModel: NewsFilterViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        filteredList = savedInstanceState?.getIntegerArrayList("test") as List<Int>?
+            ?: viewModel.filteredList.value
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +46,17 @@ class NewsFilterFragment : Fragment() {
         toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
-
                 requireActivity().supportFragmentManager.popBackStack()
-
             }
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_done -> {
-                        val filter = viewModel.filteredCategories.value ?: emptyList()
-                        viewModel.filteredList(filter)
+                        viewModel.filteredList.observe(viewLifecycleOwner) {
+                            setFragmentResult(
+                                "request_key",
+                                bundleOf("extra_key" to it)
+                            )
+                        }
                         requireActivity().supportFragmentManager.popBackStack()
                         true
                     }
@@ -51,12 +65,21 @@ class NewsFilterFragment : Fragment() {
                 }
             }
         }
+        categories = viewModel.categories.value ?: emptyList()
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = FilterAdapter(viewModel)
-        recyclerView.adapter = adapter
-        viewModel.categories.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        adapter = FilterAdapter(
+            categories,
+            filteredList
+        ) { position, isCheck ->
+            viewModel.onSwitchChanged(position, isCheck)
         }
+        recyclerView.adapter = adapter
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val savedFilterList = viewModel.filteredList.value?.toList()
+        outState.putIntegerArrayList("test", savedFilterList as ArrayList<Int>)
     }
 
     companion object {
