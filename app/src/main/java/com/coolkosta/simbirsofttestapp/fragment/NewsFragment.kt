@@ -25,7 +25,7 @@ class NewsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setFragmentResultListener("request_key") {_, bundle ->
             val filteredList = bundle.getIntegerArrayList("extra_key") as List<Int>
-            viewModel.filteredList(filteredList)
+            viewModel.onCategoriesChanged(filteredList)
         }
     }
 
@@ -43,7 +43,7 @@ class NewsFragment : Fragment() {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
-                        openFragment(NewsFilterFragment.newInstance())
+                        openFragment(NewsFilterFragment.newInstance(viewModel.filterCategories))
                         true
                     }
                     else -> false

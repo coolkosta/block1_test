@@ -21,15 +21,14 @@ class NewsFilterFragment : Fragment() {
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FilterAdapter
-    private lateinit var categories: List<EventCategory>
-    private var filteredList: List<Int>? = null
 
     private val viewModel: NewsFilterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        filteredList = savedInstanceState?.getIntegerArrayList("test") as List<Int>?
-            ?: viewModel.filteredList.value
+        if (savedInstanceState == null) {
+            viewModel.initFilterCategories(arguments?.getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty())
+        }
     }
 
     override fun onCreateView(
@@ -51,12 +50,10 @@ class NewsFilterFragment : Fragment() {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_done -> {
-                        viewModel.filteredList.observe(viewLifecycleOwner) {
-                            setFragmentResult(
-                                "request_key",
-                                bundleOf("extra_key" to it)
-                            )
-                        }
+                        setFragmentResult(
+                            "request_key",
+                            bundleOf("extra_key" to viewModel.filterCategories)
+                        )
                         requireActivity().supportFragmentManager.popBackStack()
                         true
                     }
@@ -65,24 +62,21 @@ class NewsFilterFragment : Fragment() {
                 }
             }
         }
-        categories = viewModel.categories.value ?: emptyList()
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = FilterAdapter(
-            categories,
-            filteredList
-        ) { position, isCheck ->
-            viewModel.onSwitchChanged(position, isCheck)
-        }
-        recyclerView.adapter = adapter
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val savedFilterList = viewModel.filteredList.value?.toList()
-        outState.putIntegerArrayList("test", savedFilterList as ArrayList<Int>)
+        viewModel.categories.observe(viewLifecycleOwner) {
+            adapter = FilterAdapter(it, viewModel.filterCategories) { position, isCheck ->
+                viewModel.onSwitchChanged(position, isCheck)
+            }
+            recyclerView.adapter = adapter
+        }
     }
 
     companion object {
-        fun newInstance() = NewsFilterFragment()
+        private const val FILTER_CATEGORIES_KEY = "selected_categories_key"
+
+        fun newInstance(selectedCategories: List<Int>) = NewsFilterFragment().apply {
+            arguments = bundleOf(FILTER_CATEGORIES_KEY to selectedCategories)
+        }
     }
 }

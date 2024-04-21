@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.coolkosta.simbirsofttestapp.util.Event
+import com.coolkosta.simbirsofttestapp.util.EventCategory
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
 
 
@@ -19,8 +20,11 @@ class NewsViewModel(
     private var _currentEvent = MutableLiveData<Event>()
     val currentEvent: LiveData<Event> get() = _currentEvent
 
+    var filterCategories: List<Int> = listOf()
+
     init {
         getEvents()
+        filterCategories = getCategories().map { it.id }
     }
 
     private fun getEvents() {
@@ -28,16 +32,24 @@ class NewsViewModel(
         _eventList.value = jsonHelper.getEventsFromJson(inputStream)
     }
 
+    private fun getCategories(): List<EventCategory> {
+        getApplication<Application>().assets.open("categories.json").use {
+            return jsonHelper.getCategoryFromJson(it)
+        }
+    }
 
-    fun filteredList(categories: List<Int>) {
+    fun onCategoriesChanged(categories: List<Int>) {
+        filterCategories = categories
+        filteredList()
+    }
+
+    private fun filteredList() {
         getEvents()
-        val currentEvents = _eventList.value
-        val filteredList = currentEvents?.filter { event ->
-            categories.any {
+        _eventList.value = _eventList.value.orEmpty().filter { event ->
+            filterCategories.any {
                 event.categoryIds.contains(it)
             }
         }
-        _eventList.value = filteredList ?: emptyList()
     }
 
     fun getCurrentEvent(event: Event) {

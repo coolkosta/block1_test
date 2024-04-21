@@ -11,15 +11,17 @@ class NewsFilterViewModel(application: Application) : AndroidViewModel(applicati
 
     private val jsonHelper = JsonHelper()
 
-    private val _filteredList = MutableLiveData<List<Int>>()
-    val filteredList: LiveData<List<Int>> get() = _filteredList
-
     private val _categories = MutableLiveData<List<EventCategory>>()
     val categories: LiveData<List<EventCategory>> get() = _categories
 
+    var filterCategories: MutableList<Int> = mutableListOf()
+
     init {
         getCategories()
-        _filteredList.value = _categories.value?.map { it.id } as MutableList<Int>
+    }
+
+    fun initFilterCategories(categories: List<Int>) {
+        filterCategories = categories.toMutableList()
     }
 
     private fun getCategories() {
@@ -28,14 +30,12 @@ class NewsFilterViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun onSwitchChanged(idCategory: Int, isSwitchEnable: Boolean) {
-        val currentFilteredCategories = _filteredList.value?.toMutableList()
         if (isSwitchEnable) {
-            if (currentFilteredCategories?.contains(idCategory) != true) {
-                currentFilteredCategories?.add(idCategory)
+            if (!filterCategories.contains(idCategory)) {
+                filterCategories.add(idCategory)
             }
         } else {
-            currentFilteredCategories?.remove(idCategory)
+            filterCategories.remove(idCategory)
         }
-        _filteredList.value = currentFilteredCategories ?: emptyList()
     }
 }
