@@ -1,5 +1,6 @@
 package com.coolkosta.simbirsofttestapp.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.util.Event
 import com.coolkosta.simbirsofttestapp.util.ImageResource
-import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.todayAt
+import kotlin.reflect.KClass
 
 class EventDetailFragment : Fragment() {
 
@@ -23,8 +29,37 @@ class EventDetailFragment : Fragment() {
     private lateinit var contactInfo: TextView
     private lateinit var imageView: ImageView
     private lateinit var description: TextView
+    private lateinit var currentEvent: Event
 
-    private val viewModel: NewsViewModel by activityViewModels()
+
+    private inline fun <reified T : Any> KClass<T>.getParcelable(bundle: Bundle, key: String): T? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            bundle.getParcelable(key, T::class.java)
+        else
+            bundle.getParcelable(key)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        when (savedInstanceState) {
+            null -> {
+                arguments?.let { bundle ->
+                    currentEvent = Event::class.getParcelable(bundle, EVENT_DETAIL_KEY) as Event
+                }
+            }
+
+            else -> {
+                savedInstanceState.let {
+                    currentEvent = Event::class.getParcelable(it, EVENT_DETAIL_KEY) as Event
+                }
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(EVENT_DETAIL_KEY, currentEvent)
+        super.onSaveInstanceState(outState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,20 +95,39 @@ class EventDetailFragment : Fragment() {
         imageView = view.findViewById(R.id.card_image_1)
         description = view.findViewById(R.id.event_description_tv)
 
-        viewModel.currentEvent.observe(viewLifecycleOwner) { event ->
-            toolbar.title = event.title
-            title.text = event.title
-            dateTime.text = event.date
-            foundation.text = event.foundation
-            address.text = event.location
-            contactInfo.text = event.contactInfo
-            val imageResource = ImageResource.from(event.imageName)
+        currentEvent.let {
+            toolbar.title = currentEvent.title
+            title.text = currentEvent.title
+
+            val today = Clock.System.todayAt(TimeZone.currentSystemDefault())
+            val eventDay = LocalDate.parse(currentEvent.date)
+            when (val daysLeft = today.daysUntil(eventDay)) {
+                in 0..20 -> dateTime.text = getString(
+                    R.string.daytime_text_with_left_days,
+                    daysLeft,
+                    eventDay.toString()
+                )
+
+                else -> dateTime.text = getString(
+                    R.string.daytime_text_without_left_days,
+                    eventDay.toString()
+                )
+            }
+
+            foundation.text = currentEvent.foundation
+            address.text = currentEvent.location
+            contactInfo.text = currentEvent.contactInfo
+            val imageResource = ImageResource.from(currentEvent.imageName)
             imageView.setImageResource(imageResource.resourceId)
-            description.text = event.description
+            description.text = currentEvent.description
+
         }
     }
 
     companion object {
-        fun newInstance() = EventDetailFragment()
+        private const val EVENT_DETAIL_KEY = "selected_event_key"
+        fun newInstance(event: Event) = EventDetailFragment().apply {
+            arguments = Bundle().apply { putParcelable(EVENT_DETAIL_KEY, event) }
+        }
     }
 }

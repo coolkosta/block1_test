@@ -5,17 +5,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.util.Event
 import com.coolkosta.simbirsofttestapp.util.ImageResource
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.todayAt
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
+
     private var items: List<Event> = listOf()
     var onItemClick: ((Event) -> Unit)? = null
-    fun submitList(list: List<Event>): List<Event> {
-        items = list
-        return items
+
+    fun submitList(newItems: List<Event>) {
+        val diffUtilCallback = DiffUtilCallback(items, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
+        items = newItems
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    inner class DiffUtilCallback(
+        private val oldItems: List<Event>,
+        private val newItems: List<Event>,
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldItems.size
+
+        override fun getNewListSize(): Int = newItems.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
     }
 
     inner class NewsItemViewHolder(view: View) :
@@ -30,7 +58,21 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
             eventDescription.text = item.description
             val imageResource = ImageResource.from(item.imageName)
             imageView.setImageResource(imageResource.resourceId)
-            eventDate.text = item.date
+
+            val today: LocalDate = Clock.System.todayAt(TimeZone.currentSystemDefault())
+            val eventDay: LocalDate = LocalDate.parse(item.date)
+            when (val daysLeft = today.daysUntil(eventDay)) {
+                in 0..20 -> eventDate.text =
+                    itemView.context.getString(
+                        R.string.daytime_text_with_left_days,
+                        daysLeft,
+                        eventDay.toString()
+                    )
+                else -> eventDate.text = itemView.context.getString(
+                    R.string.daytime_text_without_left_days,
+                    eventDay.toString()
+                )
+            }
         }
     }
 

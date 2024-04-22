@@ -1,8 +1,11 @@
 package com.coolkosta.simbirsofttestapp.util
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 
+@Parcelize
 data class Event(
     val id: Int,
     @SerializedName("category_ids")
@@ -16,4 +19,4 @@ data class Event(
     val contactInfo: String,
     @SerializedName("image_name")
     val imageName: String,
-)
+) : Parcelable

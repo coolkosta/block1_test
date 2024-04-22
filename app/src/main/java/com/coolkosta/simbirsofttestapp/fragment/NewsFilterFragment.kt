@@ -12,9 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.FilterAdapter
-import com.coolkosta.simbirsofttestapp.util.EventCategory
 import com.coolkosta.simbirsofttestapp.viewmodel.NewsFilterViewModel
-import java.util.ArrayList
 
 class NewsFilterFragment : Fragment() {
 

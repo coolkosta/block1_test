@@ -50,6 +50,7 @@ class NewsFragment : Fragment() {
                 }
             }
         }
+
         recyclerView = view.findViewById(R.id.recycler_view_container)
         adapter = NewsAdapter()
         recyclerView.adapter = adapter
@@ -58,8 +59,7 @@ class NewsFragment : Fragment() {
         }
 
         adapter.onItemClick = {
-            viewModel.getCurrentEvent(it)
-            openFragment(EventDetailFragment.newInstance())
+            openFragment(EventDetailFragment.newInstance(it))
         }
     }
 

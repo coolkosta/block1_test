@@ -17,9 +17,6 @@ class NewsViewModel(
     private var _eventList = MutableLiveData<List<Event>>()
     val eventList: LiveData<List<Event>> get() = _eventList
 
-    private var _currentEvent = MutableLiveData<Event>()
-    val currentEvent: LiveData<Event> get() = _currentEvent
-
     var filterCategories: List<Int> = listOf()
 
     init {
@@ -50,10 +47,6 @@ class NewsViewModel(
                 event.categoryIds.contains(it)
             }
         }
-    }
-
-    fun getCurrentEvent(event: Event) {
-        _currentEvent.value = event
     }
 }
 
