@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.coolkosta.simbirsofttestapp.util.Event
-import com.coolkosta.simbirsofttestapp.util.EventCategory
+import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
 
 
@@ -25,8 +25,10 @@ class NewsViewModel(
     }
 
     private fun getEvents() {
-        val inputStream = getApplication<Application>().assets.open("events.json")
-        _eventList.value = jsonHelper.getEventsFromJson(inputStream)
+        val streamResult = getApplication<Application>().assets.open("events.json").use {
+            jsonHelper.getEventsFromJson(it)
+        }
+        _eventList.value = streamResult
     }
 
     private fun getCategories(): List<EventCategory> {

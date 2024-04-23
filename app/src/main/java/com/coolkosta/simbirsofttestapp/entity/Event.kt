@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.util
+package com.coolkosta.simbirsofttestapp.entity
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

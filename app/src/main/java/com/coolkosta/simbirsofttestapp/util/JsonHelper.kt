@@ -1,5 +1,7 @@
 package com.coolkosta.simbirsofttestapp.util
 
+import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.InputStream

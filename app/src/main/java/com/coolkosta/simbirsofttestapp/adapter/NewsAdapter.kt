@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.util.Event
+import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.util.ImageResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -16,10 +16,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayAt
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
-
-    private var items: List<Event> = listOf()
-    var onItemClick: ((Event) -> Unit)? = null
+class NewsAdapter(
+    private var items: List<Event> = listOf(),
+    var onItemClick: ((Event) -> Unit)? = null,
+) : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
 
     fun submitList(newItems: List<Event>) {
         val diffUtilCallback = DiffUtilCallback(items, newItems)
@@ -38,12 +38,13 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
         override fun getNewListSize(): Int = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition] == newItems[newItemPosition]
+            return oldItems[oldItemPosition].id == newItems[newItemPosition].id
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldItems[oldItemPosition] == newItems[newItemPosition]
         }
+
     }
 
     inner class NewsItemViewHolder(view: View) :
@@ -68,6 +69,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
                         daysLeft,
                         eventDay.toString()
                     )
+
                 else -> eventDate.text = itemView.context.getString(
                     R.string.daytime_text_without_left_days,
                     eventDay.toString()

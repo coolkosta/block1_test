@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.util.EventCategory
+import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class FilterAdapter(
     private val items: List<EventCategory>,
-    private val filterList: List<Int>?,
+    private val filterList: List<Int>,
     private val listener: (Int, Boolean) -> Unit,
 ) :
     RecyclerView.Adapter<FilterAdapter.FilterItemViewHolder>() {
@@ -20,8 +20,8 @@ class FilterAdapter(
         private val title: TextView = view.findViewById(R.id.filter_item_tv)
         private val switcher: SwitchMaterial = view.findViewById(R.id.filter_check)
         private val div: View = view.findViewById(R.id.item_div)
-        fun bind(category: EventCategory, listener: (Int, Boolean) -> Unit) {
-            switcher.isChecked = filterList?.contains(category.id) ?: false
+        fun bind(category: EventCategory) {
+            switcher.isChecked = filterList.contains(category.id)
             switcher.setOnCheckedChangeListener { _, isChecked ->
                 listener(category.id, isChecked)
             }
@@ -43,6 +43,6 @@ class FilterAdapter(
 
     override fun onBindViewHolder(holder: FilterItemViewHolder, position: Int) {
         val content = items[holder.bindingAdapterPosition]
-        holder.bind(content, listener)
+        holder.bind(content)
     }
 }

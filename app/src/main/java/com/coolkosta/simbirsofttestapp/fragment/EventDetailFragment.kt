@@ -1,6 +1,5 @@
 package com.coolkosta.simbirsofttestapp.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,20 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.util.Event
+import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.util.ImageResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayAt
-import kotlin.reflect.KClass
 
 class EventDetailFragment : Fragment() {
 
-    private lateinit var toolbar: Toolbar
     private lateinit var title: TextView
     private lateinit var dateTime: TextView
     private lateinit var foundation: TextView
@@ -31,35 +29,6 @@ class EventDetailFragment : Fragment() {
     private lateinit var description: TextView
     private lateinit var currentEvent: Event
 
-
-    private inline fun <reified T : Any> KClass<T>.getParcelable(bundle: Bundle, key: String): T? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            bundle.getParcelable(key, T::class.java)
-        else
-            bundle.getParcelable(key)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        when (savedInstanceState) {
-            null -> {
-                arguments?.let { bundle ->
-                    currentEvent = Event::class.getParcelable(bundle, EVENT_DETAIL_KEY) as Event
-                }
-            }
-
-            else -> {
-                savedInstanceState.let {
-                    currentEvent = Event::class.getParcelable(it, EVENT_DETAIL_KEY) as Event
-                }
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(EVENT_DETAIL_KEY, currentEvent)
-        super.onSaveInstanceState(outState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +40,11 @@ class EventDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
+        arguments?.let { bundle ->
+            currentEvent =
+                BundleCompat.getParcelable(bundle, EVENT_DETAIL_KEY, Event::class.java) as Event
+        }
+        val toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
                 requireActivity().supportFragmentManager.popBackStack()

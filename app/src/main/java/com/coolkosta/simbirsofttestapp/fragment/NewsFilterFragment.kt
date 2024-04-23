@@ -25,7 +25,9 @@ class NewsFilterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            viewModel.initFilterCategories(arguments?.getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty())
+            viewModel.initFilterCategories(
+                arguments?.getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty()
+            )
         }
     }
 
@@ -49,8 +51,8 @@ class NewsFilterFragment : Fragment() {
                 when (menuItem.itemId) {
                     R.id.action_done -> {
                         setFragmentResult(
-                            "request_key",
-                            bundleOf("extra_key" to viewModel.filterCategories)
+                            REQUEST_FILTER_RESULT_KEY,
+                            bundleOf(FILTER_EXTRA_KEY to viewModel.filterCategories)
                         )
                         requireActivity().supportFragmentManager.popBackStack()
                         true
@@ -72,6 +74,8 @@ class NewsFilterFragment : Fragment() {
 
     companion object {
         private const val FILTER_CATEGORIES_KEY = "selected_categories_key"
+        const val REQUEST_FILTER_RESULT_KEY = "filtered_categories_result_key"
+        const val FILTER_EXTRA_KEY = "extra_key"
 
         fun newInstance(selectedCategories: List<Int>) = NewsFilterFragment().apply {
             arguments = bundleOf(FILTER_CATEGORIES_KEY to selectedCategories)

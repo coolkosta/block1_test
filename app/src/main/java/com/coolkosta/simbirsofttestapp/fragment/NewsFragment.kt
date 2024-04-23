@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
+import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
+import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
 
 
@@ -23,8 +25,8 @@ class NewsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener("request_key") {_, bundle ->
-            val filteredList = bundle.getIntegerArrayList("extra_key") as List<Int>
+        setFragmentResultListener(REQUEST_FILTER_RESULT_KEY) { _, bundle ->
+            val filteredList = bundle.getIntegerArrayList(FILTER_EXTRA_KEY) as List<Int>
             viewModel.onCategoriesChanged(filteredList)
         }
     }
@@ -46,6 +48,7 @@ class NewsFragment : Fragment() {
                         openFragment(NewsFilterFragment.newInstance(viewModel.filterCategories))
                         true
                     }
+
                     else -> false
                 }
             }
