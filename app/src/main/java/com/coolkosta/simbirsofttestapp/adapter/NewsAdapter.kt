@@ -17,9 +17,10 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayAt
 
 class NewsAdapter(
-    private var items: List<Event> = listOf(),
-    var onItemClick: ((Event) -> Unit)? = null,
+    private var onItemClick: ((Event) -> Unit),
 ) : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
+
+    private var items: List<Event> = listOf()
 
     fun submitList(newItems: List<Event>) {
         val diffUtilCallback = DiffUtilCallback(items, newItems)
@@ -94,7 +95,7 @@ class NewsAdapter(
         val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(content)
+            onItemClick.invoke(content)
         }
     }
 }

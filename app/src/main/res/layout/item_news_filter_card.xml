@@ -26,9 +26,7 @@
         android:checked="true"
         app:layout_constraintBottom_toBottomOf="@id/filter_item_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:thumbTint="@color/leaf"
-        app:trackTint="@color/light_olive_green" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/item_div"

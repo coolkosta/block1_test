@@ -3,6 +3,7 @@
     <style name="Theme.SimbirSoftTestApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/turtle_green</item>
         <item name="colorPrimaryDark">@color/leaf</item>
+        <item name="colorSecondary">?attr/colorPrimary</item>
         <!-- Customize your light theme here. -->
     </style>
 
@@ -17,10 +18,13 @@
         <!-- Required for animated icons. -->
         <item name="windowSplashScreenAnimationDuration">200</item>
 
-        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">@drawable/ic_splashscreen_branding_centered</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">
+            @drawable/ic_splashscreen_branding_centered
+        </item>
 
         <!-- Set the theme of the Activity that directly follows your splash
         screen. This is required. -->
         <item name="postSplashScreenTheme">@style/Theme.SimbirSoftTestApp</item>
     </style>
+
 </resources>

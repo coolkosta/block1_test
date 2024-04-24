@@ -55,14 +55,12 @@ class NewsFragment : Fragment() {
         }
 
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = NewsAdapter()
+        adapter = NewsAdapter() {
+            openFragment(EventDetailFragment.newInstance(it))
+        }
         recyclerView.adapter = adapter
         viewModel.eventList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        }
-
-        adapter.onItemClick = {
-            openFragment(EventDetailFragment.newInstance(it))
         }
     }
 

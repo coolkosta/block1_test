@@ -26,7 +26,7 @@ class NewsFilterFragment : Fragment() {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             viewModel.initFilterCategories(
-                arguments?.getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty()
+                requireArguments().getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty()
             )
         }
     }
@@ -73,9 +73,9 @@ class NewsFilterFragment : Fragment() {
     }
 
     companion object {
-        private const val FILTER_CATEGORIES_KEY = "selected_categories_key"
         const val REQUEST_FILTER_RESULT_KEY = "filtered_categories_result_key"
         const val FILTER_EXTRA_KEY = "extra_key"
+        private const val FILTER_CATEGORIES_KEY = "selected_categories_key"
 
         fun newInstance(selectedCategories: List<Int>) = NewsFilterFragment().apply {
             arguments = bundleOf(FILTER_CATEGORIES_KEY to selectedCategories)

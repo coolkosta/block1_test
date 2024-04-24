@@ -27,7 +27,6 @@ class EventDetailFragment : Fragment() {
     private lateinit var contactInfo: TextView
     private lateinit var imageView: ImageView
     private lateinit var description: TextView
-    private lateinit var currentEvent: Event
 
 
     override fun onCreateView(
@@ -40,7 +39,8 @@ class EventDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let { bundle ->
+        val currentEvent: Event
+        requireArguments().let { bundle ->
             currentEvent =
                 BundleCompat.getParcelable(bundle, EVENT_DETAIL_KEY, Event::class.java) as Event
         }
