@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.util.Generator
-import com.coolkosta.simbirsofttestapp.util.HelpItem
+import com.coolkosta.simbirsofttestapp.entity.HelpItem
 
 class HelpAdapter : RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {
 
@@ -36,7 +36,7 @@ class HelpAdapter : RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: HelpItemViewHolder, position: Int) {
-        val content = items[holder.adapterPosition]
+        val content = items[holder.bindingAdapterPosition]
         holder.bind(content)
     }
 }

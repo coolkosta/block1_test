@@ -1,6 +1,7 @@
 package com.coolkosta.simbirsofttestapp.util
 
 import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.entity.HelpItem
 
 class Generator {
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
+import com.coolkosta.simbirsofttestapp.fragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
 import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,9 +26,10 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
+                R.id.news -> NewsFragment.newInstance()
+                R.id.search -> SearchFragment.newInstance()
                 R.id.help -> HelpFragment.newInstance()
                 R.id.profile -> ProfileFragment.newInstance()
-                R.id.search -> SearchFragment.newInstance()
                 else -> null
             }
             // Переключение фрагмента

@@ -24,10 +24,20 @@ class ProfileFragment : Fragment() {
     private lateinit var imageView: ImageView
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var choosePhotoLauncher: ActivityResultLauncher<String>
     private var photoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        choosePhotoLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let { imageUri ->
+                    photoUri = imageUri
+                    imageView.setImageURI(photoUri)
+                }
+            }
+
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
@@ -67,7 +77,6 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         imageView = view.findViewById(R.id.profile_iv)
         imageView.setOnClickListener { showChooseDialog() }
-
     }
 
     private fun showChooseDialog() {
@@ -78,6 +87,7 @@ class ProfileFragment : Fragment() {
             .create()
 
         dialogView.findViewById<TextView>(R.id.choose_photo_item).setOnClickListener {
+            choosePhotoLauncher.launch(MIME_TYPE_IMAGE)
             dialog.dismiss()
         }
 
@@ -121,6 +131,7 @@ class ProfileFragment : Fragment() {
     companion object {
         const val FILE_NAME = "JPEG_%s.jpg"
         const val MIME_TYPE_IMAGE_JPEG = "image/jpeg"
+        const val MIME_TYPE_IMAGE = "image/*"
         fun newInstance() = ProfileFragment()
     }
 }

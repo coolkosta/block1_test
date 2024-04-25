@@ -13,5 +13,9 @@
     <dimen name="margin_m">84dp</dimen>
     <dimen name="margin_l">136dp</dimen>
     <dimen name="margin_xl">180dp</dimen>
+    <dimen name="text_size_s">14sp</dimen>
     <dimen name="text_size_l">22sp</dimen>
+    <dimen name="card_width_m">240dp</dimen>
+    <dimen name="card_height_m">160dp</dimen>
+    <dimen name="corner_radius">2dp</dimen>
 </resources>
