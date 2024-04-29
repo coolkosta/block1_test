@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 
 class NewsViewModel(
@@ -19,8 +21,13 @@ class NewsViewModel(
 
     var filterCategories: List<Int> = listOf()
 
+    private var initList = MutableLiveData<List<Event>>()
+
     init {
-        getEvents()
+        if (_eventList.value == null) {
+            eventExecutor()
+        }
+
         filterCategories = getCategories().map { it.id }
     }
 
@@ -28,7 +35,8 @@ class NewsViewModel(
         val streamResult = getApplication<Application>().assets.open("events.json").use {
             jsonHelper.getEventsFromJson(it)
         }
-        _eventList.value = streamResult
+        _eventList.postValue(streamResult)
+        initList.postValue(streamResult)
     }
 
     private fun getCategories(): List<EventCategory> {
@@ -43,12 +51,19 @@ class NewsViewModel(
     }
 
     private fun filteredList() {
-        getEvents()
-        _eventList.value = _eventList.value.orEmpty().filter { event ->
+        _eventList.value = initList.value?.filter { event ->
             filterCategories.any {
                 event.categoryIds.contains(it)
             }
         }
+    }
+
+    private fun eventExecutor() {
+        val callable = Callable {
+            Thread.sleep(5000)
+            getEvents()
+        }
+        Executors.newSingleThreadExecutor().submit(callable)
     }
 }
 
