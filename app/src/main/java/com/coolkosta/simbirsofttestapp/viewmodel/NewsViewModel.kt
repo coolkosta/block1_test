@@ -19,15 +19,13 @@ class NewsViewModel(
     private var _eventList = MutableLiveData<List<Event>>()
     val eventList: LiveData<List<Event>> get() = _eventList
 
-    var filterCategories: List<Int> = listOf()
+    val progress = MutableLiveData(true)
 
-    private var initList = MutableLiveData<List<Event>>()
+    var filterCategories: List<Int> = listOf()
+    private var initList: List<Event> = listOf()
 
     init {
-        if (_eventList.value == null) {
-            eventExecutor()
-        }
-
+        eventExecutor()
         filterCategories = getCategories().map { it.id }
     }
 
@@ -36,7 +34,8 @@ class NewsViewModel(
             jsonHelper.getEventsFromJson(it)
         }
         _eventList.postValue(streamResult)
-        initList.postValue(streamResult)
+        initList = streamResult
+        progress.postValue(false)
     }
 
     private fun getCategories(): List<EventCategory> {
@@ -51,7 +50,7 @@ class NewsViewModel(
     }
 
     private fun filteredList() {
-        _eventList.value = initList.value?.filter { event ->
+        _eventList.value = initList.filter { event ->
             filterCategories.any {
                 event.categoryIds.contains(it)
             }
