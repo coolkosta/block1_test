@@ -9,6 +9,7 @@ import android.os.Looper
 import android.os.Message
 import android.os.Process
 import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
+import com.coolkosta.simbirsofttestapp.fragment.HelpFragment.Companion.ACTION_SERVICE_FILTER_KEY
 import com.coolkosta.simbirsofttestapp.util.Generator
 
 class HelpCategoryService : Service() {
@@ -25,7 +26,8 @@ class HelpCategoryService : Service() {
             try {
                 Thread.sleep(5000)
                 val result = Generator().generateHelpList()
-                val broadcastIntent = Intent(HelpFragment.ACTION_SERVICE_FILTER_KEY)
+                val broadcastIntent = Intent(ACTION_SERVICE_FILTER_KEY)
+                broadcastIntent.setPackage(applicationContext.packageName)
                 broadcastIntent.putParcelableArrayListExtra(
                     HelpFragment.SERVICE_DATA_KEY,
                     ArrayList(result)
