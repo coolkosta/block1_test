@@ -2,11 +2,9 @@ package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -24,7 +22,6 @@ class NewsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
-    private var isMenuVisible = false
     private val viewModel: NewsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +30,6 @@ class NewsFragment : Fragment() {
             val filteredList = bundle.getIntegerArrayList(FILTER_EXTRA_KEY) as List<Int>
             viewModel.onCategoriesChanged(filteredList)
         }
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.action_filter).isVisible = isMenuVisible
     }
 
     override fun onCreateView(
@@ -70,8 +63,7 @@ class NewsFragment : Fragment() {
             } else {
                 progress.visibility = View.GONE
             }
-            isMenuVisible = !it
-            invalidateOptionsMenu(activity)
+            toolBar.menu.findItem(R.id.action_filter).isVisible = !it
         }
 
         recyclerView = view.findViewById(R.id.recycler_view_container)

@@ -25,7 +25,7 @@ class NewsViewModel(
     private var initList: List<Event> = listOf()
 
     init {
-        eventExecutor()
+        getEventsAsync()
         filterCategories = getCategories().map { it.id }
     }
 
@@ -57,7 +57,7 @@ class NewsViewModel(
         }
     }
 
-    private fun eventExecutor() {
+    private fun getEventsAsync() {
         val callable = Callable {
             Thread.sleep(5000)
             getEvents()

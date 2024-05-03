@@ -31,7 +31,7 @@ class HelpAdapter(private var items: List<HelpItem>) : RecyclerView.Adapter<Help
         override fun getNewListSize(): Int = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition] == newItems[newItemPosition]
+           return true
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
