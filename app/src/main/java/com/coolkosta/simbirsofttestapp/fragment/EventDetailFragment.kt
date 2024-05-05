@@ -39,11 +39,12 @@ class EventDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val currentEvent: Event
-        requireArguments().let { bundle ->
-            currentEvent =
-                BundleCompat.getParcelable(bundle, EVENT_DETAIL_KEY, Event::class.java) as Event
-        }
+        val currentEvent =
+            BundleCompat.getParcelable(
+                requireArguments(),
+                EVENT_DETAIL_KEY,
+                Event::class.java
+            ) as Event
         val toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {

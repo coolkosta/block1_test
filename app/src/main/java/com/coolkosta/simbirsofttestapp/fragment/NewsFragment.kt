@@ -14,6 +14,7 @@ import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 
 class NewsFragment : Fragment() {
@@ -41,7 +42,7 @@ class NewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolBar = view.findViewById<Toolbar?>(R.id.news_toolbar).apply {
+        toolBar = view.findViewById<Toolbar>(R.id.news_toolbar).apply {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
@@ -54,8 +55,19 @@ class NewsFragment : Fragment() {
             }
         }
 
+        val progress: CircularProgressIndicator = view.findViewById(R.id.progress_circular)
+
+        viewModel.progress.observe(viewLifecycleOwner) {
+            if (it) {
+                progress.visibility = View.VISIBLE
+            } else {
+                progress.visibility = View.GONE
+            }
+            toolBar.menu.findItem(R.id.action_filter).isVisible = !it
+        }
+
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = NewsAdapter() {
+        adapter = NewsAdapter {
             openFragment(EventDetailFragment.newInstance(it))
         }
         recyclerView.adapter = adapter
