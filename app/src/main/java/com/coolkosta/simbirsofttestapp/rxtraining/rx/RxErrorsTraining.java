@@ -23,7 +23,7 @@ public class RxErrorsTraining {
      * defaultValue
      */
     public Observable<Integer> handleErrorsWithDefaultValue(Observable<Integer> intObservable, final Integer defaultValue) {
-        throw new NotImplementedException();
+        return intObservable.onErrorReturnItem(defaultValue);
     }
 
     /**
@@ -37,6 +37,6 @@ public class RxErrorsTraining {
      * {@code fallbackObservable}
      */
     public Observable<Integer> handleErrorsWithFallbackObservable(Observable<Integer> intObservable, Observable<Integer> fallbackObservable) {
-        throw new NotImplementedException();
+     return intObservable.onErrorResumeNext(fallbackObservable);
     }
 }
