@@ -26,7 +26,7 @@ public class RxTransformingTraining {
      * преобразованные из чисел в {@code intObservable}
      */
     public Observable<String> transformIntToString(Observable<Integer> intObservable) {
-        throw new NotImplementedException();
+        return intObservable.map(Object::toString);
     }
 
     /**
@@ -38,7 +38,7 @@ public class RxTransformingTraining {
      * {@code idObservable}
      */
     public Observable<Entity> requestEntityById(Observable<Integer> idObservable) {
-        throw new NotImplementedException();
+        return idObservable.flatMap(this::requestApiEntity);
     }
 
     /**
@@ -50,19 +50,19 @@ public class RxTransformingTraining {
      * поток имён объединённых первой буквой в имени
      */
     public Observable<GroupedObservable<Character, String>> distributeNamesByFirstLetter(Observable<String> namesObservable) {
-        throw new NotImplementedException();
+        return namesObservable.groupBy(names -> names.charAt(0));
     }
 
     /**
      * Объединить элементы, полученные из {@code intObservable} в списки {@link List} с максимальным
      * размером {@code listsSize}
      *
-     * @param listsSize      максимальный размер списка элементов
-     * @param intObservable  {@link Observable} с произвольным количеством рандомных чисел
+     * @param listsSize     максимальный размер списка элементов
+     * @param intObservable {@link Observable} с произвольным количеством рандомных чисел
      * @return {@code Observable} который эммитит списки чисел из {@code intObservable}
      */
     public Observable<List<Integer>> collectsIntsToLists(int listsSize, Observable<Integer> intObservable) {
-        throw new NotImplementedException();
+        return intObservable.buffer(listsSize);
     }
 
     /* Вспомогательные методы */
