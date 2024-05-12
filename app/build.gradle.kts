@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id ("kotlin-parcelize")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -78,12 +78,17 @@ dependencies {
     //Gson
     implementation(libs.gson)
     //Kotlin Datetime
-    implementation (libs.kotlinx.datetime)
+    implementation(libs.kotlinx.datetime)
     //ViewModel
-    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     //LiveData
-    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     //Fragment
-    implementation (libs.androidx.fragment.ktx)
+    implementation(libs.androidx.fragment.ktx)
+
+    implementation("io.reactivex.rxjava2:rxjava:2.2.2")
+
+    testImplementation("junit:junit:4.12")
+    testImplementation("org.mockito:mockito-core:2.22.0")
 
 }
