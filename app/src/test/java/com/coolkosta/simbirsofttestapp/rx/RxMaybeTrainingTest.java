@@ -65,7 +65,7 @@ public class RxMaybeTrainingTest {
     @Test
     public void positiveOrEmpty_positiveSingle() {
         TestObserver<Integer> testObserver = mRxMaybeTraining
-                .positiveOrEmpty(Single.just(1).blockingGet()) //.blockingGet
+                .positiveOrEmptySingle(Single.just(1))
                 .test();
 
         testObserver.assertNoErrors();
@@ -76,7 +76,7 @@ public class RxMaybeTrainingTest {
     @Test
     public void positiveOrEmpty_negativeSingle() {
         TestObserver<Integer> testObserver = mRxMaybeTraining
-                .positiveOrEmpty(Single.just(-1).blockingGet()) //blockingGet()
+                .positiveOrEmptySingle(Single.just(-1))
                 .test();
 
         testObserver.assertNoValues();
