@@ -1,5 +1,6 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
+import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
 import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
 
 import io.reactivex.Completable;
@@ -19,7 +20,7 @@ public class RxCompletableTraining {
      * @return {@link Completable}, который вызывает {@link #havyMethod()}
      */
     public Completable callFunction() {
-        throw new NotImplementedException();
+        return Completable.fromAction(this::havyMethod);
     }
 
     /**
@@ -30,7 +31,14 @@ public class RxCompletableTraining {
      * @return {@code Completable}
      */
     public Completable completeWhenTrue(Single<Boolean> checkSingle) {
-        throw new NotImplementedException();
+        return checkSingle.flatMapCompletable(result -> {
+                    if (result) {
+                        return Completable.complete();
+                    } else {
+                        return Completable.error(new ExpectedException());
+                    }
+                }
+        );
     }
 
     /* Вспомогательные методы */
