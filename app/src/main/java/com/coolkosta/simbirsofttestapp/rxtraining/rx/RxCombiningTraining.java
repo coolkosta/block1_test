@@ -1,9 +1,5 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
-
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

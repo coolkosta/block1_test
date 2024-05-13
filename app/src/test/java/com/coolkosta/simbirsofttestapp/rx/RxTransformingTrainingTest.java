@@ -1,5 +1,13 @@
 package com.coolkosta.simbirsofttestapp.rx;
 
+import static org.mockito.Mockito.reset;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
+import com.coolkosta.simbirsofttestapp.rx.entity.Pair;
+import com.coolkosta.simbirsofttestapp.rxtraining.entity.Entity;
+import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxTransformingTraining;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -12,15 +20,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import io.reactivex.observables.GroupedObservable;
 import io.reactivex.observers.TestObserver;
-
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.mockito.Mockito.reset;
-
-import com.coolkosta.simbirsofttestapp.rx.entity.Pair;
-import com.coolkosta.simbirsofttestapp.rxtraining.entity.Entity;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxTransformingTraining;
 
 /**
  * @author Arthur Korchagin (artur.korchagin@simbirsoft.com)

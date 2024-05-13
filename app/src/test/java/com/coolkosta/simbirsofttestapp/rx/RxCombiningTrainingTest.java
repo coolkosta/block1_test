@@ -1,5 +1,14 @@
 package com.coolkosta.simbirsofttestapp.rx;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxCombiningTraining;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -13,15 +22,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.TestScheduler;
-
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxCombiningTraining;
 
 /**
  * @author Arthur Korchagin (artur.korchagin@simbirsoft.com)

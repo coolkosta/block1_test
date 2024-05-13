@@ -1,7 +1,6 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
 import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;

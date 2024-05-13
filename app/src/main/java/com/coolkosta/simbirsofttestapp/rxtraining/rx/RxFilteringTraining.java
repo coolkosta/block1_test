@@ -1,7 +1,5 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
-
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;

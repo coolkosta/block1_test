@@ -1,7 +1,5 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
-
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;

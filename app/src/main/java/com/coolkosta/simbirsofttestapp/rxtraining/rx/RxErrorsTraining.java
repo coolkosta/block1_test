@@ -1,7 +1,5 @@
 package com.coolkosta.simbirsofttestapp.rxtraining.rx;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.NotImplementedException;
-
 import io.reactivex.Observable;
 
 /**
@@ -37,6 +35,6 @@ public class RxErrorsTraining {
      * {@code fallbackObservable}
      */
     public Observable<Integer> handleErrorsWithFallbackObservable(Observable<Integer> intObservable, Observable<Integer> fallbackObservable) {
-     return intObservable.onErrorResumeNext(fallbackObservable);
+        return intObservable.onErrorResumeNext(fallbackObservable);
     }
 }

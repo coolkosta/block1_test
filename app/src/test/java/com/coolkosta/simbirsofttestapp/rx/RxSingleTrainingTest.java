@@ -1,5 +1,10 @@
 package com.coolkosta.simbirsofttestapp.rx;
 
+import static org.mockito.Mockito.reset;
+
+import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
+import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxSingleTraining;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -14,12 +19,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.TestScheduler;
-
-
-import static org.mockito.Mockito.reset;
-
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxSingleTraining;
 
 /**
  * @author Arthur Korchagin (artur.korchagin@simbirsoft.com)
