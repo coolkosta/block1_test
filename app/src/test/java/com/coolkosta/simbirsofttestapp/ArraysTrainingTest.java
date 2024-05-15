@@ -3,7 +3,6 @@ package com.coolkosta.simbirsofttestapp;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-
 import com.coolkosta.simbirsofttestapp.training.ArraysTraining;
 
 import org.junit.BeforeClass;

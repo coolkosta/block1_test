@@ -1,11 +1,11 @@
 package com.coolkosta.simbirsofttestapp;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.coolkosta.simbirsofttestapp.training.ElementaryTraining;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ElementaryTrainingTest {
 
