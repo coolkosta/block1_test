@@ -1,10 +1,12 @@
 package com.coolkosta.simbirsofttestapp.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
+import com.coolkosta.simbirsofttestapp.fragment.LoginScreenFragment
 import com.coolkosta.simbirsofttestapp.fragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
 import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
@@ -20,8 +22,9 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             bottomNavigationView.selectedItemId = R.id.help
+            bottomNavigationView.visibility = View.GONE
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HelpFragment.newInstance())
+                .replace(R.id.fragment_container, LoginScreenFragment.newInstance())
                 .commit()
         }
         bottomNavigationView.setOnItemSelectedListener { item ->

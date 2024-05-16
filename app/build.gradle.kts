@@ -85,5 +85,10 @@ dependencies {
     implementation (libs.androidx.lifecycle.livedata.ktx)
     //Fragment
     implementation (libs.androidx.fragment.ktx)
-
+    //RxJava
+    implementation (libs.rxjava)
+    //RxAndroid
+    implementation (libs.rxandroid)
+    //RxBinding
+    implementation (libs.rxbinding)
 }
