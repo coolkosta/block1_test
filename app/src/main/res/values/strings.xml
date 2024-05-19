@@ -71,4 +71,7 @@
     <string name="password">Пароль</string>
     <string name="enter_pass">Введите пароль</string>
     <string name="enter_text_btn">ВОЙТИ</string>
+    <string name="search_example_label">Например,</string>
+    <string name="search_example_text"><u>мастер-класс, помощь</u></string>
+    <string name="empty_search_list_label_text">Напишите в строке поиска название\nмероприятия или ключевые слова.</string>
 </resources>

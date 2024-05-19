@@ -20,6 +20,7 @@ appcompat = "1.6.1"
 activity = "1.8.2"
 rxandroid = "3.0.2"
 rxbinding = "4.0.0"
+rxbindingAppcompat = "4.0.0"
 rxjava = "3.1.8"
 
 [libraries]
@@ -51,6 +52,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 rxbinding = { module = "com.jakewharton.rxbinding4:rxbinding", version.ref = "rxbinding" }
+rxbinding-appcompat = { module = "com.jakewharton.rxbinding4:rxbinding-appcompat", version.ref = "rxbindingAppcompat" }
 rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
 
 [plugins]
