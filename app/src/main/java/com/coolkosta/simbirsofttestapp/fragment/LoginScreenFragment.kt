@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
-
 import androidx.fragment.app.Fragment
 import com.coolkosta.simbirsofttestapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,10 +14,13 @@ import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding4.view.clicks
 import com.jakewharton.rxbinding4.widget.textChanges
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 
 class LoginScreenFragment : Fragment() {
 
     private lateinit var toolbar: Toolbar
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,22 +48,27 @@ class LoginScreenFragment : Fragment() {
             .map { t -> (t.length >= 6) }
             .distinctUntilChanged()
         val button = view.findViewById<Button>(R.id.enter_btn)
-        val isSingUpPossible = Observable
+        val isLoginAvailable = Observable
             .combineLatest(isEmailValid, isPasswordValid) { e, p ->
                 e && p
             }
             .distinctUntilChanged()
 
-        isSingUpPossible
+        isLoginAvailable
             .subscribe { b ->
                 button.isEnabled = b
                 button.isClickable = b
             }
-            .isDisposed
+            .addTo(disposables)
 
         button.clicks()
             .subscribe { loginButtonAction() }
-            .isDisposed
+            .addTo(disposables)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 
     private fun loginButtonAction() {

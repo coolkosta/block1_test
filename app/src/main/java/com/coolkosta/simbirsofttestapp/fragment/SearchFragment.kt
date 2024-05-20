@@ -1,7 +1,6 @@
 package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,10 @@ import com.coolkosta.simbirsofttestapp.adapter.SearchResultPagerAdapter
 import com.coolkosta.simbirsofttestapp.util.Generator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : Fragment() {
@@ -24,6 +24,29 @@ class SearchFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: SearchView
     private lateinit var emptyListView: View
+    private lateinit var eventList: List<String>
+    private lateinit var nkoList: List<String>
+    private var isVisible: Boolean = true
+
+    private val disposables = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            isVisible = false
+            eventList = savedInstanceState.getStringArrayList(EVENT_STATE) as List<String>
+            nkoList = savedInstanceState.getStringArrayList(NKO_STATE) as List<String>
+        } else {
+            eventList = Generator().generateEventList()
+            nkoList = Generator().generateNkoList()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(EVENT_STATE, eventList as ArrayList<String>)
+        outState.putStringArrayList(NKO_STATE, nkoList as ArrayList<String>)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +60,10 @@ class SearchFragment : Fragment() {
         viewPager = view.findViewById(R.id.viewpager_container)
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
+        if (isVisible) {
+            emptyListView.visibility = View.VISIBLE
+        } else emptyListView.visibility = View.GONE
+
         viewPager.adapter = SearchResultPagerAdapter(this)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -61,62 +88,40 @@ class SearchFragment : Fragment() {
         if (currentFragment is SearchByEventFragment) {
             when (position) {
                 0 -> {
-                    val list = Generator().generateEventList()
-                    currentFragment.updateList(list)
-                    search(currentFragment, list)
+                    search(currentFragment, eventList)
                 }
 
                 1 -> {
-                    val list = Generator().generateNkoList()
-                    currentFragment.updateList(list)
-                    search(currentFragment, list)
+                    search(currentFragment, nkoList)
                 }
             }
         }
     }
 
     private fun search(currentFragment: SearchByEventFragment, list: List<String>) {
-        Observable.create { emitter ->
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query != null) {
-                        emitter.onNext(query)
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText != null) {
-                        emitter.onNext(newText)
-                    }
-                    return true
-                }
-
-            })
-        }.debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
+        searchView.queryTextChanges()
+            .debounce(500, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { searchText ->
-                    Log.d(TAG, "On Next: $searchText")
-                    when (searchText) {
-                        " " -> emptyListView.visibility = View.VISIBLE
-                        else -> emptyListView.visibility = View.GONE
-                    }
-                    val newList = list.filter { it.contains(searchText, ignoreCase = true) }
-                    currentFragment.updateList(newList)
-                },
-                {
-                    Log.e(TAG, "Error: $it")
-                },
-                {
-                    Log.d(TAG, "Complete")
-                }
-            ).isDisposed
+            .subscribe({ text ->
+                if (text.isNotBlank()) {
+                    emptyListView.visibility = View.GONE
+                } else emptyListView.visibility = View.VISIBLE
+                val newList = list.filter { it.contains(text, ignoreCase = true) }
+
+                currentFragment.updateList(newList)
+            }, {
+
+            }).addTo(disposables)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 
     companion object {
-        private const val TAG = "SearchFragment"
+        private const val EVENT_STATE = "Event"
+        private const val NKO_STATE = "Nko"
         fun newInstance() = SearchFragment()
     }
 }

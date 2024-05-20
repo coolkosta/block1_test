@@ -28,7 +28,7 @@ class Generator {
             "Флешмоб 'Танцуй, чтобы помочь'",
             "Квест-игра 'Путешествие добрых сердец'"
         )
-        val result = init.shuffled().take(6)
+        val result = init.shuffled()
         return result
     }
 
@@ -45,7 +45,7 @@ class Generator {
             "Фонд 'Русфонд' - акция 'Помощь детям с редкими заболеваниями'",
             "Фонд 'Вера' - акция 'Поддержка хосписов'"
         )
-        val result = init.shuffled().take(6)
+        val result = init.shuffled()
         return result
     }
 }
