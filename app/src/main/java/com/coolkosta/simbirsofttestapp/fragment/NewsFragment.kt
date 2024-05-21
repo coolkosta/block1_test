@@ -11,8 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
+import com.coolkosta.simbirsofttestapp.entity.UnreadCountEvent
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
+import com.coolkosta.simbirsofttestapp.util.RxBus
 import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
@@ -72,8 +74,14 @@ class NewsFragment : Fragment() {
         }
         recyclerView.adapter = adapter
         viewModel.eventList.observe(viewLifecycleOwner) {
+            val unreadNews = it.size
+            fetchData(unreadNews)
             adapter.submitList(it)
         }
+    }
+
+    private fun fetchData(unreadCount: Int){
+        RxBus.publish(UnreadCountEvent(unreadCount))
     }
 
     private fun openFragment(fragment: Fragment) {
