@@ -25,6 +25,7 @@ class NewsFragment : Fragment() {
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
     private val viewModel: NewsViewModel by viewModels()
+    private var unreadNews: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,18 +70,21 @@ class NewsFragment : Fragment() {
         }
 
         recyclerView = view.findViewById(R.id.recycler_view_container)
+
         adapter = NewsAdapter {
+            unreadNews -=1
+            fetchData(unreadNews)
             openFragment(EventDetailFragment.newInstance(it))
         }
         recyclerView.adapter = adapter
         viewModel.eventList.observe(viewLifecycleOwner) {
-            val unreadNews = it.size
+            unreadNews = it.size
             fetchData(unreadNews)
             adapter.submitList(it)
         }
     }
 
-    private fun fetchData(unreadCount: Int){
+    private fun fetchData(unreadCount: Int) {
         RxBus.publish(UnreadCountEvent(unreadCount))
     }
 
