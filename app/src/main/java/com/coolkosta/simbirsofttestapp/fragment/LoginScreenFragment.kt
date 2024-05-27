@@ -41,23 +41,20 @@ class LoginScreenFragment : Fragment() {
 
         val emailEditText = view.findViewById<EditText>(R.id.email_edit_text)
         val isEmailValid = emailEditText.textChanges()
-            .map { t -> (t.length >= 6) }
+            .map { t -> (t.length >= TEXT_SIZE) }
             .distinctUntilChanged()
         val passwordEditText = view.findViewById<TextInputEditText>(R.id.password_input_edit_text)
         val isPasswordValid = passwordEditText.textChanges()
-            .map { t -> (t.length >= 6) }
+            .map { t -> (t.length >= TEXT_SIZE) }
             .distinctUntilChanged()
         val button = view.findViewById<Button>(R.id.enter_btn)
-        val isLoginAvailable = Observable
-            .combineLatest(isEmailValid, isPasswordValid) { e, p ->
-                e && p
-            }
-            .distinctUntilChanged()
 
-        isLoginAvailable
+        Observable.combineLatest(isEmailValid, isPasswordValid) { e, p ->
+            e && p
+        }
+            .distinctUntilChanged()
             .subscribe { b ->
                 button.isEnabled = b
-                button.isClickable = b
             }
             .addTo(disposables)
 
@@ -72,7 +69,7 @@ class LoginScreenFragment : Fragment() {
     }
 
     private fun loginButtonAction() {
-        requireActivity().supportFragmentManager.beginTransaction()
+        parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, HelpFragment.newInstance())
             .commit()
         val navBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -80,6 +77,7 @@ class LoginScreenFragment : Fragment() {
     }
 
     companion object {
+        private const val TEXT_SIZE = 6
         fun newInstance() = LoginScreenFragment()
     }
 }

@@ -1,6 +1,7 @@
 package com.coolkosta.simbirsofttestapp.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -58,8 +59,8 @@ class MainActivity : AppCompatActivity() {
             .subscribe(
                 { event ->
                     updateUnreadCountBadge(event.unreadCount)
-                }, {
-
+                }, { ex ->
+                    Log.e(MAIN_ERROR_TAG, "onError message: ${ex.message}")
                 }).addTo(disposables)
     }
 
@@ -73,5 +74,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
+    }
+
+    companion object {
+        private const val MAIN_ERROR_TAG = "MainActivityError"
     }
 }

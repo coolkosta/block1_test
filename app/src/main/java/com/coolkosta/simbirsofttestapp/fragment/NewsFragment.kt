@@ -11,10 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.NewsAdapter
-import com.coolkosta.simbirsofttestapp.entity.UnreadCountEvent
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
 import com.coolkosta.simbirsofttestapp.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
-import com.coolkosta.simbirsofttestapp.util.RxBus
 import com.coolkosta.simbirsofttestapp.viewmodel.NewsViewModel
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
@@ -25,8 +23,6 @@ class NewsFragment : Fragment() {
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
     private val viewModel: NewsViewModel by viewModels()
-    private var unreadCount: Int = 0
-    private val readEvents: MutableList<Int> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,27 +68,13 @@ class NewsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view_container)
         adapter = NewsAdapter { event ->
-            if (!readEvents.contains(event.id)) {
-                unreadCount--
-                readEvents.add(event.id)
-                fetchUnreadCount(unreadCount)
-            }
+            viewModel.readEvent(event)
             openFragment(EventDetailFragment.newInstance(event))
         }
         recyclerView.adapter = adapter
         viewModel.eventList.observe(viewLifecycleOwner) { list ->
-            val unreadEvents = list.filter { !readEvents.contains(it.id) }
-            if (unreadEvents.isNotEmpty()) {
-                unreadCount = unreadEvents.size
-                fetchUnreadCount(unreadCount)
-            }
-
             adapter.submitList(list)
         }
-    }
-
-    private fun fetchUnreadCount(unreadCount: Int) {
-        RxBus.publish(UnreadCountEvent(unreadCount))
     }
 
     private fun openFragment(fragment: Fragment) {

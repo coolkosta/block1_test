@@ -1,6 +1,7 @@
 package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,9 +61,7 @@ class SearchFragment : Fragment() {
         viewPager = view.findViewById(R.id.viewpager_container)
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
-        if (isVisible) {
-            emptyListView.visibility = View.VISIBLE
-        } else emptyListView.visibility = View.GONE
+        emptyListView.visibility = if (isVisible) View.VISIBLE else View.GONE
 
         viewPager.adapter = SearchResultPagerAdapter(this)
 
@@ -100,17 +99,14 @@ class SearchFragment : Fragment() {
 
     private fun search(currentFragment: SearchByEventFragment, list: List<String>) {
         searchView.queryTextChanges()
-            .debounce(500, TimeUnit.MILLISECONDS)
+            .debounce(TIMEOUT, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ text ->
-                if (text.isNotBlank()) {
-                    emptyListView.visibility = View.GONE
-                } else emptyListView.visibility = View.VISIBLE
+                emptyListView.visibility = if (text.isNotBlank()) View.GONE else View.VISIBLE
                 val newList = list.filter { it.contains(text, ignoreCase = true) }
-
                 currentFragment.updateList(newList)
-            }, {
-
+            }, { ex ->
+                Log.e(SEARCH_ERROR_TAG, "onError message: ${ex.message}")
             }).addTo(disposables)
     }
 
@@ -122,6 +118,8 @@ class SearchFragment : Fragment() {
     companion object {
         private const val EVENT_STATE = "Event"
         private const val NKO_STATE = "Nko"
+        private const val SEARCH_ERROR_TAG = "SearchFragmentError"
+        private const val TIMEOUT = 500L
         fun newInstance() = SearchFragment()
     }
 }

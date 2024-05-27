@@ -7,9 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
+import com.coolkosta.simbirsofttestapp.entity.UnreadCountEvent
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
+import com.coolkosta.simbirsofttestapp.util.RxBus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -17,6 +21,7 @@ class NewsViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
+    private val disposables = CompositeDisposable()
     private val jsonHelper = JsonHelper()
     private var _eventList = MutableLiveData<List<Event>>()
     val eventList: LiveData<List<Event>> get() = _eventList
@@ -25,6 +30,9 @@ class NewsViewModel(
 
     var filterCategories: List<Int> = listOf()
     private var initList: List<Event> = listOf()
+
+    private var unreadCount: Int = 0
+    private val readEvents: MutableList<Int> = mutableListOf()
 
     init {
         getEventsAsync()
@@ -90,7 +98,9 @@ class NewsViewModel(
                 _eventList.postValue(events)
                 initList = events
                 progress.postValue(false)
-            }.isDisposed
+                unreadCount = events.size
+                fetchUnreadCount(events.size)
+            }.addTo(disposables)
     }
 
     private fun getCategoriesAsync() {
@@ -105,7 +115,19 @@ class NewsViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { categories ->
                 filterCategories = categories.map { it.id }
-            }.isDisposed
+            }.addTo(disposables)
+    }
+
+    fun readEvent(event: Event) {
+        if (!readEvents.contains(event.id)) {
+            unreadCount--
+            readEvents.add(event.id)
+            fetchUnreadCount(unreadCount)
+        }
+    }
+
+    private fun fetchUnreadCount(unreadCount: Int) {
+        RxBus.publish(UnreadCountEvent(unreadCount))
     }
 
     private fun combineObservable() {
@@ -157,14 +179,29 @@ class NewsViewModel(
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { Log.d(TAG, "combineLatest after observeOn(main) on thread: ${Thread.currentThread().name}") }
+            .doOnNext {
+                Log.d(
+                    TAG,
+                    "combineLatest after observeOn(main) on thread: ${Thread.currentThread().name}"
+                )
+            }
             .observeOn(Schedulers.computation())
-            .doOnNext { Log.d(TAG, "combineLatest after second observeOn(computation) on thread: ${Thread.currentThread().name}") }
+            .doOnNext {
+                Log.d(
+                    TAG,
+                    "combineLatest after second observeOn(computation) on thread: ${Thread.currentThread().name}"
+                )
+            }
             .subscribe({ resultMap ->
                 Log.d(TAG, "Combine result $resultMap on thread: ${Thread.currentThread().name}")
             }, { error ->
                 Log.e(TAG, "Error combining observables", error)
-            }).isDisposed
+            }).addTo(disposables)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.clear()
     }
 
     companion object {
