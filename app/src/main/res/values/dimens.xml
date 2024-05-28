@@ -9,6 +9,7 @@
     <dimen name="spacing_xxl">28dp</dimen>
     <dimen name="spacing_xxl_2">32dp</dimen>
     <dimen name="icon_size">48dp</dimen>
+    <dimen name="margin_xs">40dp</dimen>
     <dimen name="margin_s">56dp</dimen>
     <dimen name="margin_m">84dp</dimen>
     <dimen name="margin_l">136dp</dimen>

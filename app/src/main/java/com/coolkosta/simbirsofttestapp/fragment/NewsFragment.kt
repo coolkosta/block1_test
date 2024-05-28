@@ -67,12 +67,13 @@ class NewsFragment : Fragment() {
         }
 
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = NewsAdapter {
-            openFragment(EventDetailFragment.newInstance(it))
+        adapter = NewsAdapter { event ->
+            viewModel.readEvent(event)
+            openFragment(EventDetailFragment.newInstance(event))
         }
         recyclerView.adapter = adapter
-        viewModel.eventList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewModel.eventList.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
         }
     }
 

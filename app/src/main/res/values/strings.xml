@@ -58,4 +58,20 @@
     <string name="become_volunteer_text">Стать\nволонтером</string>
     <string name="professional_help_text">Проф.\nпомощь</string>
     <string name="help_money_text">Помочь\nденьгами</string>
+    <string name="authorization_label">Авторизация</string>
+    <string name="forgot_pass_text"><u>Забыли пароль?</u></string>
+    <string name="registration_label_tv"><u>Регистрация</u></string>
+    <string name="auth_social_media_text">Для участия в мероприятиях войдите\nв приложение через социальые сети</string>
+    <string name="vk">Vk</string>
+    <string name="facebook">Facebook</string>
+    <string name="ok">OK</string>
+    <string name="auth_app_text">Или авторизуйтесь через приложение</string>
+    <string name="e_mail">E-mail</string>
+    <string name="enter_email_text">Введите e-mail</string>
+    <string name="password">Пароль</string>
+    <string name="enter_pass">Введите пароль</string>
+    <string name="enter_text_btn">ВОЙТИ</string>
+    <string name="search_example_label">Например,</string>
+    <string name="search_example_text"><u>мастер-класс, помощь</u></string>
+    <string name="empty_search_list_label_text">Напишите в строке поиска название\nмероприятия или ключевые слова.</string>
 </resources>
