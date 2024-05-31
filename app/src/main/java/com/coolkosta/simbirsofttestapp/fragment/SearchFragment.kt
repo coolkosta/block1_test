@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.SearchResultPagerAdapter
-import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.simbirsofttestapp.viewmodel.SearchFragmentViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
@@ -25,29 +26,11 @@ class SearchFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: SearchView
     private lateinit var emptyListView: View
-    private lateinit var eventList: List<String>
-    private lateinit var nkoList: List<String>
     private var isVisible: Boolean = true
 
     private val disposables = CompositeDisposable()
+    private val viewModel: SearchFragmentViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            isVisible = false
-            eventList = savedInstanceState.getStringArrayList(EVENT_STATE) as List<String>
-            nkoList = savedInstanceState.getStringArrayList(NKO_STATE) as List<String>
-        } else {
-            eventList = Generator().generateEventList()
-            nkoList = Generator().generateNkoList()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putStringArrayList(EVENT_STATE, eventList as ArrayList<String>)
-        outState.putStringArrayList(NKO_STATE, nkoList as ArrayList<String>)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,11 +70,18 @@ class SearchFragment : Fragment() {
         if (currentFragment is SearchByEventFragment) {
             when (position) {
                 0 -> {
-                    search(currentFragment, eventList)
+                    viewModel.getEventList().observe(viewLifecycleOwner) { eventList ->
+                        //search(currentFragment, eventList)
+                        anotherSearch(currentFragment, eventList)
+                    }
+
                 }
 
                 1 -> {
-                    search(currentFragment, nkoList)
+                    viewModel.getNkoList().observe(viewLifecycleOwner) { nkoList ->
+                        //search(currentFragment, nkoList)
+                        anotherSearch(currentFragment, nkoList)
+                    }
                 }
             }
         }
@@ -108,6 +98,25 @@ class SearchFragment : Fragment() {
             }, { ex ->
                 Log.e(SEARCH_ERROR_TAG, "onError message: ${ex.message}")
             }).addTo(disposables)
+    }
+
+    private fun anotherSearch(currentFragment: SearchByEventFragment, list: List<String>) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    viewModel.search(it, list)
+                    emptyListView.visibility = if (it.isNotBlank()) View.GONE else View.VISIBLE
+                }
+                return false
+            }
+        })
+        viewModel.getSearchResult().observe(viewLifecycleOwner) {
+            currentFragment.updateList(it)
+        }
     }
 
     override fun onDestroy() {
