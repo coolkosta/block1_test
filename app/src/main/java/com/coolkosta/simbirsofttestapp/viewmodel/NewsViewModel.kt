@@ -7,9 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
-import com.coolkosta.simbirsofttestapp.entity.UnreadCountEvent
+import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
-import com.coolkosta.simbirsofttestapp.util.RxBus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -127,7 +126,7 @@ class NewsViewModel(
     }
 
     private fun fetchUnreadCount(unreadCount: Int) {
-        RxBus.publish(UnreadCountEvent(unreadCount))
+        EventFlow.publish(unreadCount)
     }
 
     private fun combineObservable() {
