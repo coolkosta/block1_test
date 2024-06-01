@@ -1,5 +1,6 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SearchFragmentByEventViewModel : ViewModel() {
+class SearchByEventFragmentViewModel : ViewModel() {
 
     private val _eventList = MutableLiveData<List<String>>()
     private val _nkoList = MutableLiveData<List<String>>()
@@ -34,10 +35,19 @@ class SearchFragmentByEventViewModel : ViewModel() {
         dispatcher: CoroutineDispatcher = Dispatchers.IO
     ) {
         viewModelScope.launch(dispatcher) {
-            delay(500)
-            val newList = list.filter { it.contains(query, ignoreCase = true) }
-            _searchResult.postValue(newList)
+            try {
+                delay(500)
+                val newList = list.filter { it.contains(query, ignoreCase = true) }
+                _searchResult.postValue(newList)
+            } catch (e: Exception) {
+                Log.e(EXCEPTION_TAG, "An error message: ${e.message}")
+                _searchResult.postValue(emptyList())
+            }
         }
+    }
+
+    companion object {
+        private const val EXCEPTION_TAG = "Search_by_event_fragment"
     }
 
 }

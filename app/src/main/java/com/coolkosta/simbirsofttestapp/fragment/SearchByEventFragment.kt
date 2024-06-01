@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.SearchResultAdapter
 import com.coolkosta.simbirsofttestapp.util.SearchCategory
-import com.coolkosta.simbirsofttestapp.viewmodel.SearchFragmentByEventViewModel
+import com.coolkosta.simbirsofttestapp.viewmodel.SearchByEventFragmentViewModel
 
 class SearchByEventFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchResultAdapter
-    private val viewModel: SearchFragmentByEventViewModel by viewModels()
+    private val viewModel: SearchByEventFragmentViewModel by viewModels()
     private var list: List<String> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
