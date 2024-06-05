@@ -1,47 +1,54 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.simbirsofttestapp.util.SearchCategory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchByEventFragmentViewModel : ViewModel() {
 
-    private val _eventList = MutableLiveData<List<String>>()
-    private val _nkoList = MutableLiveData<List<String>>()
-    private val _searchResult = MutableLiveData<List<String>>()
 
-    val eventList get() = _eventList.value
-    val nkoList get() = _nkoList.value
-    val searchResult: LiveData<List<String>> get() = _searchResult
+    private val _initList = MutableStateFlow<List<String>>(emptyList())
+    private val _searchResult = MutableStateFlow<List<String>>(emptyList())
 
-    fun generateEventList() {
-        _eventList.value = Generator().generateEventList()
-    }
+    val initList get() = _initList.value
+    val searchResult = _searchResult.asStateFlow()
 
-    fun generateNkoList() {
-        _nkoList.value = Generator().generateNkoList()
+    fun getInitList(category: SearchCategory) {
+        when (category) {
+            SearchCategory.EVENTS -> {
+                _initList.value = Generator().generateEventList()
+            }
+
+            SearchCategory.NKO -> {
+                _initList.value = Generator().generateNkoList()
+            }
+        }
     }
 
     fun search(
         query: String,
         list: List<String>,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO
+        dispatcher: CoroutineDispatcher = Dispatchers.Default
     ) {
-        viewModelScope.launch(dispatcher) {
-            try {
+        val coroutineException = CoroutineExceptionHandler.createCoroutineExceptionHandler(
+            EXCEPTION_TAG
+        ) {
+            _searchResult.value = emptyList()
+        }
+        viewModelScope.launch(coroutineException) {
+            withContext(dispatcher) {
                 delay(500)
                 val newList = list.filter { it.contains(query, ignoreCase = true) }
-                _searchResult.postValue(newList)
-            } catch (e: Exception) {
-                Log.e(EXCEPTION_TAG, "An error message: ${e.message}")
-                _searchResult.postValue(emptyList())
+                _searchResult.value = newList
             }
         }
     }
@@ -49,5 +56,4 @@ class SearchByEventFragmentViewModel : ViewModel() {
     companion object {
         private const val EXCEPTION_TAG = "Search_by_event_fragment"
     }
-
 }

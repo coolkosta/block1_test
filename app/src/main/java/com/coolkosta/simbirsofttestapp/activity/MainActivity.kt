@@ -1,29 +1,29 @@
 package com.coolkosta.simbirsofttestapp.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
 import com.coolkosta.simbirsofttestapp.fragment.LoginScreenFragment
 import com.coolkosta.simbirsofttestapp.fragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
 import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
+import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private val disposables = CompositeDisposable()
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -53,18 +53,19 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        getUnreadCountEvent(dispatcher)
+        getUnreadCountEvent()
     }
 
-    private fun getUnreadCountEvent(dispatcher: CoroutineDispatcher) {
-        lifecycleScope.launch(dispatcher) {
-            try {
-                EventFlow.listen()
-                    .collect { count ->
-                        updateUnreadCountBadge(count)
+    private fun getUnreadCountEvent() {
+        val coroutineException =
+            CoroutineExceptionHandler.createCoroutineExceptionHandler(EXCEPTION_TAG) {}
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                withContext(coroutineException) {
+                    EventFlow.getEvents().collect {
+                        updateUnreadCountBadge(it)
                     }
-            } catch (e: Exception) {
-                Log.e(EXCEPTION_TAG, "An error message: ${e.message}")
+                }
             }
         }
     }

@@ -19,7 +19,6 @@ class SearchFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var emptyListView: View
     private var isVisible: Boolean = true
-    private var queryWord: String = ""
 
 
     override fun onCreateView(
@@ -36,7 +35,7 @@ class SearchFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
         emptyListView.visibility = if (isVisible) View.VISIBLE else View.GONE
-
+        viewPager.offscreenPageLimit = 2
         viewPager.adapter = SearchResultPagerAdapter(this)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -48,15 +47,6 @@ class SearchFragment : Fragment() {
         }.attach()
 
         queryTextListener()
-
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (queryWord.isNotBlank()) {
-                    setQueryText(queryWord)
-                }
-            }
-        })
     }
 
     private fun setQueryText(query: String) {
@@ -79,9 +69,9 @@ class SearchFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let {
-                    emptyListView.visibility = if (it.isNotBlank()) View.GONE else View.VISIBLE
+                    emptyListView.visibility =
+                        if (it.isNotBlank()) View.GONE else View.VISIBLE
                     setQueryText(it)
-                    queryWord = it
                 }
                 return false
             }
