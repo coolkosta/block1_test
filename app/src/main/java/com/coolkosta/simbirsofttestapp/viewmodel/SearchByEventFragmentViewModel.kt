@@ -46,7 +46,7 @@ class SearchByEventFragmentViewModel : ViewModel() {
         }
         viewModelScope.launch(coroutineException) {
             withContext(dispatcher) {
-                delay(500)
+                delay(TIMEOUT)
                 val newList = list.filter { it.contains(query, ignoreCase = true) }
                 _searchResult.value = newList
             }
@@ -54,6 +54,7 @@ class SearchByEventFragmentViewModel : ViewModel() {
     }
 
     companion object {
+        private const val TIMEOUT = 500L
         private const val EXCEPTION_TAG = "Search_by_event_fragment"
     }
 }

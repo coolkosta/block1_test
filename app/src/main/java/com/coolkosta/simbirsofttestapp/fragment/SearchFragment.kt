@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.SearchResultPagerAdapter
+import com.coolkosta.simbirsofttestapp.viewmodel.SearchFragmentViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
@@ -18,8 +24,7 @@ class SearchFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: SearchView
     private lateinit var emptyListView: View
-    private var isVisible: Boolean = true
-
+    private val viewModel: SearchFragmentViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +39,6 @@ class SearchFragment : Fragment() {
         viewPager = view.findViewById(R.id.viewpager_container)
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
-        emptyListView.visibility = if (isVisible) View.VISIBLE else View.GONE
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = SearchResultPagerAdapter(this)
 
@@ -45,8 +49,15 @@ class SearchFragment : Fragment() {
                 else -> null
             }
         }.attach()
-
         queryTextListener()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchText.collect {
+                    emptyListView.visibility =
+                        if (it.isNotBlank()) View.GONE else View.VISIBLE
+                }
+            }
+        }
     }
 
     private fun setQueryText(query: String) {
@@ -68,10 +79,9 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    emptyListView.visibility =
-                        if (it.isNotBlank()) View.GONE else View.VISIBLE
-                    setQueryText(it)
+                newText?.let { text ->
+                    viewModel.onSearchViewTextChanged(text)
+                    setQueryText(text)
                 }
                 return false
             }
