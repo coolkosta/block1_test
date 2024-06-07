@@ -4,13 +4,13 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineExceptionHandler
 
 object CoroutineExceptionHandler {
-    fun createCoroutineExceptionHandler(
+    fun create(
         tag: String,
-        onError: (Throwable) -> Unit
+        onError: () -> Unit
     ): CoroutineExceptionHandler {
         return CoroutineExceptionHandler { _, exception ->
             Log.e(tag, "CoroutineExceptionHandler got $exception")
-            onError(exception)
+            onError()
         }
     }
 }

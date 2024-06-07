@@ -13,13 +13,11 @@ import com.coolkosta.simbirsofttestapp.fragment.LoginScreenFragment
 import com.coolkosta.simbirsofttestapp.fragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
 import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
-import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -57,14 +55,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getUnreadCountEvent() {
-        val coroutineException =
-            CoroutineExceptionHandler.createCoroutineExceptionHandler(EXCEPTION_TAG) {}
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                withContext(coroutineException) {
-                    EventFlow.getEvents().collect {
-                        updateUnreadCountBadge(it)
-                    }
+                EventFlow.getEvents().collect {
+                    updateUnreadCountBadge(it)
                 }
             }
         }
@@ -79,9 +73,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
-    }
-
-    companion object {
-        private const val EXCEPTION_TAG = "Main_activity_error_tag"
     }
 }

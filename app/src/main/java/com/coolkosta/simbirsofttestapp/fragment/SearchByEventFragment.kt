@@ -26,14 +26,12 @@ class SearchByEventFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            val category = BundleCompat.getSerializable(
-                requireArguments(),
-                SEARCH_CATEGORY_KEY,
-                SearchCategory::class.java
-            ) as SearchCategory
-            viewModel.getInitList(category)
-        }
+        val category = BundleCompat.getSerializable(
+            requireArguments(),
+            SEARCH_CATEGORY_KEY,
+            SearchCategory::class.java
+        ) as SearchCategory
+        viewModel.setCategory(category)
     }
 
     override fun onCreateView(
@@ -46,7 +44,7 @@ class SearchByEventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = SearchResultAdapter(viewModel.initList)
+        adapter = SearchResultAdapter()
         recyclerView.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -59,7 +57,7 @@ class SearchByEventFragment : Fragment() {
     }
 
     fun updateSearchQuery(query: String) {
-        viewModel.search(query, viewModel.initList)
+        viewModel.onSearchQueryChanged(query)
     }
 
     companion object {

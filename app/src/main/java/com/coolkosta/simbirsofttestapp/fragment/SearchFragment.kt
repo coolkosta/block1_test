@@ -26,6 +26,7 @@ class SearchFragment : Fragment() {
     private lateinit var emptyListView: View
     private val viewModel: SearchFragmentViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -53,8 +54,8 @@ class SearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.searchText.collect {
-                    emptyListView.visibility =
-                        if (it.isNotBlank()) View.GONE else View.VISIBLE
+                    emptyListView.visibility = if (it.isNotBlank()) View.GONE else View.VISIBLE
+                    setQueryText(it)
                 }
             }
         }
@@ -81,7 +82,6 @@ class SearchFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { text ->
                     viewModel.onSearchViewTextChanged(text)
-                    setQueryText(text)
                 }
                 return false
             }

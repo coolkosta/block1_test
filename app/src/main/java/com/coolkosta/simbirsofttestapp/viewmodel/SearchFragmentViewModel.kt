@@ -1,10 +1,13 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 class SearchFragmentViewModel : ViewModel() {
 
@@ -14,9 +17,12 @@ class SearchFragmentViewModel : ViewModel() {
     val searchText = _searchText
         .asStateFlow()
         .debounce(TIMEOUT)
+        .distinctUntilChanged()
 
     fun onSearchViewTextChanged(text: String) {
-        _searchText.value = text
+        viewModelScope.launch {
+            _searchText.value = text
+        }
     }
 
     companion object {

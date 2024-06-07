@@ -1,26 +1,27 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
+import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class NewsViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
-    private val disposables = CompositeDisposable()
     private val jsonHelper = JsonHelper()
     private var _eventList = MutableLiveData<List<Event>>()
     val eventList: LiveData<List<Event>> get() = _eventList
@@ -34,26 +35,52 @@ class NewsViewModel(
     private val readEvents: MutableList<Int> = mutableListOf()
 
     init {
-        getEventsAsync()
-        getCategoriesAsync()
-        combineObservable()
+        fetchData()
     }
 
-    private fun getEventsObservable(): Observable<List<Event>> {
-        return Observable.fromCallable {
-            Thread.sleep(5000)
+    private suspend fun getEvents(): List<Event> {
+        return withContext(Dispatchers.IO) {
+            delay(TIMEOUT)
             getApplication<Application>().assets.open("events.json").use {
                 jsonHelper.getEventsFromJson(it)
             }
         }
     }
 
-    private fun getCategoriesObservable(): Observable<List<EventCategory>> {
-        return Observable.fromCallable {
-            Thread.sleep(5000)
+    private suspend fun getCategories(): List<EventCategory> {
+        return withContext(Dispatchers.IO) {
+            delay(TIMEOUT)
             getApplication<Application>().assets.open("categories.json").use {
                 jsonHelper.getCategoryFromJson(it)
             }
+        }
+    }
+
+    private fun fetchData() {
+        val coroutineException = CoroutineExceptionHandler.create(EXCEPTION_TAG) {
+            _eventList.value = emptyList()
+            initList = emptyList()
+            progress.value = false
+            unreadCount = 0
+            fetchUnreadCount(0)
+            filterCategories = emptyList()
+        }
+        viewModelScope.launch(coroutineException) {
+            val deferreds = listOf(
+                async {
+                    val eventList = getEvents()
+                    _eventList.value = eventList
+                    initList = eventList
+                    unreadCount = eventList.size
+                    fetchUnreadCount(eventList.size)
+                },
+                async {
+                    val categoryList = getCategories()
+                    filterCategories = categoryList.map { it.id }
+                }
+            )
+            deferreds.awaitAll()
+            progress.value = false
         }
     }
 
@@ -70,53 +97,6 @@ class NewsViewModel(
         }
     }
 
-    private fun getEventsAsync() {
-        getEventsObservable()
-            .subscribeOn(Schedulers.io())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "Events subscribeOn(io): ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(Schedulers.computation())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "Events observeOn(computation): ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "Events observeOn(mainThread): ${Thread.currentThread().name}"
-                )
-            }
-            .subscribe { events ->
-                _eventList.postValue(events)
-                initList = events
-                progress.postValue(false)
-                unreadCount = events.size
-                fetchUnreadCount(events.size)
-            }.addTo(disposables)
-    }
-
-    private fun getCategoriesAsync() {
-        getCategoriesObservable()
-            .subscribeOn(Schedulers.newThread())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "Categories subscribeOn(newThread): ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { categories ->
-                filterCategories = categories.map { it.id }
-            }.addTo(disposables)
-    }
-
     fun readEvent(event: Event) {
         if (!readEvents.contains(event.id)) {
             unreadCount--
@@ -129,82 +109,9 @@ class NewsViewModel(
         EventFlow.publish(unreadCount)
     }
 
-    private fun combineObservable() {
-        val eventsObservable = getEventsObservable()
-            .subscribeOn(Schedulers.io())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "eventsObservable on thread: ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(Schedulers.computation())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "eventsObservable after observeOn on thread: ${Thread.currentThread().name}"
-                )
-            }
-
-        val categoriesObservable = getCategoriesObservable()
-            .subscribeOn(Schedulers.io())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "categoriesObservable on thread: ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(Schedulers.computation())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "categoriesObservable after observeOn on thread: ${Thread.currentThread().name}"
-                )
-            }
-
-        Observable.combineLatest(eventsObservable, categoriesObservable) { events, categories ->
-            val categoryMap = categories.associateBy { it.id }
-            val resultMap = mutableMapOf<String, List<String>>()
-
-            events.forEach { event ->
-                event.categoryIds.forEach { categoryId ->
-                    categoryMap[categoryId]?.let { category ->
-                        val foundationList = resultMap.getOrPut(category.title) { mutableListOf() }
-                        (foundationList as MutableList).add(event.foundation)
-                    }
-                }
-            }
-            resultMap
-        }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "combineLatest after observeOn(main) on thread: ${Thread.currentThread().name}"
-                )
-            }
-            .observeOn(Schedulers.computation())
-            .doOnNext {
-                Log.d(
-                    TAG,
-                    "combineLatest after second observeOn(computation) on thread: ${Thread.currentThread().name}"
-                )
-            }
-            .subscribe({ resultMap ->
-                Log.d(TAG, "Combine result $resultMap on thread: ${Thread.currentThread().name}")
-            }, { error ->
-                Log.e(TAG, "Error combining observables", error)
-            }).addTo(disposables)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposables.clear()
-    }
-
     companion object {
-        private const val TAG = "NewsViewModel"
+        private const val TIMEOUT = 5000L
+        private const val EXCEPTION_TAG = "NewsViewModel"
     }
 }
 
