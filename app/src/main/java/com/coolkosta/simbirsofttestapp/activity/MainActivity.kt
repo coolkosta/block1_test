@@ -1,23 +1,23 @@
 package com.coolkosta.simbirsofttestapp.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.entity.UnreadCountEvent
 import com.coolkosta.simbirsofttestapp.fragment.HelpFragment
 import com.coolkosta.simbirsofttestapp.fragment.LoginScreenFragment
 import com.coolkosta.simbirsofttestapp.fragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.fragment.ProfileFragment
 import com.coolkosta.simbirsofttestapp.fragment.SearchFragment
-import com.coolkosta.simbirsofttestapp.util.RxBus
+import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -51,21 +51,20 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        subscribeToUnreadCountEvent()
+        getUnreadCountEvent()
     }
 
-    private fun subscribeToUnreadCountEvent() {
-        RxBus.listen(UnreadCountEvent::class.java).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { event ->
-                    updateUnreadCountBadge(event.unreadCount)
-                }, { ex ->
-                    Log.e(MAIN_ERROR_TAG, "onError message: ${ex.message}")
-                }).addTo(disposables)
+    private fun getUnreadCountEvent() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                EventFlow.getEvents().collect {
+                    updateUnreadCountBadge(it)
+                }
+            }
+        }
     }
 
     private fun updateUnreadCountBadge(unreadCount: Int) {
-
         val badge: BadgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.news)
         badge.number = unreadCount
         badge.isVisible = unreadCount > 0
@@ -74,9 +73,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
-    }
-
-    companion object {
-        private const val MAIN_ERROR_TAG = "MainActivityError"
     }
 }

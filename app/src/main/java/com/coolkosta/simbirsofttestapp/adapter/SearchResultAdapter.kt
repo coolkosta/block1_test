@@ -8,15 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 
-class SearchResultAdapter(private var items: List<String>) :
-    RecyclerView.Adapter<SearchResultAdapter.SearchItemViewHolder>() {
-
+class SearchResultAdapter : RecyclerView.Adapter<SearchResultAdapter.SearchItemViewHolder>() {
+    private var items = emptyList<String>()
     fun updateList(newItems: List<String>) {
-
         val diffUtilCallback = DiffUtilCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
-
-        this.items = newItems
+        items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
 

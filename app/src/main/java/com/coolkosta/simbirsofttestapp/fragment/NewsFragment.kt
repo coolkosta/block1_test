@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -58,12 +59,9 @@ class NewsFragment : Fragment() {
         val progress: CircularProgressIndicator = view.findViewById(R.id.progress_circular)
 
         viewModel.progress.observe(viewLifecycleOwner) {
-            if (it) {
-                progress.visibility = View.VISIBLE
-            } else {
-                progress.visibility = View.GONE
-            }
+            progress.isVisible = it
             toolBar.menu.findItem(R.id.action_filter).isVisible = !it
+            recyclerView.isVisible = !it
         }
 
         recyclerView = view.findViewById(R.id.recycler_view_container)

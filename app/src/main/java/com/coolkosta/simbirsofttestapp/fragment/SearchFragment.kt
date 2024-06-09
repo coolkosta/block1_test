@@ -1,23 +1,22 @@
 package com.coolkosta.simbirsofttestapp.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.adapter.SearchResultPagerAdapter
-import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.simbirsofttestapp.viewmodel.SearchFragmentViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.jakewharton.rxbinding4.appcompat.queryTextChanges
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
@@ -25,29 +24,8 @@ class SearchFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: SearchView
     private lateinit var emptyListView: View
-    private lateinit var eventList: List<String>
-    private lateinit var nkoList: List<String>
-    private var isVisible: Boolean = true
+    private val viewModel: SearchFragmentViewModel by viewModels()
 
-    private val disposables = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            isVisible = false
-            eventList = savedInstanceState.getStringArrayList(EVENT_STATE) as List<String>
-            nkoList = savedInstanceState.getStringArrayList(NKO_STATE) as List<String>
-        } else {
-            eventList = Generator().generateEventList()
-            nkoList = Generator().generateNkoList()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putStringArrayList(EVENT_STATE, eventList as ArrayList<String>)
-        outState.putStringArrayList(NKO_STATE, nkoList as ArrayList<String>)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,11 +36,11 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        searchView = view.findViewById(R.id.search_view)
         viewPager = view.findViewById(R.id.viewpager_container)
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
-        emptyListView.visibility = if (isVisible) View.VISIBLE else View.GONE
-
+        viewPager.offscreenPageLimit = 2
         viewPager.adapter = SearchResultPagerAdapter(this)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -72,54 +50,45 @@ class SearchFragment : Fragment() {
                 else -> null
             }
         }.attach()
-
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                updateListForPosition(position)
-            }
-        })
-        searchView = view.findViewById(R.id.search_view)
-    }
-
-    private fun updateListForPosition(position: Int) {
-        val currentFragment = childFragmentManager.findFragmentByTag("f$position")
-        if (currentFragment is SearchByEventFragment) {
-            when (position) {
-                0 -> {
-                    search(currentFragment, eventList)
-                }
-
-                1 -> {
-                    search(currentFragment, nkoList)
+        queryTextListener()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchText.collect {
+                    emptyListView.visibility = if (it.isNotBlank()) View.GONE else View.VISIBLE
+                    setQueryText(it)
                 }
             }
         }
     }
 
-    private fun search(currentFragment: SearchByEventFragment, list: List<String>) {
-        searchView.queryTextChanges()
-            .debounce(TIMEOUT, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ text ->
-                emptyListView.visibility = if (text.isNotBlank()) View.GONE else View.VISIBLE
-                val newList = list.filter { it.contains(text, ignoreCase = true) }
-                currentFragment.updateList(newList)
-            }, { ex ->
-                Log.e(SEARCH_ERROR_TAG, "onError message: ${ex.message}")
-            }).addTo(disposables)
+    private fun setQueryText(query: String) {
+        viewPager.adapter?.itemCount?.let { itemCount ->
+            for (position in 0..itemCount) {
+                childFragmentManager.findFragmentByTag("f$position").let { fragment ->
+                    if (fragment is SearchByEventFragment) {
+                        fragment.updateSearchQuery(query)
+                    }
+                }
+            }
+        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
+    private fun queryTextListener() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { text ->
+                    viewModel.onSearchViewTextChanged(text)
+                }
+                return false
+            }
+        })
     }
 
     companion object {
-        private const val EVENT_STATE = "Event"
-        private const val NKO_STATE = "Nko"
-        private const val SEARCH_ERROR_TAG = "SearchFragmentError"
-        private const val TIMEOUT = 500L
         fun newInstance() = SearchFragment()
     }
 }
