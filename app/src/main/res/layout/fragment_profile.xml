@@ -139,11 +139,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/ic_friend_1"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_marginStart="@dimen/spacing_l"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/avatar_3" />
+                    android:contentDescription="@string/icon" />
 
                 <TextView
                     style="@style/TextStyle8"
@@ -162,11 +162,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/ic_friend_2"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_marginStart="@dimen/spacing_l"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/avatar_2" />
+                    android:contentDescription="@string/icon" />
 
                 <TextView
                     style="@style/TextStyle8"
@@ -185,11 +185,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/ic_friend_3"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_marginStart="@dimen/spacing_l"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/avatar_1" />
+                    android:contentDescription="@string/icon" />
 
                 <TextView
                     style="@style/TextStyle8"

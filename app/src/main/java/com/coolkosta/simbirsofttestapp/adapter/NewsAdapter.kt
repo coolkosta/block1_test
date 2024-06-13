@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.util.ImageResource
@@ -58,8 +60,25 @@ class NewsAdapter(
         fun bind(item: Event) {
             title.text = item.title
             eventDescription.text = item.description
-            val imageResource = ImageResource.from(item.imageName)
-            imageView.setImageResource(imageResource.resourceId)
+            when (val imageResource = ImageResource.from(item.imageName)) {
+                ImageResource.DEFAULT_IMAGE -> {
+                    Glide
+                        .with(itemView.context)
+                        .load(item.imageName)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(imageView)
+                }
+
+                else -> {
+                    Glide
+                        .with(itemView.context)
+                        .load(imageResource.resourceId)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(imageView)
+                }
+            }
 
             val today: LocalDate = Clock.System.todayAt(TimeZone.currentSystemDefault())
             val eventDay: LocalDate = LocalDate.parse(item.date)
