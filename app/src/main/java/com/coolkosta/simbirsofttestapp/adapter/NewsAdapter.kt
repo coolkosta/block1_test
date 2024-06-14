@@ -65,8 +65,8 @@ class NewsAdapter(
                     Glide
                         .with(itemView.context)
                         .load(item.imageName)
+                        .placeholder(R.drawable.ic_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
                         .into(imageView)
                 }
 
@@ -74,8 +74,8 @@ class NewsAdapter(
                     Glide
                         .with(itemView.context)
                         .load(imageResource.resourceId)
+                        .placeholder(R.drawable.ic_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
                         .into(imageView)
                 }
             }
