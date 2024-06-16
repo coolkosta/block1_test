@@ -1,21 +1,26 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.coolkosta.simbirsofttestapp.api.ApiHelper
+import com.coolkosta.simbirsofttestapp.api.ApiHelperImpl
 import com.coolkosta.simbirsofttestapp.api.RetrofitProvider
 import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.coolkosta.simbirsofttestapp.util.CategoryMapper
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.EventMapper
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NewsViewModel(
     application: Application,
@@ -33,75 +38,73 @@ class NewsViewModel(
     private var unreadCount: Int = 0
     private val readEvents: MutableList<Int> = mutableListOf()
 
-    private val disposables = CompositeDisposable()
+    private val apiHelper: ApiHelper = ApiHelperImpl(RetrofitProvider.apiService)
 
     init {
-        getCategories()
-        getEvents()
+        fetchEvents()
+        fetchCategories()
     }
 
-    private fun getEvents() {
-        RetrofitProvider.eventsApi.getEvents()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { remoteEvents ->
-                remoteEvents.map {
-                    EventMapper.fromRemoteEventToEvent(it)
-                }
+    private suspend fun getLocalEvents(): List<Event> {
+        return withContext(Dispatchers.IO) {
+            delay(TIMEOUT)
+            getApplication<Application>().assets.open("events.json").use {
+                jsonHelper.getEventsFromJson(it)
             }
-            .onErrorResumeNext {
-                Observable.fromCallable {
-                    Thread.sleep(TIMEOUT)
-                    getApplication<Application>().assets.open("events.json").use {
-                        jsonHelper.getEventsFromJson(it)
+        }
+    }
+
+    private suspend fun getLocalCategories(): List<EventCategory> {
+        return withContext(Dispatchers.IO) {
+            delay(TIMEOUT)
+            getApplication<Application>().assets.open("categories.json").use {
+                jsonHelper.getCategoryFromJson(it)
+            }
+        }
+    }
+
+    private fun fetchEvents() {
+        viewModelScope.launch {
+            apiHelper.getEvents()
+                .flowOn(Dispatchers.IO)
+                .map { remoteEvent ->
+                    remoteEvent.map {
+                        EventMapper.fromRemoteEventToEvent(it)
                     }
                 }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            }
-            .subscribe(
-                { eventList ->
+                .catch {
+                    val eventList = getLocalEvents()
                     _eventList.value = eventList
                     initList = eventList
                     unreadCount = eventList.size
                     fetchUnreadCount(eventList.size)
                     progress.value = false
-                },
-                { error ->
-                    Log.e(EXCEPTION_TAG, "Error events observable", error)
                 }
-            )
-            .addTo(disposables)
+                .collect { eventList ->
+                    _eventList.value = eventList
+                    initList = eventList
+                    unreadCount = eventList.size
+                    fetchUnreadCount(eventList.size)
+                    progress.value = false
+                }
+        }
     }
 
-    private fun getCategories() {
-        RetrofitProvider.categoriesApi.getCategories()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { remoteCategories ->
-                remoteCategories.map {
-                    CategoryMapper.fromCategoryToEventCategory(it.value)
+    private fun fetchCategories() {
+        viewModelScope.launch {
+            apiHelper.getCategories()
+                .flowOn(Dispatchers.IO)
+                .map { remoteCategories ->
+                    remoteCategories.map { CategoryMapper.fromCategoryToEventCategory(it.value) }
                 }
-            }
-            .onErrorResumeNext {
-                Observable.fromCallable {
-                    Thread.sleep(TIMEOUT)
-                    getApplication<Application>().assets.open("categories.json").use {
-                        jsonHelper.getCategoryFromJson(it)
-                    }
-                }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            }
-            .subscribe(
-                { categories ->
+                .catch {
+                    val categories = getLocalCategories()
                     filterCategories = categories.map { it.id }
-                },
-                { error ->
-                    Log.e(EXCEPTION_TAG, "Error categories observable", error)
                 }
-            )
-            .addTo(disposables)
+                .collect { categoryList ->
+                    filterCategories = categoryList.map { it.id }
+                }
+        }
     }
 
     fun onCategoriesChanged(categories: List<Int>) {
@@ -129,14 +132,8 @@ class NewsViewModel(
         EventFlow.publish(unreadCount)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposables.clear()
-    }
-
     companion object {
         private const val TIMEOUT = 5000L
-        private const val EXCEPTION_TAG = "NewsViewModel"
     }
 }
 
