@@ -16,9 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.coolkosta.simbirsofttestapp.R
 
 class ProfileFragment : Fragment() {
@@ -79,23 +77,6 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         imageView = view.findViewById(R.id.profile_iv)
         imageView.setOnClickListener { showChooseDialog() }
-
-        view.findViewById<ImageView>(R.id.ic_friend_1).apply {
-            loadIcon(R.drawable.avatar_3, this)
-        }
-        view.findViewById<ImageView>(R.id.ic_friend_2).apply {
-            loadIcon(R.drawable.avatar_2, this)
-        }
-        view.findViewById<ImageView>(R.id.ic_friend_3).apply {
-            loadIcon(R.drawable.avatar_1, this)
-        }
-    }
-
-    private fun loadIcon(@DrawableRes drawableRes: Int, view: ImageView) {
-        Glide
-            .with(requireContext())
-            .load(drawableRes)
-            .into(view)
     }
 
     private fun showChooseDialog() {

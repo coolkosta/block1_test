@@ -7,12 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.coolkosta.simbirsofttestapp.api.RetrofitProvider
 import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventCategory
 import com.coolkosta.simbirsofttestapp.util.CategoryMapper
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.EventMapper
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -40,25 +41,27 @@ class NewsViewModel(
         getEvents()
     }
 
+    private fun getLocalEvents(): Single<List<Event>> {
+        return Single.fromCallable {
+            Thread.sleep(TIMEOUT)
+            getApplication<Application>().assets.open("events.json").use {
+                jsonHelper.getEventsFromJson(it)
+            }
+        }
+    }
+
     private fun getEvents() {
         RetrofitProvider.eventsApi.getEvents()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map { remoteEvents ->
                 remoteEvents.map {
                     EventMapper.fromRemoteEventToEvent(it)
                 }
             }
             .onErrorResumeNext {
-                Observable.fromCallable {
-                    Thread.sleep(TIMEOUT)
-                    getApplication<Application>().assets.open("events.json").use {
-                        jsonHelper.getEventsFromJson(it)
-                    }
-                }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                getLocalEvents()
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { eventList ->
                     _eventList.value = eventList
@@ -74,25 +77,27 @@ class NewsViewModel(
             .addTo(disposables)
     }
 
+    private fun getLocalCategories(): Single<List<EventCategory>> {
+        return Single.fromCallable {
+            Thread.sleep(TIMEOUT)
+            getApplication<Application>().assets.open("categories.json").use {
+                jsonHelper.getCategoryFromJson(it)
+            }
+        }
+    }
+
     private fun getCategories() {
         RetrofitProvider.categoriesApi.getCategories()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map { remoteCategories ->
                 remoteCategories.map {
                     CategoryMapper.fromCategoryToEventCategory(it.value)
                 }
             }
             .onErrorResumeNext {
-                Observable.fromCallable {
-                    Thread.sleep(TIMEOUT)
-                    getApplication<Application>().assets.open("categories.json").use {
-                        jsonHelper.getCategoryFromJson(it)
-                    }
-                }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                getLocalCategories()
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { categories ->
                     filterCategories = categories.map { it.id }
