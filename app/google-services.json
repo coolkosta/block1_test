@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99450885546",
+    "project_id": "simbirsoft-test-app",
+    "storage_bucket": "simbirsoft-test-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99450885546:android:0f23e710c5c318143387d3",
+        "android_client_info": {
+          "package_name": "com.coolkosta.simbirsofttestapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr65wIjYVL5ciP5nNtBprmrcKlPpqwdew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

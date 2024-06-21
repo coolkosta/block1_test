@@ -1,22 +1,22 @@
 package com.coolkosta.simbirsofttestapp.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import com.coolkosta.simbirsofttestapp.api.RetrofitProvider
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
-import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
+import com.coolkosta.simbirsofttestapp.util.CategoryMapper
 import com.coolkosta.simbirsofttestapp.util.EventFlow
+import com.coolkosta.simbirsofttestapp.util.EventMapper
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class NewsViewModel(
     application: Application,
@@ -34,54 +34,79 @@ class NewsViewModel(
     private var unreadCount: Int = 0
     private val readEvents: MutableList<Int> = mutableListOf()
 
+    private val disposables = CompositeDisposable()
+
     init {
-        fetchData()
+        getCategories()
+        getEvents()
     }
 
-    private suspend fun getEvents(): List<Event> {
-        return withContext(Dispatchers.IO) {
-            delay(TIMEOUT)
+    private fun getLocalEvents(): Single<List<Event>> {
+        return Single.fromCallable {
+            Thread.sleep(TIMEOUT)
             getApplication<Application>().assets.open("events.json").use {
                 jsonHelper.getEventsFromJson(it)
             }
         }
     }
 
-    private suspend fun getCategories(): List<EventCategory> {
-        return withContext(Dispatchers.IO) {
-            delay(TIMEOUT)
+    private fun getEvents() {
+        RetrofitProvider.eventsApi.getEvents()
+            .map { remoteEvents ->
+                remoteEvents.map {
+                    EventMapper.fromRemoteEventToEvent(it)
+                }
+            }
+            .onErrorResumeNext {
+                getLocalEvents()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { eventList ->
+                    _eventList.value = eventList
+                    initList = eventList
+                    unreadCount = eventList.size
+                    fetchUnreadCount(eventList.size)
+                    progress.value = false
+                },
+                { error ->
+                    Log.e(EXCEPTION_TAG, "Error events observable", error)
+                }
+            )
+            .addTo(disposables)
+    }
+
+    private fun getLocalCategories(): Single<List<EventCategory>> {
+        return Single.fromCallable {
+            Thread.sleep(TIMEOUT)
             getApplication<Application>().assets.open("categories.json").use {
                 jsonHelper.getCategoryFromJson(it)
             }
         }
     }
 
-    private fun fetchData() {
-        val coroutineException = CoroutineExceptionHandler.create(EXCEPTION_TAG) {
-            _eventList.value = emptyList()
-            initList = emptyList()
-            progress.value = false
-            unreadCount = 0
-            fetchUnreadCount(0)
-            filterCategories = emptyList()
-        }
-        viewModelScope.launch(coroutineException) {
-            val deferreds = listOf(
-                async {
-                    val eventList = getEvents()
-                    _eventList.value = eventList
-                    initList = eventList
-                    unreadCount = eventList.size
-                    fetchUnreadCount(eventList.size)
+    private fun getCategories() {
+        RetrofitProvider.categoriesApi.getCategories()
+            .map { remoteCategories ->
+                remoteCategories.map {
+                    CategoryMapper.fromCategoryToEventCategory(it.value)
+                }
+            }
+            .onErrorResumeNext {
+                getLocalCategories()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { categories ->
+                    filterCategories = categories.map { it.id }
                 },
-                async {
-                    val categoryList = getCategories()
-                    filterCategories = categoryList.map { it.id }
+                { error ->
+                    Log.e(EXCEPTION_TAG, "Error categories observable", error)
                 }
             )
-            deferreds.awaitAll()
-            progress.value = false
-        }
+            .addTo(disposables)
     }
 
     fun onCategoriesChanged(categories: List<Int>) {
@@ -107,6 +132,11 @@ class NewsViewModel(
 
     private fun fetchUnreadCount(unreadCount: Int) {
         EventFlow.publish(unreadCount)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.clear()
     }
 
     companion object {
