@@ -5,8 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.coolkosta.simbirsofttestapp.api.ApiHelper
-import com.coolkosta.simbirsofttestapp.api.ApiHelperImpl
 import com.coolkosta.simbirsofttestapp.api.RetrofitProvider
 import com.coolkosta.simbirsofttestapp.entity.Event
 import com.coolkosta.simbirsofttestapp.entity.EventCategory
@@ -15,10 +13,9 @@ import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.EventMapper
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,11 +35,8 @@ class NewsViewModel(
     private var unreadCount: Int = 0
     private val readEvents: MutableList<Int> = mutableListOf()
 
-    private val apiHelper: ApiHelper = ApiHelperImpl(RetrofitProvider.apiService)
-
     init {
-        fetchEvents()
-        fetchCategories()
+        fetchData()
     }
 
     private suspend fun getLocalEvents(): List<Event> {
@@ -63,47 +57,50 @@ class NewsViewModel(
         }
     }
 
-    private fun fetchEvents() {
-        viewModelScope.launch {
-            apiHelper.getEvents()
-                .flowOn(Dispatchers.IO)
-                .map { remoteEvent ->
-                    remoteEvent.map {
-                        EventMapper.fromRemoteEventToEvent(it)
+    private fun fetchData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deferrds = listOf(
+                async {
+                    runCatching {
+                        RetrofitProvider.apiService.getEvents()
+                    }.onSuccess { remoteList ->
+                        val eventList =
+                            remoteList.map { EventMapper.fromRemoteEventToEvent(it) }
+                        withContext(Dispatchers.Main) {
+                            _eventList.value = eventList
+                            initList = eventList
+                            unreadCount = eventList.size
+                            fetchUnreadCount(eventList.size)
+                        }
+                    }.onFailure {
+                        withContext(Dispatchers.Main) {
+                            val eventList = getLocalEvents()
+                            _eventList.value = eventList
+                            initList = eventList
+                            unreadCount = eventList.size
+                            fetchUnreadCount(eventList.size)
+                        }
+                    }
+                },
+                async {
+                    runCatching {
+                        RetrofitProvider.apiService.getCategories()
+                    }.onSuccess { remoteCategories ->
+                        val categoryList =
+                            remoteCategories.map { CategoryMapper.fromCategoryToEventCategory(it.value) }
+                        withContext(Dispatchers.Main) {
+                            filterCategories = categoryList.map { it.id }
+                        }
+                    }.onFailure {
+                        val localCategoryList = getLocalCategories()
+                        withContext(Dispatchers.Main) {
+                            filterCategories = localCategoryList.map { it.id }
+                        }
                     }
                 }
-                .catch {
-                    val eventList = getLocalEvents()
-                    _eventList.value = eventList
-                    initList = eventList
-                    unreadCount = eventList.size
-                    fetchUnreadCount(eventList.size)
-                    progress.value = false
-                }
-                .collect { eventList ->
-                    _eventList.value = eventList
-                    initList = eventList
-                    unreadCount = eventList.size
-                    fetchUnreadCount(eventList.size)
-                    progress.value = false
-                }
-        }
-    }
-
-    private fun fetchCategories() {
-        viewModelScope.launch {
-            apiHelper.getCategories()
-                .flowOn(Dispatchers.IO)
-                .map { remoteCategories ->
-                    remoteCategories.map { CategoryMapper.fromCategoryToEventCategory(it.value) }
-                }
-                .catch {
-                    val categories = getLocalCategories()
-                    filterCategories = categories.map { it.id }
-                }
-                .collect { categoryList ->
-                    filterCategories = categoryList.map { it.id }
-                }
+            )
+            deferrds.awaitAll()
+            progress.postValue(false)
         }
     }
 
