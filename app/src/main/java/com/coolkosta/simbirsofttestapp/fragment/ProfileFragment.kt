@@ -79,7 +79,6 @@ class ProfileFragment : Fragment() {
         imageView.setOnClickListener { showChooseDialog() }
     }
 
-
     private fun showChooseDialog() {
         val dialogView =
             LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_view, null)
