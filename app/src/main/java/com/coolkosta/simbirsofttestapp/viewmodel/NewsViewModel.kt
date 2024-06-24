@@ -57,50 +57,49 @@ class NewsViewModel(
         }
     }
 
+    private fun updateEventList(eventList: List<Event>) {
+        viewModelScope.launch {
+            _eventList.value = eventList
+            initList = eventList
+            unreadCount = eventList.size
+            fetchUnreadCount(eventList.size)
+        }
+    }
+
+    private fun updateCategoryList(categoryList: List<EventCategory>) {
+        viewModelScope.launch {
+            filterCategories = categoryList.map { it.id }
+        }
+    }
+
     private fun fetchData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val deferrds = listOf(
                 async {
-                    runCatching {
-                        RetrofitProvider.apiService.getEvents()
-                    }.onSuccess { remoteList ->
-                        val eventList =
-                            remoteList.map { EventMapper.fromRemoteEventToEvent(it) }
-                        withContext(Dispatchers.Main) {
-                            _eventList.value = eventList
-                            initList = eventList
-                            unreadCount = eventList.size
-                            fetchUnreadCount(eventList.size)
+                    withContext(Dispatchers.IO) {
+                        val eventList = runCatching {
+                            RetrofitProvider.apiService.getEvents().map {
+                                EventMapper.fromRemoteEventToEvent(it)
+                            }
+                        }.getOrElse {
+                            getLocalEvents()
                         }
-                    }.onFailure {
-                        withContext(Dispatchers.Main) {
-                            val eventList = getLocalEvents()
-                            _eventList.value = eventList
-                            initList = eventList
-                            unreadCount = eventList.size
-                            fetchUnreadCount(eventList.size)
-                        }
+                        updateEventList(eventList)
                     }
                 },
                 async {
-                    runCatching {
-                        RetrofitProvider.apiService.getCategories()
-                    }.onSuccess { remoteCategories ->
-                        val categoryList =
-                            remoteCategories.map { CategoryMapper.fromCategoryToEventCategory(it.value) }
-                        withContext(Dispatchers.Main) {
-                            filterCategories = categoryList.map { it.id }
-                        }
-                    }.onFailure {
-                        val localCategoryList = getLocalCategories()
-                        withContext(Dispatchers.Main) {
-                            filterCategories = localCategoryList.map { it.id }
-                        }
+                    withContext(Dispatchers.IO) {
+                        val categoryList = runCatching {
+                            RetrofitProvider.apiService.getCategories().map {
+                                CategoryMapper.fromCategoryToEventCategory(it.value)
+                            }
+                        }.getOrElse { getLocalCategories() }
+                        updateCategoryList(categoryList)
                     }
                 }
             )
             deferrds.awaitAll()
-            progress.postValue(false)
+            progress.value = false
         }
     }
 
