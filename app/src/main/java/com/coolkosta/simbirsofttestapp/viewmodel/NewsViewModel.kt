@@ -58,44 +58,40 @@ class NewsViewModel(
     }
 
     private fun updateEventList(eventList: List<Event>) {
-        viewModelScope.launch {
-            _eventList.value = eventList
-            initList = eventList
-            unreadCount = eventList.size
-            fetchUnreadCount(eventList.size)
-        }
+        _eventList.value = eventList
+        initList = eventList
+        unreadCount = eventList.size
+        fetchUnreadCount(eventList.size)
     }
 
     private fun updateCategoryList(categoryList: List<EventCategory>) {
-        viewModelScope.launch {
-            filterCategories = categoryList.map { it.id }
-        }
+        filterCategories = categoryList.map { it.id }
     }
 
     private fun fetchData() {
         viewModelScope.launch {
             val deferrds = listOf(
                 async {
-                    withContext(Dispatchers.IO) {
-                        val eventList = runCatching {
+                    val eventList = withContext(Dispatchers.IO) {
+                        runCatching {
                             RetrofitProvider.apiService.getEvents().map {
                                 EventMapper.fromRemoteEventToEvent(it)
                             }
                         }.getOrElse {
                             getLocalEvents()
                         }
-                        updateEventList(eventList)
                     }
+                    updateEventList(eventList)
                 },
                 async {
-                    withContext(Dispatchers.IO) {
-                        val categoryList = runCatching {
+                    val categoryList = withContext(Dispatchers.IO) {
+                        runCatching {
                             RetrofitProvider.apiService.getCategories().map {
                                 CategoryMapper.fromCategoryToEventCategory(it.value)
                             }
                         }.getOrElse { getLocalCategories() }
-                        updateCategoryList(categoryList)
                     }
+                    updateCategoryList(categoryList)
                 }
             )
             deferrds.awaitAll()
