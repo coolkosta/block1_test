@@ -15,7 +15,6 @@ import com.coolkosta.simbirsofttestapp.entity.EventEntity
 import com.coolkosta.simbirsofttestapp.util.CategoryMapper
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.coolkosta.simbirsofttestapp.util.EventMapper
-import com.coolkosta.simbirsofttestapp.util.JsonHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,7 +25,6 @@ class NewsViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
-    private val jsonHelper = JsonHelper()
     private var _eventList = MutableLiveData<List<EventEntity>>()
     val eventList: LiveData<List<EventEntity>> get() = _eventList
 
@@ -41,13 +39,13 @@ class NewsViewModel(
     private val eventDb = Room.databaseBuilder(
         application,
         EventDatabase::class.java,
-        "event_databes"
+        "event_database"
     ).build()
 
     private val categoryDb = Room.databaseBuilder(
         application,
         CategoryDatabase::class.java,
-        "event_category_database"
+        "category_database"
     ).build()
 
     private val eventDao = eventDb.eventDao()
@@ -135,7 +133,6 @@ class NewsViewModel(
 
     companion object {
         private const val EXCEPTION_TAG = "NewsViewModel"
-        private const val TIMEOUT = 5000L
     }
 }
 
