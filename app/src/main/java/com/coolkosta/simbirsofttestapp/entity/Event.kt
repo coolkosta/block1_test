@@ -1,22 +1,16 @@
 package com.coolkosta.simbirsofttestapp.entity
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-
-
-@Parcelize
 data class Event(
-    val id: Int,
-    @SerializedName("category_ids")
-    val categoryIds: List<Int>,
-    val foundation: String,
-    val title: String,
+    val id: String,
+    val name: String,
+    val startDate: Long,
+    val endDate: Long,
     val description: String,
-    val date: String,
-    val location: String,
-    @SerializedName("contact_info")
-    val contactInfo: String,
-    @SerializedName("image_name")
-    val imageName: String,
-) : Parcelable
+    val status: Long,
+    val photos: List<String>,
+    val category: List<String>,
+    val createAt: Long,
+    val phone: String,
+    val address: String,
+    val organisation: String
+)

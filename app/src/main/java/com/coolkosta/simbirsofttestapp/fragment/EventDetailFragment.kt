@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventEntity
 import com.coolkosta.simbirsofttestapp.util.ImageResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -43,8 +43,8 @@ class EventDetailFragment : Fragment() {
             BundleCompat.getParcelable(
                 requireArguments(),
                 EVENT_DETAIL_KEY,
-                Event::class.java
-            ) as Event
+                EventEntity::class.java
+            ) as EventEntity
         val toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
@@ -100,7 +100,7 @@ class EventDetailFragment : Fragment() {
 
     companion object {
         private const val EVENT_DETAIL_KEY = "selected_event_key"
-        fun newInstance(event: Event) = EventDetailFragment().apply {
+        fun newInstance(event: EventEntity) = EventDetailFragment().apply {
             arguments = Bundle().apply { putParcelable(EVENT_DETAIL_KEY, event) }
         }
     }
