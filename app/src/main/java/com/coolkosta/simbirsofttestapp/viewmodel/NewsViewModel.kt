@@ -71,32 +71,31 @@ class NewsViewModel(
         viewModelScope.launch {
             val deferrds = listOf(
                 async {
-                    val eventEntityList: List<EventEntity>
-                    withContext(Dispatchers.IO) {
+                    val eventEntityList = withContext(Dispatchers.IO) {
                         runCatching {
                             val eventList = RetrofitProvider.apiService.getEvents().map {
                                 EventMapper.fromRemoteEventToEvent(it)
                             }
-                            eventList.forEach { eventDao.insertEvent(it) }
-                        }.getOrElse {
+                            eventDao.insertEvent(eventList)
+
+                        }.onFailure {
                             Log.e(EXCEPTION_TAG, "Error loading events: ${it.message}")
                         }
-                        eventEntityList = eventDao.getAllData()
+                        eventDao.getAllData()
                     }
                     updateEventList(eventEntityList)
                 },
                 async {
-                    val categoryEntityList: List<CategoryEntity>
-                    withContext(Dispatchers.IO) {
+                    val categoryEntityList = withContext(Dispatchers.IO) {
                         runCatching {
                             val categoryList = RetrofitProvider.apiService.getCategories().map {
                                 CategoryMapper.fromCategoryToEventCategory(it.value)
                             }
-                            categoryList.forEach { categoryDao.insertEventCategory(it) }
-                        }.getOrElse {
+                            categoryDao.insertEventCategory(categoryList)
+                        }.onFailure {
                             Log.e(EXCEPTION_TAG, "Error loading category: ${it.message}")
                         }
-                        categoryEntityList = categoryDao.getAllCategories()
+                        categoryDao.getAllCategories()
                     }
                     updateCategoryList(categoryEntityList)
                 }

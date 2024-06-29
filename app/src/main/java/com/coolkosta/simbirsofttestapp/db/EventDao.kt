@@ -9,8 +9,8 @@ import com.coolkosta.simbirsofttestapp.entity.EventEntity
 @Dao
 interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEvent(event: EventEntity)
+    suspend fun insertEvent(eventList: List<EventEntity>)
 
     @Query("SELECT * FROM event_entity")
-    fun getAllData(): List<EventEntity>
+    suspend fun getAllData(): List<EventEntity>
 }

@@ -9,8 +9,8 @@ import com.coolkosta.simbirsofttestapp.entity.CategoryEntity
 @Dao
 interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEventCategory(category: CategoryEntity)
+    suspend fun insertEventCategory(categoryList: List<CategoryEntity>)
 
     @Query("SELECT * FROM category_entity")
-    fun getAllCategories(): List<CategoryEntity>
+    suspend fun getAllCategories(): List<CategoryEntity>
 }
