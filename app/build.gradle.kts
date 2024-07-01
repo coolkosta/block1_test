@@ -4,6 +4,7 @@ plugins {
     id("kotlin-parcelize")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -121,6 +122,12 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.glide)
+
+    //Room
+    implementation (libs.androidx.room.runtime)
+    annotationProcessor (libs.androidx.room.compiler)
+    kapt (libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
 
     testImplementation(libs.junit.v412)
     testImplementation(libs.mockito.core)

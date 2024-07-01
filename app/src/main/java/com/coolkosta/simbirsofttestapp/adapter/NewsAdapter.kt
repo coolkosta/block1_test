@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.entity.EventEntity
 import com.coolkosta.simbirsofttestapp.util.ImageResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -19,12 +19,12 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayAt
 
 class NewsAdapter(
-    private var onItemClick: ((Event) -> Unit),
+    private var onItemClick: ((EventEntity) -> Unit),
 ) : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
 
-    private var items: List<Event> = listOf()
+    private var items: List<EventEntity> = listOf()
 
-    fun submitList(newItems: List<Event>) {
+    fun submitList(newItems: List<EventEntity>) {
         val diffUtilCallback = DiffUtilCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
         items = newItems
@@ -32,8 +32,8 @@ class NewsAdapter(
     }
 
     inner class DiffUtilCallback(
-        private val oldItems: List<Event>,
-        private val newItems: List<Event>,
+        private val oldItems: List<EventEntity>,
+        private val newItems: List<EventEntity>,
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldItems.size
@@ -57,7 +57,7 @@ class NewsAdapter(
         private val eventDescription: TextView = view.findViewById(R.id.news_description_tv)
         private val eventDate: TextView = view.findViewById(R.id.news_datetime_tv)
 
-        fun bind(item: Event) {
+        fun bind(item: EventEntity) {
             title.text = item.title
             eventDescription.text = item.description
             when (val imageResource = ImageResource.from(item.imageName)) {
