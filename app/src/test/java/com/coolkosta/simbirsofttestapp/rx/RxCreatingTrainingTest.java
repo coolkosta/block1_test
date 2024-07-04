@@ -5,8 +5,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxCreatingTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.exceptions.ExpectedException;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxCreatingTraining;
 
 import org.junit.Before;
 import org.junit.Test;

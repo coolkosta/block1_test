@@ -1,20 +1,20 @@
 package com.coolkosta.simbirsofttestapp.util
 
-import com.coolkosta.simbirsofttestapp.entity.EventEntity
-import com.coolkosta.simbirsofttestapp.entity.Event
+import com.coolkosta.simbirsofttestapp.data.source.local.entity.EventEntity
+import com.coolkosta.simbirsofttestapp.data.source.remote.dto.EventDto
 
 object EventMapper {
-    fun fromRemoteEventToEvent(event: Event): EventEntity {
+    fun fromRemoteEventToEvent(eventDto: EventDto): EventEntity {
         return EventEntity(
-            id = event.id.toInt(),
-            categoryIds = event.category.map { it.toInt() },
-            foundation = event.organisation,
-            title = event.name,
-            description = event.description,
+            id = eventDto.id.toInt(),
+            categoryIds = eventDto.category.map { it.toInt() },
+            foundation = eventDto.organisation,
+            title = eventDto.name,
+            description = eventDto.description,
             date = "2024-04-20",
-            location = event.address,
-            contactInfo = event.phone,
-            imageName = event.photos.first()
+            location = eventDto.address,
+            contactInfo = eventDto.phone,
+            imageName = eventDto.photos.first()
         )
     }
 }

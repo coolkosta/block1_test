@@ -1,13 +1,14 @@
 package com.coolkosta.simbirsofttestapp.util
 
-import com.coolkosta.simbirsofttestapp.entity.Category
-import com.coolkosta.simbirsofttestapp.entity.CategoryEntity
+import com.coolkosta.simbirsofttestapp.data.source.local.entity.CategoryEntity
+import com.coolkosta.simbirsofttestapp.data.source.remote.dto.CategoryDto
+
 
 object CategoryMapper {
-    fun fromCategoryToEventCategory(category: Category): CategoryEntity {
+    fun fromCategoryToEventCategory(categoryDto: CategoryDto): CategoryEntity {
         return CategoryEntity(
-            id = category.id.toInt(),
-            title = category.name
+            id = categoryDto.id.toInt(),
+            title = categoryDto.name
         )
     }
 }

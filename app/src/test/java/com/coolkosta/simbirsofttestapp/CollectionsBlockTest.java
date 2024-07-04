@@ -2,7 +2,7 @@ package com.coolkosta.simbirsofttestapp;
 
 import static org.junit.Assert.assertEquals;
 
-import com.coolkosta.simbirsofttestapp.collections.CollectionsBlock;
+import com.coolkosta.simbirsofttestapp.other.collections.CollectionsBlock;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
