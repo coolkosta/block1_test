@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.data.source.remote.Resource
 import com.coolkosta.simbirsofttestapp.domain.interactor.GetCategoriesInteractor
@@ -21,10 +22,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NewsViewModel @Inject constructor(
-    application: Application,
     private val getEventsInteractor: GetEventsInteractor,
     private val getCategoriesInteractor: GetCategoriesInteractor
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private var _eventList = MutableLiveData<List<Event>>()
     val eventList: LiveData<List<Event>> get() = _eventList
@@ -94,45 +94,6 @@ class NewsViewModel @Inject constructor(
             progress.value = false
         }
     }
-
-
-    /*private fun fetchData() {
-        viewModelScope.launch {
-            val deferrds = listOf(
-                async {
-                    val eventEntityList = withContext(Dispatchers.IO) {
-                        runCatching {
-                            val eventList = RetrofitProvider.apiService.getEvents().map {
-                                EventMapper.fromRemoteEventToEvent(it)
-                            }
-                            eventDao.insertEvent(eventList)
-
-                        }.onFailure {
-                            Log.e(EXCEPTION_TAG, "Error loading events: ${it.message}")
-                        }
-                        eventDao.getAllData()
-                    }
-                    updateEventList(eventEntityList)
-                },
-                async {
-                    val categoryEntityList = withContext(Dispatchers.IO) {
-                        runCatching {
-                            val categoryList = RetrofitProvider.apiService.getCategories().map {
-                                CategoryMapper.fromCategoryToEventCategory(it.value)
-                            }
-                            categoryDao.insertEventCategory(categoryList)
-                        }.onFailure {
-                            Log.e(EXCEPTION_TAG, "Error loading category: ${it.message}")
-                        }
-                        categoryDao.getAllCategories()
-                    }
-                    updateCategoryList(categoryEntityList)
-                }
-            )
-            deferrds.awaitAll()
-            progress.value = false
-        }
-    }*/
 
     fun onCategoriesChanged(categories: List<Int>) {
         filterCategories = categories
