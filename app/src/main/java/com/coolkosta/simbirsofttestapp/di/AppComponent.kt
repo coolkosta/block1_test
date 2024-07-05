@@ -7,5 +7,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, DataModule::class, DomainModule::class])
 interface AppComponent {
-    fun viewModelFaсtory(): ViewModelFactory
+    fun viewModelsFactory(): ViewModelFactory
 }

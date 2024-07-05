@@ -1,6 +1,6 @@
 package com.coolkosta.simbirsofttestapp.di
 
-import android.app.Application
+import android.content.Context
 import com.coolkosta.simbirsofttestapp.common.Constants
 import com.coolkosta.simbirsofttestapp.data.repository.NewsRepositoryImpl
 import com.coolkosta.simbirsofttestapp.data.source.local.dao.CategoryDao
@@ -17,8 +17,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [AppModule::class])
 class DataModule {
+
     @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
@@ -43,7 +44,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideEventDatabase(application: Application) = EventDatabase.getDatabase(application)
+    fun provideEventDatabase(context: Context) = EventDatabase.getDatabase(context)
 
     @Singleton
     @Provides
@@ -51,8 +52,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideCategoryDatabase(application: Application) =
-        CategoryDatabase.getDatabase(application)
+    fun provideCategoryDatabase(context: Context) =
+        CategoryDatabase.getDatabase(context)
 
     @Singleton
     @Provides
