@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.presentation.NewsState
 import com.coolkosta.simbirsofttestapp.presentation.adapter.NewsAdapter
 import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
 import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
@@ -24,6 +26,7 @@ class NewsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
+    private lateinit var progress: CircularProgressIndicator
     private val viewModel: NewsViewModel by viewModels {
         getAppComponent().viewModelsFactory()
     }
@@ -59,23 +62,42 @@ class NewsFragment : Fragment() {
             }
         }
 
-        val progress: CircularProgressIndicator = view.findViewById(R.id.progress_circular)
-
-        viewModel.progress.observe(viewLifecycleOwner) {
-            progress.isVisible = it
-            toolBar.menu.findItem(R.id.action_filter).isVisible = !it
-            recyclerView.isVisible = !it
-        }
-
+        progress = view.findViewById(R.id.progress_circular)
         recyclerView = view.findViewById(R.id.recycler_view_container)
         adapter = NewsAdapter { event ->
             viewModel.readEvent(event)
             openFragment(EventDetailFragment.newInstance(event))
         }
+
         recyclerView.adapter = adapter
-        viewModel.eventList.observe(viewLifecycleOwner) { list ->
-            adapter.submitList(list)
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is NewsState.Loading -> {
+                    setupVisibility(true)
+                }
+
+                is NewsState.Success -> {
+                    setupVisibility(false)
+                    adapter.submitList(state.events)
+                }
+
+                is NewsState.Error -> {
+                    setupVisibility(false)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_loading_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
+    }
+
+    private fun setupVisibility(isVisible: Boolean) {
+        progress.isVisible = isVisible
+        toolBar.menu.findItem(R.id.action_filter).isVisible = !isVisible
+        recyclerView.isVisible = !isVisible
     }
 
     private fun openFragment(fragment: Fragment) {

@@ -9,10 +9,10 @@ import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
 import com.coolkosta.simbirsofttestapp.domain.interactor.EventInteractor
 import com.coolkosta.simbirsofttestapp.domain.model.Category
 import com.coolkosta.simbirsofttestapp.domain.model.Event
+import com.coolkosta.simbirsofttestapp.presentation.NewsState
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,10 +24,9 @@ class NewsViewModel @Inject constructor(
     @Named("IO") private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
 
-    private var _eventList = MutableLiveData<List<Event>>()
-    val eventList: LiveData<List<Event>> get() = _eventList
+    private val _state = MutableLiveData<NewsState>()
+    val state: LiveData<NewsState> get() = _state
 
-    val progress = MutableLiveData(true)
 
     var filterCategories: List<Int> = listOf()
     private var initList: List<Event> = listOf()
@@ -36,49 +35,41 @@ class NewsViewModel @Inject constructor(
     private val readEvents: MutableList<Int> = mutableListOf()
 
     init {
-        getData()
+        getMviData()
     }
 
-    private fun updateEventList(eventList: List<Event>) {
-        _eventList.value = eventList
-        initList = eventList
-        unreadCount = eventList.size
-        fetchUnreadCount(eventList.size)
+    private fun updateEventList(events: List<Event>) {
+        _state.value = NewsState.Success(events)
+        initList = events
+        unreadCount = events.size
+        fetchUnreadCount(events.size)
     }
 
     private fun updateCategoryList(categoryList: List<Category>) {
         filterCategories = categoryList.map { it.id }
     }
 
-    private fun getData() {
+    private fun getMviData() {
         viewModelScope.launch {
-            val deferreds = listOf(
-                async {
-                    val list = withContext(dispatcherIO) {
-                        runCatching {
-                            eventInteractor.getEventList()
-                        }.getOrElse { ex ->
-                            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get event data: ${ex.message} ")
-                            emptyList()
-                        }
+            _state.value = NewsState.Loading
+            runCatching {
+                val eventsDeferred = withContext(dispatcherIO) {
+                    async {
+                        eventInteractor.getEventList()
                     }
-                    updateEventList(list)
-                },
-                async {
-                    val list = withContext(dispatcherIO) {
-                        runCatching {
-                            categoryInteractor.getCategoryList()
-                        }.getOrElse { ex ->
-                            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get category data: ${ex.message} ")
-                            emptyList()
-                        }
-                    }
-                    categoryInteractor.getCategoryList()
-                    updateCategoryList(list)
                 }
-            )
-            deferreds.awaitAll()
-            progress.value = false
+                val categoriesDeferred = withContext(dispatcherIO) {
+                    async {
+                        categoryInteractor.getCategoryList()
+                    }
+                }
+                val events = eventsDeferred.await()
+                val categories = categoriesDeferred.await()
+                updateCategoryList(categories)
+                updateEventList(events)
+            }.onFailure { ex ->
+                Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get data: ${ex.message}")
+            }
         }
     }
 
@@ -88,11 +79,12 @@ class NewsViewModel @Inject constructor(
     }
 
     private fun filteredList() {
-        _eventList.value = initList.filter { event ->
+        val filteredList = initList.filter { event ->
             filterCategories.any {
                 event.categoryIds.contains(it)
             }
         }
+        _state.value = NewsState.Success(filteredList)
     }
 
     fun readEvent(event: Event) {
