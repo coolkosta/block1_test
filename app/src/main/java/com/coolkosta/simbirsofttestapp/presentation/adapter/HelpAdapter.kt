@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.domain.model.HelpItem
+import com.coolkosta.simbirsofttestapp.presentation.model.HelpItem
 
-class HelpAdapter(private var items: List<HelpItem>) : RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {
+class HelpAdapter(private var items: List<HelpItem>) :
+    RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {
 
     fun updateList(newItems: List<HelpItem>) {
 
@@ -31,7 +32,7 @@ class HelpAdapter(private var items: List<HelpItem>) : RecyclerView.Adapter<Help
         override fun getNewListSize(): Int = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-           return true
+            return true
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

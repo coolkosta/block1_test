@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.data.source.local.entity.CategoryEntity
+import com.coolkosta.simbirsofttestapp.data.source.local.model.CategoryDbModel
 
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class FilterAdapter(
-    private val items: List<CategoryEntity>,
+    private val items: List<CategoryDbModel>,
     private val filterList: List<Int>,
     private val listener: (Int, Boolean) -> Unit,
 ) :
@@ -21,7 +21,7 @@ class FilterAdapter(
         private val title: TextView = view.findViewById(R.id.filter_item_tv)
         private val switcher: SwitchMaterial = view.findViewById(R.id.filter_check)
         private val div: View = view.findViewById(R.id.item_div)
-        fun bind(category: CategoryEntity) {
+        fun bind(category: CategoryDbModel) {
             switcher.isChecked = filterList.contains(category.id)
             switcher.setOnCheckedChangeListener { _, isChecked ->
                 listener(category.id, isChecked)

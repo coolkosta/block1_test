@@ -7,8 +7,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class ViewModelFactory @Inject constructor(
-  newsViewModelProvider: Provider<NewsViewModel>
-): ViewModelProvider.Factory {
+    newsViewModelProvider: Provider<NewsViewModel>
+) : ViewModelProvider.Factory {
     private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
         NewsViewModel::class.java to newsViewModelProvider
     )

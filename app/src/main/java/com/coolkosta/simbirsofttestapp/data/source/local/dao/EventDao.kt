@@ -4,14 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.coolkosta.simbirsofttestapp.data.source.local.entity.EventEntity
+import com.coolkosta.simbirsofttestapp.data.source.local.model.EventDbModel
 
 
 @Dao
 interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEvent(eventList: List<EventEntity>)
+    suspend fun insertEvent(eventList: List<EventDbModel>)
 
     @Query("SELECT * FROM event_entity")
-    suspend fun getAllData(): List<EventEntity>
+    suspend fun getAllData(): List<EventDbModel>
 }

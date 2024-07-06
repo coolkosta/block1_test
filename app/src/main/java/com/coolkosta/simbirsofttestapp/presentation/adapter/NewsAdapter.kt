@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.data.source.local.entity.EventEntity
 import com.coolkosta.simbirsofttestapp.domain.model.Event
 
 import com.coolkosta.simbirsofttestapp.util.ImageResource

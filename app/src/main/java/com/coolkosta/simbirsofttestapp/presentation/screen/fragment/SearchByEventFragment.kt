@@ -14,8 +14,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.adapter.SearchResultAdapter
-import com.coolkosta.simbirsofttestapp.util.SearchCategory
 import com.coolkosta.simbirsofttestapp.presentation.viewmodel.SearchByEventFragmentViewModel
+import com.coolkosta.simbirsofttestapp.util.SearchCategory
 import kotlinx.coroutines.launch
 
 class SearchByEventFragment : Fragment() {

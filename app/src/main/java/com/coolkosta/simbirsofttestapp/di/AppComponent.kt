@@ -6,6 +6,6 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AppModule::class, DataModule::class, DomainModule::class])
-interface AppComponent {
+fun interface AppComponent {
     fun viewModelsFactory(): ViewModelFactory
 }

@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.presentation.model.HelpItem
 import com.coolkosta.simbirsofttestapp.presentation.adapter.HelpAdapter
-import com.coolkosta.simbirsofttestapp.domain.model.HelpItem
 import com.coolkosta.simbirsofttestapp.service.HelpCategoryService
 import com.google.android.material.progressindicator.CircularProgressIndicator
 

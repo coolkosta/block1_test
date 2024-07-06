@@ -11,12 +11,11 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.app.App
-import com.coolkosta.simbirsofttestapp.di.AppComponent
 import com.coolkosta.simbirsofttestapp.presentation.adapter.NewsAdapter
 import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
 import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 import com.coolkosta.simbirsofttestapp.presentation.viewmodel.NewsViewModel
+import com.coolkosta.simbirsofttestapp.util.getAppComponent
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 
@@ -25,10 +24,6 @@ class NewsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
-
-    fun Fragment.getAppComponent(): AppComponent =
-        (requireContext() as App).appComponent
-
     private val viewModel: NewsViewModel by viewModels {
         getAppComponent().viewModelsFactory()
     }

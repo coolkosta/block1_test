@@ -1,29 +1,27 @@
 package com.coolkosta.simbirsofttestapp.presentation.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.coolkosta.simbirsofttestapp.data.source.remote.Resource
-import com.coolkosta.simbirsofttestapp.domain.interactor.GetCategoriesInteractor
-import com.coolkosta.simbirsofttestapp.domain.interactor.GetEventsInteractor
+import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
+import com.coolkosta.simbirsofttestapp.domain.interactor.EventInteractor
 import com.coolkosta.simbirsofttestapp.domain.model.Category
 import com.coolkosta.simbirsofttestapp.domain.model.Event
 import com.coolkosta.simbirsofttestapp.util.EventFlow
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 class NewsViewModel @Inject constructor(
-    private val getEventsInteractor: GetEventsInteractor,
-    private val getCategoriesInteractor: GetCategoriesInteractor
+    private val eventInteractor: EventInteractor,
+    private val categoryInteractor: CategoryInteractor,
+    @Named("IO") private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
 
     private var _eventList = MutableLiveData<List<Event>>()
@@ -36,6 +34,10 @@ class NewsViewModel @Inject constructor(
 
     private var unreadCount: Int = 0
     private val readEvents: MutableList<Int> = mutableListOf()
+
+    init {
+        getData()
+    }
 
     private fun updateEventList(eventList: List<Event>) {
         _eventList.value = eventList
@@ -52,42 +54,27 @@ class NewsViewModel @Inject constructor(
         viewModelScope.launch {
             val deferreds = listOf(
                 async {
-                    withContext(Dispatchers.IO) {
-                        getEventsInteractor.invoke().onEach { result ->
-                            when (result) {
-                                is Resource.Loading -> {
-                                    updateEventList(result.data ?: emptyList())
-                                }
-
-                                is Resource.Error -> {
-                                    Log.d(EXCEPTION_TAG, "Test event")
-                                }
-
-                                is Resource.Success -> {
-                                    updateEventList(result.data ?: emptyList())
-                                }
-                            }
+                    val list = withContext(dispatcherIO) {
+                        runCatching {
+                            eventInteractor.getEventList()
+                        }.getOrElse { ex ->
+                            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get event data: ${ex.message} ")
+                            emptyList()
                         }
                     }
+                    updateEventList(list)
                 },
                 async {
-                    withContext(Dispatchers.IO) {
-                        getCategoriesInteractor.invoke().onEach { result ->
-                            when (result) {
-                                is Resource.Loading -> {
-                                    updateCategoryList(result.data ?: emptyList())
-                                }
-
-                                is Resource.Error -> {
-                                    Log.d(EXCEPTION_TAG, "Test category")
-                                }
-
-                                is Resource.Success -> {
-                                    updateCategoryList(result.data ?: emptyList())
-                                }
-                            }
+                    val list = withContext(dispatcherIO) {
+                        runCatching {
+                            categoryInteractor.getCategoryList()
+                        }.getOrElse { ex ->
+                            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get category data: ${ex.message} ")
+                            emptyList()
                         }
                     }
+                    categoryInteractor.getCategoryList()
+                    updateCategoryList(list)
                 }
             )
             deferreds.awaitAll()
@@ -121,7 +108,7 @@ class NewsViewModel @Inject constructor(
     }
 
     companion object {
-        private const val EXCEPTION_TAG = "NewsViewModel"
+        private const val NEWS_VM_EXCEPTION_TAG = "NewsViewModel"
     }
 }
 

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.coolkosta.simbirsofttestapp.data.source.local.entity.CategoryEntity
+import com.coolkosta.simbirsofttestapp.data.source.local.model.CategoryDbModel
 
 import com.coolkosta.simbirsofttestapp.util.JsonHelper
 
@@ -12,8 +12,8 @@ class NewsFilterViewModel(application: Application) : AndroidViewModel(applicati
 
     private val jsonHelper = JsonHelper()
 
-    private val _categories = MutableLiveData<List<CategoryEntity>>()
-    val categories: LiveData<List<CategoryEntity>> get() = _categories
+    private val _categories = MutableLiveData<List<CategoryDbModel>>()
+    val categories: LiveData<List<CategoryDbModel>> get() = _categories
 
     var filterCategories: MutableList<Int> = mutableListOf()
 
@@ -25,7 +25,7 @@ class NewsFilterViewModel(application: Application) : AndroidViewModel(applicati
         filterCategories = categories.toMutableList()
     }
 
-    private fun getCategories(): List<CategoryEntity> {
+    private fun getCategories(): List<CategoryDbModel> {
         getApplication<Application>().assets.open("categories.json").use {
             return jsonHelper.getCategoryFromJson(it)
         }

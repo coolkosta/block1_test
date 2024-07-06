@@ -1,18 +1,14 @@
-package com.coolkosta.simbirsofttestapp.data.source.local.entity
+package com.coolkosta.simbirsofttestapp.data.source.local.model
 
-import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.coolkosta.simbirsofttestapp.domain.model.Event
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @Entity(tableName = "event_entity")
 @TypeConverters(CategoryIdsConverter::class)
-data class EventEntity(
+data class EventDbModel(
     @PrimaryKey
     val id: Int,
     @ColumnInfo(name = "category_ids")
@@ -26,22 +22,7 @@ data class EventEntity(
     val contactInfo: String,
     @ColumnInfo(name = "image_name")
     val imageName: String,
-) : Parcelable {
-    fun toEvent(): Event {
-        return Event(
-            id = id.toInt(),
-            categoryIds = categoryIds,
-            foundation = foundation,
-            title = title,
-            description = description,
-            date = "2024-04-20",
-            location = location,
-            contactInfo = contactInfo,
-            imageName = imageName
-
-        )
-    }
-}
+)
 
 class CategoryIdsConverter {
     @TypeConverter
