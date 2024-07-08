@@ -30,7 +30,7 @@ class SearchByEventFragment : Fragment() {
             SEARCH_CATEGORY_KEY,
             SearchCategory::class.java
         ) as SearchCategory
-        viewModel.setCategory(category)
+        viewModel.sendEvent(SearchByEventIntent.Category(category))
     }
 
     override fun onCreateView(
@@ -56,7 +56,7 @@ class SearchByEventFragment : Fragment() {
     }
 
     fun updateSearchQuery(query: String) {
-        viewModel.onSearchQueryChanged(query)
+        viewModel.sendEvent(SearchByEventIntent.SearchQuery(query))
     }
 
     companion object {

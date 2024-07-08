@@ -13,7 +13,19 @@ class SearchByEventFragmentViewModel : ViewModel() {
 
     val searchResult = _searchResult.asStateFlow()
 
-    fun setCategory(category: SearchCategory) {
+    fun sendEvent(searchByEventIntent: SearchByEventIntent) {
+        when (searchByEventIntent) {
+            is SearchByEventIntent.Category -> {
+                setCategory(searchByEventIntent.category)
+            }
+
+            is SearchByEventIntent.SearchQuery -> {
+                onSearchQueryChanged(searchByEventIntent.query)
+            }
+        }
+    }
+
+    private fun setCategory(category: SearchCategory) {
         initList.value =
             when (category) {
                 SearchCategory.EVENTS -> Generator().generateEventList()
@@ -22,7 +34,7 @@ class SearchByEventFragmentViewModel : ViewModel() {
             }
     }
 
-    fun onSearchQueryChanged(query: String) {
+    private fun onSearchQueryChanged(query: String) {
         val newList = initList.value.filter { it.contains(query, ignoreCase = true) }
         _searchResult.value = newList
     }

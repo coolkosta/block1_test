@@ -17,7 +17,15 @@ class SearchFragmentViewModel : ViewModel() {
         .debounce(TIMEOUT)
         .distinctUntilChanged()
 
-    fun onSearchViewTextChanged(text: String) {
+    fun sendEvent(searchFragmentIntent: SearchFragmentIntent) {
+        when (searchFragmentIntent) {
+            is SearchFragmentIntent.SearchView -> {
+                onSearchViewTextChanged(searchFragmentIntent.text)
+            }
+        }
+    }
+
+   private fun onSearchViewTextChanged(text: String) {
         _searchText.value = text
     }
 

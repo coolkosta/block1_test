@@ -80,7 +80,7 @@ class SearchFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { text ->
-                    viewModel.onSearchViewTextChanged(text)
+                    viewModel.sendEvent(SearchFragmentIntent.SearchView(text))
                 }
                 return false
             }
