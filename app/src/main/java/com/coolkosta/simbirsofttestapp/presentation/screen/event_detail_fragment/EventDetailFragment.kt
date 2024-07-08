@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.event_detail_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.help_fragment
 
 
 import android.content.BroadcastReceiver

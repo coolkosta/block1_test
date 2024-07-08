@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.profile_fragment
 
 import android.Manifest
 import android.app.AlertDialog

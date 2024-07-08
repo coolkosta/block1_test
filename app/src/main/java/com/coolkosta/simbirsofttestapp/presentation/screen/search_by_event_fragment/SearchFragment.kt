@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.search_by_event_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.adapter.SearchResultPagerAdapter
-import com.coolkosta.simbirsofttestapp.presentation.viewmodel.SearchFragmentViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch

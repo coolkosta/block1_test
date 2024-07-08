@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.news_filter_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +9,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.adapter.FilterAdapter
-import com.coolkosta.simbirsofttestapp.presentation.viewmodel.NewsFilterViewModel
+import com.coolkosta.simbirsofttestapp.util.getAppComponent
+import kotlinx.coroutines.launch
 
 class NewsFilterFragment : Fragment() {
 
@@ -20,15 +24,14 @@ class NewsFilterFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FilterAdapter
 
-    private val viewModel: NewsFilterViewModel by viewModels()
+    private val viewModel: NewsFilterViewModel by viewModels {
+        getAppComponent().viewModelsFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.initFilterCategories(
-                requireArguments().getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty()
-            )
-        }
+        val categoriesList = requireArguments().getIntegerArrayList(FILTER_CATEGORIES_KEY).orEmpty()
+        viewModel.sendEvent(NewsFilterEvent.FilterCategory(categoriesList))
     }
 
     override fun onCreateView(
@@ -52,7 +55,7 @@ class NewsFilterFragment : Fragment() {
                     R.id.action_done -> {
                         setFragmentResult(
                             REQUEST_FILTER_RESULT_KEY,
-                            bundleOf(FILTER_EXTRA_KEY to viewModel.filterCategories)
+                            bundleOf(FILTER_EXTRA_KEY to viewModel.state.value.filteredList)
                         )
                         requireActivity().supportFragmentManager.popBackStack()
                         true
@@ -64,11 +67,16 @@ class NewsFilterFragment : Fragment() {
         }
         recyclerView = view.findViewById(R.id.recycler_view_container)
 
-        viewModel.categories.observe(viewLifecycleOwner) {
-            adapter = FilterAdapter(it, viewModel.filterCategories) { position, isCheck ->
-                viewModel.onSwitchChanged(position, isCheck)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    adapter =
+                        FilterAdapter(state.categories, state.filteredList) { position, isCheck ->
+                            viewModel.sendEvent(NewsFilterEvent.SwitchChanger(position, isCheck))
+                        }
+                    recyclerView.adapter = adapter
+                }
             }
-            recyclerView.adapter = adapter
         }
     }
 

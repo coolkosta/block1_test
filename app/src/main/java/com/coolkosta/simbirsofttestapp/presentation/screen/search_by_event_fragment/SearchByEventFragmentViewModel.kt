@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.viewmodel
+package com.coolkosta.simbirsofttestapp.presentation.screen.search_by_event_fragment
 
 import androidx.lifecycle.ViewModel
 import com.coolkosta.simbirsofttestapp.util.Generator

@@ -8,11 +8,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.HelpFragment
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.LoginScreenFragment
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFragment
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.ProfileFragment
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.SearchFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.help_fragment.HelpFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.login_fragment.LoginScreenFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.news_fragment.NewsFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.profile_fragment.ProfileFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.search_by_event_fragment.SearchFragment
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView

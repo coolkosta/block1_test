@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.news_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,11 +12,11 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.NewsState
 import com.coolkosta.simbirsofttestapp.presentation.adapter.NewsAdapter
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
-import com.coolkosta.simbirsofttestapp.presentation.screen.fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
-import com.coolkosta.simbirsofttestapp.presentation.viewmodel.NewsViewModel
+import com.coolkosta.simbirsofttestapp.presentation.screen.event_detail_fragment.EventDetailFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.news_filter_fragment.NewsFilterFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.news_filter_fragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
+import com.coolkosta.simbirsofttestapp.presentation.screen.news_filter_fragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 import com.coolkosta.simbirsofttestapp.util.getAppComponent
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
@@ -35,7 +35,7 @@ class NewsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setFragmentResultListener(REQUEST_FILTER_RESULT_KEY) { _, bundle ->
             val filteredList = bundle.getIntegerArrayList(FILTER_EXTRA_KEY) as List<Int>
-            viewModel.onCategoriesChanged(filteredList)
+            viewModel.sendEvent(NewsEvent.FilteredEvents(filteredList))
         }
     }
 
@@ -53,7 +53,10 @@ class NewsFragment : Fragment() {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
-                        openFragment(NewsFilterFragment.newInstance(viewModel.filterCategories))
+                        viewModel.state.observe(viewLifecycleOwner) { state ->
+                            state as NewsState.Success
+                            openFragment(NewsFilterFragment.newInstance(state.filterCategories))
+                        }
                         true
                     }
 
@@ -65,7 +68,7 @@ class NewsFragment : Fragment() {
         progress = view.findViewById(R.id.progress_circular)
         recyclerView = view.findViewById(R.id.recycler_view_container)
         adapter = NewsAdapter { event ->
-            viewModel.readEvent(event)
+            viewModel.sendEvent(NewsEvent.EventReader(event))
             openFragment(EventDetailFragment.newInstance(event))
         }
 
@@ -84,12 +87,13 @@ class NewsFragment : Fragment() {
 
                 is NewsState.Error -> {
                     setupVisibility(false)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_loading_toast),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
+            }
+        }
+
+        viewModel.sideEffect.observe(viewLifecycleOwner) { sideEffect ->
+            when (sideEffect) {
+                is NewsSideEffect.ShowErrorToast -> showToast(sideEffect.message)
             }
         }
     }
@@ -98,6 +102,14 @@ class NewsFragment : Fragment() {
         progress.isVisible = isVisible
         toolBar.menu.findItem(R.id.action_filter).isVisible = !isVisible
         recyclerView.isVisible = !isVisible
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.error_loading_toast) + " " + message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun openFragment(fragment: Fragment) {

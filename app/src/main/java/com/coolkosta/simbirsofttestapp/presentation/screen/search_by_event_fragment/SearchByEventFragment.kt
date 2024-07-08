@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.fragment
+package com.coolkosta.simbirsofttestapp.presentation.screen.search_by_event_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.adapter.SearchResultAdapter
-import com.coolkosta.simbirsofttestapp.presentation.viewmodel.SearchByEventFragmentViewModel
 import com.coolkosta.simbirsofttestapp.util.SearchCategory
 import kotlinx.coroutines.launch
 

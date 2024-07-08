@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.viewmodel
+package com.coolkosta.simbirsofttestapp.presentation.screen.news_fragment
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -9,7 +9,6 @@ import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
 import com.coolkosta.simbirsofttestapp.domain.interactor.EventInteractor
 import com.coolkosta.simbirsofttestapp.domain.model.Category
 import com.coolkosta.simbirsofttestapp.domain.model.Event
-import com.coolkosta.simbirsofttestapp.presentation.NewsState
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -27,29 +26,29 @@ class NewsViewModel @Inject constructor(
     private val _state = MutableLiveData<NewsState>()
     val state: LiveData<NewsState> get() = _state
 
+    private val _sideEffect = MutableLiveData<NewsSideEffect>()
+    val sideEffect: LiveData<NewsSideEffect> get() = _sideEffect
 
-    var filterCategories: List<Int> = listOf()
+
+    private var filterCategories: List<Int> = listOf()
     private var initList: List<Event> = listOf()
 
     private var unreadCount: Int = 0
     private val readEvents: MutableList<Int> = mutableListOf()
 
     init {
-        getMviData()
+        getData()
     }
 
-    private fun updateEventList(events: List<Event>) {
-        _state.value = NewsState.Success(events)
+    private fun updateNewsState(events: List<Event>, categories: List<Category>) {
+        filterCategories = categories.map { it.id }
+        _state.value = NewsState.Success(events, filterCategories)
         initList = events
         unreadCount = events.size
         fetchUnreadCount(events.size)
     }
 
-    private fun updateCategoryList(categoryList: List<Category>) {
-        filterCategories = categoryList.map { it.id }
-    }
-
-    private fun getMviData() {
+    private fun getData() {
         viewModelScope.launch {
             _state.value = NewsState.Loading
             runCatching {
@@ -65,15 +64,28 @@ class NewsViewModel @Inject constructor(
                 }
                 val events = eventsDeferred.await()
                 val categories = categoriesDeferred.await()
-                updateCategoryList(categories)
-                updateEventList(events)
+                updateNewsState(events, categories)
             }.onFailure { ex ->
                 Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get data: ${ex.message}")
+                _state.value = NewsState.Error(ex)
+                _sideEffect.value = NewsSideEffect.ShowErrorToast(ex.message ?: "Unknown error")
             }
         }
     }
 
-    fun onCategoriesChanged(categories: List<Int>) {
+    fun sendEvent(newsEvent: NewsEvent) {
+        when (newsEvent) {
+            is NewsEvent.FilteredEvents -> {
+                onCategoriesChanged(newsEvent.filterList)
+            }
+
+            is NewsEvent.EventReader -> {
+                readEvent(newsEvent.event)
+            }
+        }
+    }
+
+    private fun onCategoriesChanged(categories: List<Int>) {
         filterCategories = categories
         filteredList()
     }
@@ -84,10 +96,10 @@ class NewsViewModel @Inject constructor(
                 event.categoryIds.contains(it)
             }
         }
-        _state.value = NewsState.Success(filteredList)
+        _state.value = NewsState.Success(filteredList, filterCategories)
     }
 
-    fun readEvent(event: Event) {
+    private fun readEvent(event: Event) {
         if (!readEvents.contains(event.id)) {
             unreadCount--
             readEvents.add(event.id)
