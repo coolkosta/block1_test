@@ -2,12 +2,8 @@ package com.coolkosta.simbirsofttestapp.presentation.screen.profile_fragment
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +13,9 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.util.getAppComponent
 
 class ProfileFragment : Fragment() {
 
@@ -25,43 +23,27 @@ class ProfileFragment : Fragment() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var choosePhotoLauncher: ActivityResultLauncher<String>
-    private var photoUri: Uri? = null
+
+    private val viewModel: ProfileViewModel by viewModels {
+        getAppComponent().viewModelsFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         choosePhotoLauncher =
             registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-                uri?.let { imageUri ->
-                    photoUri = imageUri
-                    imageView.setImageURI(photoUri)
-                }
+                viewModel.sendEvent(ProfileEvent.PhotoChosen(uri))
             }
 
-        requestPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                photoUri = createImageUri()
-                photoUri?.let {
-                    takePictureLauncher.launch(it)
-                }
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.reminder_photo_permission_toast),
-                    Toast.LENGTH_LONG
-                ).show()
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+                viewModel.sendEvent(ProfileEvent.PermissionResult(isGranted))
             }
-        }
 
         takePictureLauncher =
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                if (success) {
-                    photoUri?.let {
-                        imageView.setImageURI(it)
-                    }
-                }
+                viewModel.sendEvent(ProfileEvent.PhotoTaken(success))
             }
     }
 
@@ -69,7 +51,6 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
@@ -77,6 +58,33 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         imageView = view.findViewById(R.id.profile_iv)
         imageView.setOnClickListener { showChooseDialog() }
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.viewState.observe(viewLifecycleOwner) { state ->
+            state.photoUri?.let {
+                imageView.setImageURI(it)
+            } ?: run {
+                imageView.setImageResource(R.drawable.ic_emty_photo)
+                imageView.adjustViewBounds = true
+            }
+        }
+
+        viewModel.sideEffect.observe(viewLifecycleOwner) { action ->
+            when (action) {
+                is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                is ProfileSideEffect.ChoosePhoto -> choosePhotoLauncher.launch(ProfileViewModel.MIME_TYPE_IMAGE)
+                is ProfileSideEffect.TakePhoto -> takePictureLauncher.launch(action.uri)
+                is ProfileSideEffect.DeniedPermission -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.reminder_photo_permission_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun showChooseDialog() {
@@ -87,51 +95,27 @@ class ProfileFragment : Fragment() {
             .create()
 
         dialogView.findViewById<TextView>(R.id.choose_photo_item).setOnClickListener {
-            choosePhotoLauncher.launch(MIME_TYPE_IMAGE)
+            viewModel.sendEvent(ProfileEvent.ChoosePhoto)
             dialog.dismiss()
         }
 
         dialogView.findViewById<TextView>(R.id.make_photo_item).setOnClickListener {
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            viewModel.sendEvent(ProfileEvent.RequestCameraPermission)
             dialog.dismiss()
         }
 
         dialogView.findViewById<TextView>(R.id.delete_item).setOnClickListener {
-            deletePhoto()
+            viewModel.sendEvent(ProfileEvent.DeletePhoto)
             dialog.dismiss()
         }
 
         dialog.show()
     }
 
-    private fun createImageUri(): Uri? {
-        val contentValues = ContentValues().apply {
-            put(
-                MediaStore.MediaColumns.DISPLAY_NAME,
-                String.format(FILE_NAME, System.currentTimeMillis())
-            )
-            put(MediaStore.MediaColumns.MIME_TYPE, MIME_TYPE_IMAGE_JPEG)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            }
-        }
-        return requireContext().contentResolver.insert(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            contentValues
-        )
-    }
-
-    private fun deletePhoto() {
-        imageView.apply {
-            setImageResource(R.drawable.ic_emty_photo)
-            adjustViewBounds = true
-        }
-    }
-
     companion object {
-        const val FILE_NAME = "JPEG_%s.jpg"
-        const val MIME_TYPE_IMAGE_JPEG = "image/jpeg"
-        const val MIME_TYPE_IMAGE = "image/*"
         fun newInstance() = ProfileFragment()
     }
 }
+
+
+

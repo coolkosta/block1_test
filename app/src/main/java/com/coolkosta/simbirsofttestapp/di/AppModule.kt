@@ -2,6 +2,7 @@ package com.coolkosta.simbirsofttestapp.di
 
 import android.app.Application
 import android.content.Context
+import com.coolkosta.simbirsofttestapp.app.App
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +16,10 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun providesApplicationContext(): Context = application
+
+    @Provides
+    @Singleton
+    fun provideApplication(): Application = application
 
     @Provides
     @Singleton
