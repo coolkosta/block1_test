@@ -54,8 +54,11 @@ class NewsFragment : Fragment() {
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
                         viewModel.state.observe(viewLifecycleOwner) { state ->
-                            state as NewsState.Success
-                            openFragment(NewsFilterFragment.newInstance(state.filterCategories))
+                            if (state is NewsState.Success) {
+                                openFragment(NewsFilterFragment.newInstance(state.filterCategories))
+                            } else if (state is NewsState.Error) {
+                                openFragment(NewsFilterFragment.newInstance(emptyList()))
+                            }
                         }
                         true
                     }
