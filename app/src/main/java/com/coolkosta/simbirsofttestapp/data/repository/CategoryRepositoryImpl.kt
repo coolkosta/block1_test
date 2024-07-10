@@ -29,6 +29,7 @@ class CategoryRepositoryImpl @Inject constructor(
                 getCategoriesFromDb()
             }
         }
+        check(categoryList.isNotEmpty())
         return categoryList
     }
 
@@ -42,8 +43,6 @@ class CategoryRepositoryImpl @Inject constructor(
     private suspend fun getCategoriesFromDb(): List<CategoryEntity> {
         val categoryList = categoryDao.getAllCategories()
             .map { CategoryMapper.fromCategoryDbModelToCategory(it) }
-        check(categoryList.isNotEmpty())
         return categoryList
     }
-
 }

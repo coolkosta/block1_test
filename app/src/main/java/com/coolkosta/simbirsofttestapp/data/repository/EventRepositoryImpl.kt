@@ -29,6 +29,7 @@ class EventRepositoryImpl @Inject constructor(
                 getEventsFromDb()
             }
         }
+        check(eventList.isNotEmpty())
         return eventList
     }
 
@@ -41,7 +42,6 @@ class EventRepositoryImpl @Inject constructor(
 
     private suspend fun getEventsFromDb(): List<EventEntity> {
         val eventList = eventDao.getAllData().map { EventMapper.fromEventDbModelToEvent(it) }
-        check(eventList.isNotEmpty())
         return eventList
     }
 }
