@@ -2,7 +2,7 @@ package com.coolkosta.simbirsofttestapp.data.mapper
 
 import com.coolkosta.simbirsofttestapp.data.source.local.model.EventDbModel
 import com.coolkosta.simbirsofttestapp.data.source.remote.model.EventResponse
-import com.coolkosta.simbirsofttestapp.domain.model.Event
+import com.coolkosta.simbirsofttestapp.domain.model.EventEntity
 
 object EventMapper {
     fun fromEventResponseToEventDbModel(eventResponse: EventResponse): EventDbModel {
@@ -19,8 +19,8 @@ object EventMapper {
         )
     }
 
-    fun fromEventDbModelToEvent(eventDbModel: EventDbModel): Event {
-        return Event(
+    fun fromEventDbModelToEvent(eventDbModel: EventDbModel): EventEntity {
+        return EventEntity(
             id = eventDbModel.id,
             categoryIds = eventDbModel.categoryIds,
             foundation = eventDbModel.foundation,

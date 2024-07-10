@@ -19,7 +19,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module(includes = [AppModule::class])
@@ -84,7 +83,7 @@ class DataModule {
     fun provideEventRepository(
         apiService: ApiService,
         eventDao: EventDao,
-        @Named("IO") dispatcher: CoroutineDispatcher
+        dispatcher: CoroutineDispatcher
     ): EventRepository {
         return EventRepositoryImpl(apiService, eventDao, dispatcher)
     }
@@ -94,7 +93,7 @@ class DataModule {
     fun provideCategoryRepository(
         apiService: ApiService,
         categoryDao: CategoryDao,
-        @Named("IO") dispatcher: CoroutineDispatcher
+        dispatcher: CoroutineDispatcher
     ): CategoryRepository {
         return CategoryRepositoryImpl(apiService, categoryDao, dispatcher)
     }
