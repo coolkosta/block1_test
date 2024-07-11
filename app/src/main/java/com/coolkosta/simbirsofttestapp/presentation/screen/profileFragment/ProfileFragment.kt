@@ -62,39 +62,42 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         imageView = view.findViewById(R.id.profile_iv)
         imageView.setOnClickListener { showChooseDialog() }
-        observeViewModel()
+        observeProfileViewModel()
     }
 
-    private fun observeViewModel() {
+    private fun observeProfileViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    state.photoUri?.let {
-                        imageView.setImageURI(it)
-                    } ?: run {
-                        imageView.setImageResource(R.drawable.ic_emty_photo)
-                        imageView.adjustViewBounds = true
+                launch {
+                    viewModel.state.collect { state ->
+                        state.photoUri?.let {
+                            imageView.setImageURI(it)
+                        } ?: run {
+                            imageView.setImageResource(R.drawable.ic_emty_photo)
+                            imageView.adjustViewBounds = true
+                        }
                     }
                 }
-            }
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sideEffect.collect { action ->
-                    when (action) {
-                        is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(
-                            Manifest.permission.CAMERA
-                        )
 
-                        is ProfileSideEffect.ChoosePhoto -> choosePhotoLauncher.launch(
-                            ProfileViewModel.MIME_TYPE_IMAGE
-                        )
+                launch {
+                    viewModel.sideEffect.collect { action ->
+                        when (action) {
+                            is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(
+                                Manifest.permission.CAMERA
+                            )
 
-                        is ProfileSideEffect.TakePhoto -> takePictureLauncher.launch(action.uri)
-                        is ProfileSideEffect.DeniedPermission -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.reminder_photo_permission_toast),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            is ProfileSideEffect.ChoosePhoto -> choosePhotoLauncher.launch(
+                                ProfileViewModel.MIME_TYPE_IMAGE
+                            )
+
+                            is ProfileSideEffect.TakePhoto -> takePictureLauncher.launch(action.uri)
+                            is ProfileSideEffect.DeniedPermission -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.reminder_photo_permission_toast),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }

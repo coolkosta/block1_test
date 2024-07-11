@@ -72,16 +72,23 @@ class NewsFilterFragment : Fragment() {
             viewModel.sendEvent(NewsFilterEvent.SwitchChanged(position, isCheck))
         }
         recyclerView.adapter = adapter
+        observeNewsFilterViewModel()
+    }
 
+    private fun observeNewsFilterViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    adapter.submitList(state.categories, state.filteredList)
+                launch {
+                    viewModel.state.collect { state ->
+                        adapter.submitList(state.categories, state.filteredList)
+                    }
                 }
-            }
-            viewModel.sideEffect.collect {
-                if (it is NewsFilterSideEffect.ShowErrorToast) {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                launch {
+                    viewModel.sideEffect.collect {
+                        if (it is NewsFilterSideEffect.ShowErrorToast) {
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

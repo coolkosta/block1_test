@@ -1,6 +1,5 @@
 package com.coolkosta.simbirsofttestapp.presentation.screen.newsFragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
@@ -51,27 +50,25 @@ class NewsViewModel @Inject constructor(
     }
 
     private fun getData() {
-        val coroutineExceptionHandler = CoroutineExceptionHandler.create("TAG") { ex ->
-            _state.update { NewsState.Error }
-            _sideEffect.trySend(NewsSideEffect.ShowErrorToast(ex))
-            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get data: $ex")
-        }
-        viewModelScope.launch(coroutineExceptionHandler) {
-            runCatching {
-                val eventsDeferred =
-                    async {
-                        eventInteractor.getEventList()
-                    }
-
-                val categoriesDeferred =
-                    async {
-                        categoryInteractor.getCategoryList()
-                    }
-
-                val events = eventsDeferred.await()
-                val categories = categoriesDeferred.await()
-                updateNewsState(events, categories)
+        val coroutineExceptionHandler =
+            CoroutineExceptionHandler.create(NEWS_VM_EXCEPTION_TAG) { ex ->
+                _state.update { NewsState.Error }
+                _sideEffect.trySend(NewsSideEffect.ShowErrorToast(ex))
             }
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val eventsDeferred =
+                async {
+                    eventInteractor.getEventList()
+                }
+
+            val categoriesDeferred =
+                async {
+                    categoryInteractor.getCategoryList()
+                }
+
+            val events = eventsDeferred.await()
+            val categories = categoriesDeferred.await()
+            updateNewsState(events, categories)
         }
     }
 

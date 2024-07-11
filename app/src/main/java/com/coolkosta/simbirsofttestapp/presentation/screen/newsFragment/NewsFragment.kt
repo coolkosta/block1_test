@@ -85,28 +85,37 @@ class NewsFragment : Fragment() {
         }
 
         recyclerView.adapter = adapter
+        observeNewsFragmentViewModel()
+    }
+
+    private fun observeNewsFragmentViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    when (state) {
-                        is NewsState.Loading -> {
-                            setupVisibility(true)
-                        }
+                launch {
+                    viewModel.state.collect { state ->
+                        when (state) {
+                            is NewsState.Loading -> {
+                                setupVisibility(true)
+                            }
 
-                        is NewsState.Success -> {
-                            setupVisibility(false)
-                            adapter.submitList(state.eventEntities)
-                        }
+                            is NewsState.Success -> {
+                                setupVisibility(false)
+                                adapter.submitList(state.eventEntities)
+                            }
 
-                        is NewsState.Error -> {
-                            setupVisibility(false)
+                            is NewsState.Error -> {
+                                setupVisibility(false)
+                            }
                         }
                     }
                 }
-            }
-            viewModel.sideEffect.collect { state ->
-                if (state is NewsSideEffect.ShowErrorToast) {
-                    showToast(state.message)
+
+                launch {
+                    viewModel.sideEffect.collect { state ->
+                        if (state is NewsSideEffect.ShowErrorToast) {
+                            showToast(state.message)
+                        }
+                    }
                 }
             }
         }

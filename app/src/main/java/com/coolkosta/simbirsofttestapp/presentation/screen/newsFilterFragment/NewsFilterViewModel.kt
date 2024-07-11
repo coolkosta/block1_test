@@ -1,22 +1,19 @@
 package com.coolkosta.simbirsofttestapp.presentation.screen.newsFilterFragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
-import kotlinx.coroutines.CoroutineDispatcher
+import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NewsFilterViewModel @Inject constructor(
     private val categoryInteractor: CategoryInteractor,
-    private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewsFilterState())
@@ -30,18 +27,16 @@ class NewsFilterViewModel @Inject constructor(
     }
 
     private fun getCategories() {
-        viewModelScope.launch {
-            runCatching {
-                val categories = withContext(dispatcherIO) { categoryInteractor.getCategoryList() }
-                _state.update { state -> state.copy(categories = categories) }
-            }.onFailure { ex ->
-                Log.e(NewsFilterViewModel::class.simpleName, "Can't get data: ${ex.message}")
-                _sideEffect.trySend(
-                    NewsFilterSideEffect.ShowErrorToast(
-                        ex.message ?: "Unknown error"
-                    )
+        val coroutineException = CoroutineExceptionHandler.create(NEWS_FILTER_VM_EXCEPTION_TAG) { ex ->
+            _sideEffect.trySend(
+                NewsFilterSideEffect.ShowErrorToast(
+                    ex
                 )
-            }
+            )
+        }
+        viewModelScope.launch(coroutineException) {
+            val categories = categoryInteractor.getCategoryList()
+            _state.update { state -> state.copy(categories = categories) }
         }
     }
 
@@ -69,5 +64,9 @@ class NewsFilterViewModel @Inject constructor(
             currentList.remove(idCategory)
             _state.update { state -> state.copy(filteredList = currentList) }
         }
+    }
+
+    companion object {
+        private const val NEWS_FILTER_VM_EXCEPTION_TAG = "NewsFilterViewModel"
     }
 }
