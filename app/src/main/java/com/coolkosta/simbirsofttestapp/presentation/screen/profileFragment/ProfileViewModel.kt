@@ -6,24 +6,23 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(private val application: Application) : ViewModel() {
 
-    private val _viewState = MutableLiveData<ProfileViewState>()
-    val viewState: LiveData<ProfileViewState> = _viewState
+    private val _state = MutableStateFlow(ProfileViewState())
+    val state = _state.asStateFlow()
 
-    private val _sideEffect = MutableLiveData<ProfileSideEffect>()
-    val sideEffect: LiveData<ProfileSideEffect> = _sideEffect
+    private val _sideEffect = Channel<ProfileSideEffect>()
+    val sideEffect = _sideEffect.receiveAsFlow()
 
     private var photoUri: Uri? = null
-
-    init {
-        _viewState.value = ProfileViewState()
-    }
 
     fun sendEvent(event: ProfileEvent) {
         when (event) {
@@ -38,40 +37,39 @@ class ProfileViewModel @Inject constructor(private val application: Application)
     }
 
     private fun requestCameraPermission() {
-        _sideEffect.value = ProfileSideEffect.RequestPermission
+        _sideEffect.trySend(ProfileSideEffect.RequestPermission)
     }
 
     private fun choosePhoto() {
-        _sideEffect.value = ProfileSideEffect.ChoosePhoto
+        _sideEffect.trySend(ProfileSideEffect.ChoosePhoto)
     }
 
     private fun makePhoto() {
         photoUri = createImageUri()
-        _viewState.value = _viewState.value?.copy(photoUri = photoUri)
-        _sideEffect.value = ProfileSideEffect.TakePhoto(photoUri!!)
+        _state.update { _state.value.copy(photoUri = photoUri) }
+        _sideEffect.trySend(ProfileSideEffect.TakePhoto(photoUri!!))
     }
 
     private fun deletePhoto() {
-        photoUri = null
-        _viewState.value = ProfileViewState(photoUri = null)
+       _state.update { _state.value.copy(photoUri = null) }
     }
 
     private fun handlePermissionResult(isGranted: Boolean) {
-        _viewState.value = _viewState.value?.copy(isPermissionGranted = isGranted)
+        _state.update { _state.value.copy(isPermissionGranted = isGranted) }
         if (isGranted) {
             makePhoto()
         } else {
-            _sideEffect.value = ProfileSideEffect.DeniedPermission
+            _sideEffect.trySend(ProfileSideEffect.DeniedPermission)
         }
     }
 
     private fun handlePhotoChosen(uri: Uri?) {
-        _viewState.value = _viewState.value?.copy(photoUri = uri)
+        _state.update { _state.value.copy(photoUri = uri) }
     }
 
     private fun handlePhotoTaken(success: Boolean) {
         if (success) {
-            _viewState.value = _viewState.value?.copy(photoUri = photoUri)
+            _state.update { _state.value.copy(photoUri = photoUri) }
         }
     }
 

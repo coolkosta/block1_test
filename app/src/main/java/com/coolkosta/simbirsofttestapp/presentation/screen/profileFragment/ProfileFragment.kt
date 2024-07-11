@@ -14,8 +14,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.util.getAppComponent
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -62,26 +66,37 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.viewState.observe(viewLifecycleOwner) { state ->
-            state.photoUri?.let {
-                imageView.setImageURI(it)
-            } ?: run {
-                imageView.setImageResource(R.drawable.ic_emty_photo)
-                imageView.adjustViewBounds = true
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    state.photoUri?.let {
+                        imageView.setImageURI(it)
+                    } ?: run {
+                        imageView.setImageResource(R.drawable.ic_emty_photo)
+                        imageView.adjustViewBounds = true
+                    }
+                }
             }
-        }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.sideEffect.collect { action ->
+                    when (action) {
+                        is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(
+                            Manifest.permission.CAMERA
+                        )
 
-        viewModel.sideEffect.observe(viewLifecycleOwner) { action ->
-            when (action) {
-                is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-                is ProfileSideEffect.ChoosePhoto -> choosePhotoLauncher.launch(ProfileViewModel.MIME_TYPE_IMAGE)
-                is ProfileSideEffect.TakePhoto -> takePictureLauncher.launch(action.uri)
-                is ProfileSideEffect.DeniedPermission -> {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.reminder_photo_permission_toast),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        is ProfileSideEffect.ChoosePhoto -> choosePhotoLauncher.launch(
+                            ProfileViewModel.MIME_TYPE_IMAGE
+                        )
+
+                        is ProfileSideEffect.TakePhoto -> takePictureLauncher.launch(action.uri)
+                        is ProfileSideEffect.DeniedPermission -> {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.reminder_photo_permission_toast),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
             }
         }

@@ -13,13 +13,13 @@ class SearchByEventFragmentViewModel : ViewModel() {
 
     val searchResult = _searchResult.asStateFlow()
 
-    fun sendEvent(searchByEventIntent: SearchByEventIntent) {
+    fun sendEvent(searchByEventIntent: SearchEvent) {
         when (searchByEventIntent) {
-            is SearchByEventIntent.CategorySelected -> {
+            is SearchEvent.CategorySelected -> {
                 setCategory(searchByEventIntent.category)
             }
 
-            is SearchByEventIntent.SearchQueryChanged -> {
+            is SearchEvent.SearchQueryChanged -> {
                 onSearchQueryChanged(searchByEventIntent.query)
             }
         }

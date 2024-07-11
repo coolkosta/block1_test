@@ -10,6 +10,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.adapter.NewsAdapter
@@ -19,6 +22,7 @@ import com.coolkosta.simbirsofttestapp.presentation.screen.newsFilterFragment.Ne
 import com.coolkosta.simbirsofttestapp.presentation.screen.newsFilterFragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 import com.coolkosta.simbirsofttestapp.util.getAppComponent
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import kotlinx.coroutines.launch
 
 
 class NewsFragment : Fragment() {
@@ -53,12 +57,17 @@ class NewsFragment : Fragment() {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_filter -> {
-                        viewModel.state.observe(viewLifecycleOwner) { state ->
-                            if (state is NewsState.Success) {
-                                openFragment(NewsFilterFragment.newInstance(state.filterCategories))
-                            } else if (state is NewsState.Error) {
-                                openFragment(NewsFilterFragment.newInstance(emptyList()))
-                            }
+                        if (viewModel.state.value is NewsState.Success) {
+                            openFragment(
+                                NewsFilterFragment
+                                    .newInstance(
+                                        (viewModel.state.value as NewsState.Success).filterCategories
+                                    )
+                            )
+                        } else if (viewModel.state.value is NewsState.Error) {
+                            openFragment(
+                                NewsFilterFragment.newInstance(emptyList())
+                            )
                         }
                         true
                     }
@@ -76,27 +85,29 @@ class NewsFragment : Fragment() {
         }
 
         recyclerView.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    when (state) {
+                        is NewsState.Loading -> {
+                            setupVisibility(true)
+                        }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is NewsState.Loading -> {
-                    setupVisibility(true)
-                }
+                        is NewsState.Success -> {
+                            setupVisibility(false)
+                            adapter.submitList(state.eventEntities)
+                        }
 
-                is NewsState.Success -> {
-                    setupVisibility(false)
-                    adapter.submitList(state.eventEntities)
-                }
-
-                is NewsState.Error -> {
-                    setupVisibility(false)
+                        is NewsState.Error -> {
+                            setupVisibility(false)
+                        }
+                    }
                 }
             }
-        }
-
-        viewModel.sideEffect.observe(viewLifecycleOwner) { sideEffect ->
-            when (sideEffect) {
-                is NewsSideEffect.ShowErrorToast -> showToast(sideEffect.message)
+            viewModel.sideEffect.collect { state ->
+                if (state is NewsSideEffect.ShowErrorToast) {
+                    showToast(state.message)
+                }
             }
         }
     }

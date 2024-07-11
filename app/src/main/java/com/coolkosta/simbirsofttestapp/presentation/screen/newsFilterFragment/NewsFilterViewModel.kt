@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,6 +22,9 @@ class NewsFilterViewModel @Inject constructor(
     private val _state = MutableStateFlow(NewsFilterState())
     val state = _state.asStateFlow()
 
+    private val _sideEffect = Channel<NewsFilterSideEffect>()
+    val sideEffect = _sideEffect.receiveAsFlow()
+
     init {
         getCategories()
     }
@@ -27,11 +32,15 @@ class NewsFilterViewModel @Inject constructor(
     private fun getCategories() {
         viewModelScope.launch {
             runCatching {
-                val categories = withContext(dispatcherIO) {categoryInteractor.getCategoryList()}
+                val categories = withContext(dispatcherIO) { categoryInteractor.getCategoryList() }
                 _state.update { state -> state.copy(categories = categories) }
             }.onFailure { ex ->
                 Log.e(NewsFilterViewModel::class.simpleName, "Can't get data: ${ex.message}")
-
+                _sideEffect.trySend(
+                    NewsFilterSideEffect.ShowErrorToast(
+                        ex.message ?: "Unknown error"
+                    )
+                )
             }
         }
     }

@@ -1,16 +1,20 @@
 package com.coolkosta.simbirsofttestapp.presentation.screen.newsFragment
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coolkosta.simbirsofttestapp.domain.interactor.CategoryInteractor
 import com.coolkosta.simbirsofttestapp.domain.interactor.EventInteractor
 import com.coolkosta.simbirsofttestapp.domain.model.CategoryEntity
 import com.coolkosta.simbirsofttestapp.domain.model.EventEntity
+import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,12 +23,11 @@ class NewsViewModel @Inject constructor(
     private val categoryInteractor: CategoryInteractor,
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<NewsState>()
-    val state: LiveData<NewsState> get() = _state
+    private val _state = MutableStateFlow<NewsState>(NewsState.Loading)
+    val state = _state.asStateFlow()
 
-    private val _sideEffect = MutableLiveData<NewsSideEffect>()
-    val sideEffect: LiveData<NewsSideEffect> get() = _sideEffect
-
+    private val _sideEffect = Channel<NewsSideEffect>()
+    val sideEffect = _sideEffect.receiveAsFlow()
 
     private var filterCategories: List<Int> = listOf()
     private var initList: List<EventEntity> = listOf()
@@ -41,15 +44,19 @@ class NewsViewModel @Inject constructor(
         categories: List<CategoryEntity>
     ) {
         filterCategories = categories.map { it.id }
-        _state.value = NewsState.Success(eventEntities, filterCategories)
+        _state.update { NewsState.Success(eventEntities, filterCategories) }
         initList = eventEntities
         unreadCount = eventEntities.size
         fetchUnreadCount(eventEntities.size)
     }
 
     private fun getData() {
-        viewModelScope.launch {
-            _state.value = NewsState.Loading
+        val coroutineExceptionHandler = CoroutineExceptionHandler.create("TAG") { ex ->
+            _state.update { NewsState.Error }
+            _sideEffect.trySend(NewsSideEffect.ShowErrorToast(ex))
+            Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get data: $ex")
+        }
+        viewModelScope.launch(coroutineExceptionHandler) {
             runCatching {
                 val eventsDeferred =
                     async {
@@ -64,10 +71,6 @@ class NewsViewModel @Inject constructor(
                 val events = eventsDeferred.await()
                 val categories = categoriesDeferred.await()
                 updateNewsState(events, categories)
-            }.onFailure { ex ->
-                Log.e(NEWS_VM_EXCEPTION_TAG, "Can't get data: ${ex.message}")
-                _state.value = NewsState.Error(ex)
-                _sideEffect.value = NewsSideEffect.ShowErrorToast(ex.message ?: "Unknown error")
             }
         }
     }
