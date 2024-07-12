@@ -5,8 +5,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 import com.coolkosta.simbirsofttestapp.rx.entity.Pair;
-import com.coolkosta.simbirsofttestapp.rxtraining.entity.Entity;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxTransformingTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.entity.Entity;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxTransformingTraining;
 
 import org.junit.Before;
 import org.junit.Test;

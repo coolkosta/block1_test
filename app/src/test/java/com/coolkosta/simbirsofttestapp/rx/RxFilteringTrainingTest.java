@@ -2,7 +2,7 @@ package com.coolkosta.simbirsofttestapp.rx;
 
 import static org.mockito.Mockito.reset;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxFilteringTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxFilteringTraining;
 
 import org.junit.Before;
 import org.junit.Test;

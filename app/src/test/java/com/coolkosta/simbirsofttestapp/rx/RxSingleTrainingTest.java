@@ -2,8 +2,8 @@ package com.coolkosta.simbirsofttestapp.rx;
 
 import static org.mockito.Mockito.reset;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxSingleTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.exceptions.ExpectedException;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxSingleTraining;
 
 import org.junit.Before;
 import org.junit.Test;

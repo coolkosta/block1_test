@@ -7,7 +7,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxCombiningTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxCombiningTraining;
 
 import org.junit.Before;
 import org.junit.Test;

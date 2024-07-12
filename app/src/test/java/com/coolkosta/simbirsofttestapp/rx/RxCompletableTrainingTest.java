@@ -3,8 +3,8 @@ package com.coolkosta.simbirsofttestapp.rx;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
-import com.coolkosta.simbirsofttestapp.rxtraining.exceptions.ExpectedException;
-import com.coolkosta.simbirsofttestapp.rxtraining.rx.RxCompletableTraining;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.exceptions.ExpectedException;
+import com.coolkosta.simbirsofttestapp.other.rxtraining.rx.RxCompletableTraining;
 
 import org.junit.Before;
 import org.junit.Test;
