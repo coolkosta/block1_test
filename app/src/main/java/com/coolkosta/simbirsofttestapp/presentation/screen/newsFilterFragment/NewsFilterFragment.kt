@@ -23,10 +23,15 @@ class NewsFilterFragment : Fragment() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: FilterAdapter
 
     private val viewModel: NewsFilterViewModel by viewModels {
         getAppComponent().viewModelsFactory()
+    }
+
+    private val adapter: FilterAdapter by lazy {
+        FilterAdapter { position, isCheck ->
+            viewModel.sendEvent(NewsFilterEvent.SwitchChanged(position, isCheck))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,10 +72,6 @@ class NewsFilterFragment : Fragment() {
             }
         }
         recyclerView = view.findViewById(R.id.recycler_view_container)
-
-        adapter = FilterAdapter { position, isCheck ->
-            viewModel.sendEvent(NewsFilterEvent.SwitchChanged(position, isCheck))
-        }
         recyclerView.adapter = adapter
         observeNewsFilterViewModel()
     }

@@ -28,11 +28,17 @@ import kotlinx.coroutines.launch
 class NewsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: NewsAdapter
     private lateinit var toolBar: Toolbar
     private lateinit var progress: CircularProgressIndicator
+
     private val viewModel: NewsViewModel by viewModels {
         getAppComponent().viewModelsFactory()
+    }
+    private val adapter: NewsAdapter by lazy {
+        NewsAdapter { event ->
+            viewModel.sendEvent(NewsEvent.EventReaded(event))
+            openFragment(EventDetailFragment.newInstance(event))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,11 +85,6 @@ class NewsFragment : Fragment() {
 
         progress = view.findViewById(R.id.progress_circular)
         recyclerView = view.findViewById(R.id.recycler_view_container)
-        adapter = NewsAdapter { event ->
-            viewModel.sendEvent(NewsEvent.EventReaded(event))
-            openFragment(EventDetailFragment.newInstance(event))
-        }
-
         recyclerView.adapter = adapter
         observeNewsFragmentViewModel()
     }
