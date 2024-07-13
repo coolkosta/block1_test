@@ -88,4 +88,5 @@ rxkotlin = { module = "io.reactivex.rxjava3:rxkotlin", version.ref = "rxkotlin" 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

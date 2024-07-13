@@ -21,3 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "SimbirSoftTestApp"
 include(":app")
+include(":newsFeature")
+include(":searchFeature")
+include(":helpFeature")
+include(":profileFeature")
+include(":core")

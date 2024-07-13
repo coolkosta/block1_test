@@ -76,6 +76,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(project(":profileFeature"))
+
     //Retrofit
     implementation(libs.retrofit)
     //Gson
