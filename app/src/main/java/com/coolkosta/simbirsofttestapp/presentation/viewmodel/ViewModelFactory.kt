@@ -12,12 +12,12 @@ import javax.inject.Provider
 class ViewModelFactory @Inject constructor(
     newsViewModelProvider: Provider<NewsViewModel>,
     newsFilterViewModelProvider: Provider<NewsFilterViewModel>,
-    profileViewModelProvider: Provider<com.coolkosta.profilefeature.presentation.profileFragment.ProfileViewModel>
+    profileViewModelProvider: Provider<ProfileViewModel>
 ) : ViewModelProvider.Factory {
     private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
         NewsViewModel::class.java to newsViewModelProvider,
         NewsFilterViewModel::class.java to newsFilterViewModelProvider,
-        com.coolkosta.profilefeature.presentation.profileFragment.ProfileViewModel::class.java to profileViewModelProvider
+        ProfileViewModel::class.java to profileViewModelProvider
     )
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {

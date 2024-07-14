@@ -1,6 +1,5 @@
 package com.coolkosta.profilefeature.presentation.profileFragment
 
-import android.Manifest
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
@@ -9,44 +8,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.profilefeature.R
+import com.coolkosta.profilefeature.di.ProfileComponentProvider
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
-
     private lateinit var imageView: ImageView
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var choosePhotoLauncher: ActivityResultLauncher<String>
 
-    private val viewModel: ProfileViewModel by viewModels {
-        getAppComponent().viewModelsFactory()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+       (requireActivity().application as ProfileComponentProvider)
+            .getProfileComponent()
+            .inject(this)
+
         choosePhotoLauncher =
             registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-                viewModel.sendEvent(ProfileEvent.PhotoChosen(uri))
+             //   viewModel.sendEvent(ProfileEvent.PhotoChosen(uri))
             }
 
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                viewModel.sendEvent(ProfileEvent.PermissionResult(isGranted))
+              //  viewModel.sendEvent(ProfileEvent.PermissionResult(isGranted))
             }
 
         takePictureLauncher =
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                viewModel.sendEvent(ProfileEvent.PhotoTaken(success))
+              //  viewModel.sendEvent(ProfileEvent.PhotoTaken(success))
             }
     }
 
@@ -68,18 +66,18 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.state.collect { state ->
+                    /*viewModel.state.collect { state ->
                         state.photoUri?.let {
                             imageView.setImageURI(it)
                         } ?: run {
                             imageView.setImageResource(com.coolkosta.core.R.drawable.ic_emty_photo)
                             imageView.adjustViewBounds = true
                         }
-                    }
+                    }*/
                 }
 
                 launch {
-                    viewModel.sideEffect.collect { action ->
+                   /* viewModel.sideEffect.collect { action ->
                         when (action) {
                             is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(
                                 Manifest.permission.CAMERA
@@ -98,7 +96,7 @@ class ProfileFragment : Fragment() {
                                 ).show()
                             }
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -112,17 +110,17 @@ class ProfileFragment : Fragment() {
             .create()
 
         dialogView.findViewById<TextView>(R.id.choose_photo_item).setOnClickListener {
-            viewModel.sendEvent(ProfileEvent.ChoosePhoto)
+            //viewModel.sendEvent(ProfileEvent.ChoosePhoto)
             dialog.dismiss()
         }
 
         dialogView.findViewById<TextView>(R.id.make_photo_item).setOnClickListener {
-            viewModel.sendEvent(ProfileEvent.TakePhotoClicked)
+          //  viewModel.sendEvent(ProfileEvent.TakePhotoClicked)
             dialog.dismiss()
         }
 
         dialogView.findViewById<TextView>(R.id.delete_item).setOnClickListener {
-            viewModel.sendEvent(ProfileEvent.DeletePhoto)
+          // viewModel.sendEvent(ProfileEvent.DeletePhoto)
             dialog.dismiss()
         }
 
