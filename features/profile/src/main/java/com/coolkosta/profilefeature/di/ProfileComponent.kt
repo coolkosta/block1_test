@@ -10,8 +10,9 @@ import javax.inject.Singleton
 @Component(dependencies = [ProfileDeps::class])
 interface ProfileComponent{
     fun inject(fragment: ProfileFragment)
+    fun viewModelsFactory(): ViewModelProvider.Factory
 }
 
 interface ProfileDeps {
-    val appViewModelFactory : ViewModelProvider.Factory
+    val viewModelsFactory : ViewModelProvider.Factory
 }
