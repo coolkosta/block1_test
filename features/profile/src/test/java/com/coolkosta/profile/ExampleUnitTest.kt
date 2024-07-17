@@ -1,4 +1,4 @@
-package com.coolkosta.profilefeature
+package com.coolkosta.profile
 
 import org.junit.Test
 

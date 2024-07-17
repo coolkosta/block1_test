@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.coolkosta.profilefeature"
+    namespace = "com.coolkosta.profile"
     compileSdk = 34
 
     defaultConfig {

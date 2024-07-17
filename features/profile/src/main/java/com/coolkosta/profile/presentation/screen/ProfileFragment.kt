@@ -1,4 +1,4 @@
-package com.coolkosta.profilefeature.presentation.profileFragment
+package com.coolkosta.profile.presentation.screen
 
 import android.Manifest
 import android.app.AlertDialog
@@ -17,8 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.coolkosta.profilefeature.R
-import com.coolkosta.profilefeature.di.ProfileComponentProvider
+import com.coolkosta.profile.R
+import com.coolkosta.profile.di.ProfileComponentProvider
+import com.coolkosta.profile.presentation.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
@@ -27,11 +28,10 @@ class ProfileFragment : Fragment() {
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var choosePhotoLauncher: ActivityResultLauncher<String>
 
-
     private val viewModel: ProfileViewModel by viewModels {
         (requireActivity().application as ProfileComponentProvider)
             .getProfileComponent()
-            .viewModelsFactory()
+            .profileViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +82,7 @@ class ProfileFragment : Fragment() {
                 }
 
                 launch {
-                   viewModel.sideEffect.collect { action ->
+                    viewModel.sideEffect.collect { action ->
                         when (action) {
                             is ProfileSideEffect.RequestPermission -> requestPermissionLauncher.launch(
                                 Manifest.permission.CAMERA

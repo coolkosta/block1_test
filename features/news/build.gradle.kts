@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.coolkosta.newsfeature"
+    namespace = "com.coolkosta.news"
     compileSdk = 34
 
     defaultConfig {

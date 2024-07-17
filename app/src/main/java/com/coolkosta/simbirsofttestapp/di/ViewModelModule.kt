@@ -8,6 +8,6 @@ import dagger.Provides
 @Module
 class ViewModelModule {
     @Provides
-     fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory =
-         viewModelFactory
+    fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory =
+        viewModelFactory
 }

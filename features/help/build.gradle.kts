@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.coolkosta.helpfeature"
+    namespace = "com.coolkosta.help"
     compileSdk = 34
 
     defaultConfig {

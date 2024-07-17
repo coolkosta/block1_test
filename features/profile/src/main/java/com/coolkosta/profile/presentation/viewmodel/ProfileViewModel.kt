@@ -1,4 +1,4 @@
-package com.coolkosta.profilefeature.presentation.profileFragment
+package com.coolkosta.profile.presentation.viewmodel
 
 import android.app.Application
 import android.content.ContentValues
@@ -7,6 +7,9 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
+import com.coolkosta.profile.presentation.screen.ProfileEvent
+import com.coolkosta.profile.presentation.screen.ProfileSideEffect
+import com.coolkosta.profile.presentation.screen.ProfileViewState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.coolkosta.searchfeature"
+    namespace = "com.coolkosta.search"
     compileSdk = 34
 
     defaultConfig {

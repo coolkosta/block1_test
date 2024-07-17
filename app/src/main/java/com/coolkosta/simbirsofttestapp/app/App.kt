@@ -1,9 +1,9 @@
 package com.coolkosta.simbirsofttestapp.app
 
 import android.app.Application
-import com.coolkosta.profilefeature.di.DaggerProfileComponent
-import com.coolkosta.profilefeature.di.ProfileComponent
-import com.coolkosta.profilefeature.di.ProfileComponentProvider
+import com.coolkosta.profile.di.DaggerProfileComponent
+import com.coolkosta.profile.di.ProfileComponent
+import com.coolkosta.profile.di.ProfileComponentProvider
 import com.coolkosta.simbirsofttestapp.di.AppComponent
 import com.coolkosta.simbirsofttestapp.di.AppModule
 import com.coolkosta.simbirsofttestapp.di.DaggerAppComponent
@@ -24,5 +24,6 @@ class App : Application(), ProfileComponentProvider {
         return DaggerProfileComponent.builder()
             .profileDeps(appComponent)
             .build()
+
     }
 }

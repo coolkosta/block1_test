@@ -1,4 +1,4 @@
-package com.coolkosta.profilefeature.presentation.profileFragment
+package com.coolkosta.profile.presentation.screen
 
 import android.net.Uri
 
