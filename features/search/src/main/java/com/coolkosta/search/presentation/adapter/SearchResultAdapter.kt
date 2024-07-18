@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.adapter
+package com.coolkosta.search.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.search.R
 
 class SearchResultAdapter : RecyclerView.Adapter<SearchResultAdapter.SearchItemViewHolder>() {
     private var items = emptyList<String>()

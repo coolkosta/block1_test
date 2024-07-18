@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
+import com.coolkosta.core.util.ImageResource
 import com.coolkosta.news.R
 import com.coolkosta.news.domain.model.EventEntity
-import com.coolkosta.simbirsofttestapp.util.ImageResource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone

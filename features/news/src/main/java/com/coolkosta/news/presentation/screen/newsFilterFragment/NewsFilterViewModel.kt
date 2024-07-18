@@ -2,8 +2,8 @@ package com.coolkosta.news.presentation.screen.newsFilterFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.coolkosta.core.util.CoroutineExceptionHandler
 import com.coolkosta.news.domain.interactor.CategoryInteractor
-import com.coolkosta.simbirsofttestapp.util.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,6 +1,6 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment
+package com.coolkosta.search.presentation.screen
 
-import com.coolkosta.simbirsofttestapp.util.SearchCategory
+import com.coolkosta.search.util.SearchCategory
 
 sealed interface SearchEvent {
     data class CategorySelected(val category: SearchCategory) : SearchEvent

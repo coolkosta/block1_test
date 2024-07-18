@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.util
+package com.coolkosta.news.util
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

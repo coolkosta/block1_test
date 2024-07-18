@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment
+package com.coolkosta.search.presentation.screen
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
-import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.adapter.SearchResultPagerAdapter
+import com.coolkosta.search.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
@@ -40,12 +39,12 @@ class SearchFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tabLayout)
         emptyListView = view.findViewById(R.id.empty_list)
         viewPager.offscreenPageLimit = 2
-        viewPager.adapter = SearchResultPagerAdapter(this)
+        viewPager.adapter = com.coolkosta.search.presentation.adapter.SearchResultPagerAdapter(this)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
-                0 -> getString(R.string.event_tab_label)
-                1 -> getString(R.string.nko_tab_label)
+                0 -> getString(com.coolkosta.core.R.string.event_tab_label)
+                1 -> getString(com.coolkosta.core.R.string.nko_tab_label)
                 else -> null
             }
         }.attach()

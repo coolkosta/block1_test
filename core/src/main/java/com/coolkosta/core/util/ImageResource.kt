@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.util
+package com.coolkosta.core.util
 
 import androidx.annotation.DrawableRes
 import com.coolkosta.core.R

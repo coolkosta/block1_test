@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey_two"
-    tools:context=".presentation.screen.searchByEventFragment.SearchByEventFragment">
+    tools:context="com.coolkosta.search.presentation.screen.SearchByEventFragment">
 
     <TextView
         android:id="@+id/search_result_tv"

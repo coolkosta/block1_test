@@ -24,9 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimbirSoftTestApp"
         tools:targetApi="31">
-        <service
-            android:name="com.coolkosta.help.service.HelpCategoryService"
-            android:exported="false" />
 
         <activity
             android:name=".presentation.screen.activity.MainActivity"

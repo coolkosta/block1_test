@@ -1,9 +1,9 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment
+package com.coolkosta.search.presentation.screen
 
 import androidx.lifecycle.ViewModel
-import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.core.util.Generator
+import com.coolkosta.search.util.SearchCategory
 
-import com.coolkosta.simbirsofttestapp.util.SearchCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

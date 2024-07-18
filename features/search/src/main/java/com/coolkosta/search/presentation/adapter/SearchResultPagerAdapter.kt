@@ -1,9 +1,9 @@
-package com.coolkosta.simbirsofttestapp.presentation.adapter
+package com.coolkosta.search.presentation.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment.SearchByEventFragment
-import com.coolkosta.simbirsofttestapp.util.SearchCategory
+import com.coolkosta.search.util.SearchCategory
+import com.coolkosta.search.presentation.screen.SearchByEventFragment
 
 class SearchResultPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 

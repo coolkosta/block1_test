@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment
+package com.coolkosta.search.presentation.screen
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.FlowPreview
