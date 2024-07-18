@@ -11,7 +11,7 @@ import com.coolkosta.profile.presentation.screen.ProfileFragment
 import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.screen.helpFragment.HelpFragment
 import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginScreenFragment
-import com.coolkosta.simbirsofttestapp.presentation.screen.newsFragment.NewsFragment
+import com.coolkosta.news.presentation.screen.newsFragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment.SearchFragment
 import com.coolkosta.simbirsofttestapp.util.EventFlow
 import com.google.android.material.badge.BadgeDrawable

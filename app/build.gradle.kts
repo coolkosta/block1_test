@@ -77,6 +77,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(project(":features:profile"))
+    implementation(project(":features:news"))
+
 
     //Retrofit
     implementation(libs.retrofit)

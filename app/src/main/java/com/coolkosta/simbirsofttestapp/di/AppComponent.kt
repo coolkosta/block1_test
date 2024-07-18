@@ -1,12 +1,11 @@
 package com.coolkosta.simbirsofttestapp.di
 
-import androidx.lifecycle.ViewModelProvider
+import com.coolkosta.news.di.NewsDeps
 import com.coolkosta.profile.di.ProfileDeps
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, DataModule::class, DomainModule::class, ViewModelModule::class])
-interface AppComponent : ProfileDeps {
-    fun viewModelsFactory(): ViewModelProvider.Factory
+@Component(modules = [AppModule::class])
+interface AppComponent : ProfileDeps, NewsDeps {
 }
