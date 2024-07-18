@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="daytime_text_with_left_days">Осталось %1$d дней (%2$s)</string>
+    <string name="daytime_text_without_left_days">%1$s</string>
+    <string name="error_loading_toast">Не удалось загрузить данные</string>
+</resources>

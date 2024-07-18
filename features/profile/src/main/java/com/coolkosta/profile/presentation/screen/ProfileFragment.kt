@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
                         state.photoUri?.let {
                             imageView.setImageURI(it)
                         } ?: run {
-                            imageView.setImageResource(com.coolkosta.core.R.drawable.ic_emty_photo)
+                            imageView.setImageResource(R.drawable.ic_empty_photo)
                             imageView.adjustViewBounds = true
                         }
                     }
@@ -96,7 +96,7 @@ class ProfileFragment : Fragment() {
                             is ProfileSideEffect.DeniedPermission -> {
                                 Toast.makeText(
                                     requireContext(),
-                                    getString(com.coolkosta.core.R.string.reminder_photo_permission_toast),
+                                    getString(R.string.reminder_photo_permission_toast),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

@@ -131,7 +131,7 @@ class NewsFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(
             requireContext(),
-            getString(com.coolkosta.core.R.string.error_loading_toast) + " " + message,
+            getString(R.string.error_loading_toast) + " " + message,
             Toast.LENGTH_SHORT
         ).show()
     }

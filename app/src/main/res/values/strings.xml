@@ -46,7 +46,6 @@
     <string name="contact_us_label"><u>Напишите нам</u></string>
     <string name="sample_event_title">Спонсоры отремонтируют школу-интернат</string>
     <string name="daytime_text_with_left_days">Осталось %1$d дней (%2$s)</string>
-    <string name="daytime_text_without_left_days">%1$s</string>
     <string name="sample_foundation_label">Благотворительный Фонд «Счастливый Мир»</string>
     <string name="sample_adress_text">Санкт-Петербург, Кирочная улица,\nд. 50А, каб. 208</string>
     <string name="sample_contacts_text">+7 (937) 037 37–73\n+7 (937) 016 16–16</string>

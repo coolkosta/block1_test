@@ -67,7 +67,7 @@ class NewsAdapter(
                     Glide
                         .with(itemView.context)
                         .load(item.imageName)
-                        .placeholder(com.coolkosta.core.R.drawable.ic_placeholder)
+                        .placeholder(R.drawable.ic_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(imageView)
                 }
@@ -76,7 +76,7 @@ class NewsAdapter(
                     Glide
                         .with(itemView.context)
                         .load(imageResource.resourceId)
-                        .placeholder(com.coolkosta.core.R.drawable.ic_placeholder)
+                        .placeholder(R.drawable.ic_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(imageView)
                 }
@@ -87,13 +87,13 @@ class NewsAdapter(
             when (val daysLeft = today.daysUntil(eventDay)) {
                 in 0..20 -> eventDate.text =
                     itemView.context.getString(
-                        com.coolkosta.core.R.string.daytime_text_with_left_days,
+                        R.string.daytime_text_with_left_days,
                         daysLeft,
                         eventDay.toString()
                     )
 
                 else -> eventDate.text = itemView.context.getString(
-                    com.coolkosta.core.R.string.daytime_text_without_left_days,
+                    R.string.daytime_text_without_left_days,
                     eventDay.toString()
                 )
             }

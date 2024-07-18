@@ -77,13 +77,13 @@ class EventDetailFragment : Fragment() {
             val eventDay = LocalDate.parse(currentEventEntity.date)
             when (val daysLeft = today.daysUntil(eventDay)) {
                 in 0..20 -> dateTime.text = getString(
-                    com.coolkosta.core.R.string.daytime_text_with_left_days,
+                    R.string.daytime_text_with_left_days,
                     daysLeft,
                     eventDay.toString()
                 )
 
                 else -> dateTime.text = getString(
-                    com.coolkosta.core.R.string.daytime_text_without_left_days,
+                    R.string.daytime_text_without_left_days,
                     eventDay.toString()
                 )
             }

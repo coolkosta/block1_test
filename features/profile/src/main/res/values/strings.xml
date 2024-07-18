@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_photo_permission_toast">Для съемки фото необходимо разрешение на использование камеры</string>
+</resources>
