@@ -1,30 +1,28 @@
-package com.coolkosta.simbirsofttestapp.util
+package com.coolkosta.help.util
 
-import com.coolkosta.help.presentation.model.HelpItem
-import com.coolkosta.simbirsofttestapp.R
-
+import com.coolkosta.core.R
 
 class Generator {
 
-    fun generateHelpList(): List<HelpItem> {
+    fun generateHelpList(): List<com.coolkosta.help.presentation.model.HelpItem> {
         return listOf(
-            HelpItem(
+            com.coolkosta.help.presentation.model.HelpItem(
                 imageId = R.drawable.ic_child,
                 title = R.string.children
             ),
-            HelpItem(
+            com.coolkosta.help.presentation.model.HelpItem(
                 imageId = R.drawable.ic_adult,
                 title = R.string.adult
             ),
-            HelpItem(
+            com.coolkosta.help.presentation.model.HelpItem(
                 imageId = R.drawable.ic_old,
                 title = R.string.old
             ),
-            HelpItem(
+            com.coolkosta.help.presentation.model.HelpItem(
                 imageId = R.drawable.ic_animals,
                 title = R.string.animals
             ),
-            HelpItem(
+            com.coolkosta.help.presentation.model.HelpItem(
                 imageId = R.drawable.ic_event,
                 title = R.string.events
             ),

@@ -1,11 +1,11 @@
-package com.coolkosta.simbirsofttestapp.service
+package com.coolkosta.help.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.coolkosta.simbirsofttestapp.presentation.screen.helpFragment.HelpFragment.Companion.ACTION_SERVICE_FILTER_KEY
-import com.coolkosta.simbirsofttestapp.presentation.screen.helpFragment.HelpFragment.Companion.SERVICE_DATA_KEY
-import com.coolkosta.simbirsofttestapp.util.Generator
+import com.coolkosta.help.util.Generator
+import com.coolkosta.help.presentation.screen.HelpFragment.Companion.ACTION_SERVICE_FILTER_KEY
+import com.coolkosta.help.presentation.screen.HelpFragment.Companion.SERVICE_DATA_KEY
 
 class HelpCategoryService : Service() {
 

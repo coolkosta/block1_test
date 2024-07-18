@@ -78,6 +78,7 @@ dependencies {
 
     implementation(project(":features:profile"))
     implementation(project(":features:news"))
+    implementation(project(":features:help"))
 
 
     //Retrofit

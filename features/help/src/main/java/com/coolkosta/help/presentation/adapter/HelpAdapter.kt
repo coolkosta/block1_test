@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.adapter
+package com.coolkosta.help.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.model.HelpItem
+import com.coolkosta.help.R
+import com.coolkosta.help.presentation.model.HelpItem
 
 class HelpAdapter(private var items: List<HelpItem>) :
     RecyclerView.Adapter<HelpAdapter.HelpItemViewHolder>() {

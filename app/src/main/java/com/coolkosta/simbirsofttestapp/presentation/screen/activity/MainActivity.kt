@@ -7,9 +7,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.coolkosta.help.presentation.screen.HelpFragment
 import com.coolkosta.profile.presentation.screen.ProfileFragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.screen.helpFragment.HelpFragment
 import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginScreenFragment
 import com.coolkosta.news.presentation.screen.newsFragment.NewsFragment
 import com.coolkosta.simbirsofttestapp.presentation.screen.searchByEventFragment.SearchFragment

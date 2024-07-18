@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.model
+package com.coolkosta.help.presentation.model
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
