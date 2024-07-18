@@ -1,7 +1,7 @@
 package com.coolkosta.simbirsofttestapp.util
 
 import androidx.annotation.DrawableRes
-import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.core.R
 
 enum class ImageResource(@DrawableRes val resourceId: Int) {
     IMAGE_CHILD(R.drawable.img_child),
