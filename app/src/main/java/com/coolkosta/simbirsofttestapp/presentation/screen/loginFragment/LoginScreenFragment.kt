@@ -8,8 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.coolkosta.help.presentation.screen.HelpFragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.screen.helpFragment.HelpFragment
+
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding4.view.clicks

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="daytime_text_with_left_days">Осталось %1$d дней (%2$s)</string>
+    <string name="daytime_text_without_left_days">%1$s</string>
+    <string name="error_loading_toast">Не удалось загрузить данные</string>
+    <string name="sample_event_title">Спонсоры отремонтируют школу-интернат</string>
+    <string name="sample_foundation_label">Благотворительный Фонд «Счастливый Мир»</string>
+    <string name="sample_adress_text">Санкт-Петербург, Кирочная улица,\nд. 50А, каб. 208</string>
+    <string name="sample_contacts_text">+7 (937) 037 37–73\n+7 (937) 016 16–16</string>
+    <string name="ask_question_text">У вас есть вопросы?</string>
+    <string name="sample_event_description_text">Участники и болельщики смогли весело и активно провести время на «Петербургском благотворительном марафоне» и при этом\nфинансово поучаствовать в помощи детям.\n\nПри этом финансово поучаствовать в помощи\nдетям. При этом финансово поучаствовать в\nпомощи детям.</string>
+    <string name="foundation_site_text">Перейти на сайт организаии</string>
+    <string name="sample_counter_text">+120</string>
+    <string name="help_clothes_text">Помочь\nвещами</string>
+    <string name="become_volunteer_text">Стать\nволонтером</string>
+    <string name="professional_help_text">Проф.\nпомощь</string>
+    <string name="help_money_text">Помочь\nденьгами</string>
+</resources>

@@ -1,0 +1,22 @@
+package com.coolkosta.search.presentation.adapter
+
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.coolkosta.search.util.SearchCategory
+import com.coolkosta.search.presentation.screen.SearchByEventFragment
+
+class SearchResultPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+
+    private val fragments = listOf(
+        SearchByEventFragment.newInstance(SearchCategory.EVENTS),
+        SearchByEventFragment.newInstance(SearchCategory.NKO)
+    )
+
+    override fun getItemCount(): Int {
+        return fragments.size
+    }
+
+    override fun createFragment(position: Int): Fragment {
+        return fragments[position]
+    }
+}
