@@ -1,4 +1,4 @@
-package com.coolkosta.news.presentation.viewmodel
+package com.coolkosta.news.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

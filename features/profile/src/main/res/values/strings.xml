@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="reminder_photo_permission_toast">Для съемки фото необходимо разрешение на использование камеры</string>
+    <string name="profile_name">Константинов Денис</string>
+    <string name="date_birth_label">Дата рождения</string>
+    <string name="date_birth_text">01 февраля 1980</string>
+    <string name="work_label">Сфера деятельности</string>
+    <string name="work_text">Хирургия, травмотология</string>
+    <string name="push_label">Получать push-уведомления</string>
+    <string name="name_person_3">Дмитрий Валерьевич</string>
+    <string name="name_person_2">Евгений Александров</string>
+    <string name="name_person_1">Виктор Кузнецов</string>
 </resources>

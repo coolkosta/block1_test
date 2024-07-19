@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
+import com.coolkosta.news.presentation.adapter.FilterAdapter
 import kotlinx.coroutines.launch
 
 class NewsFilterFragment : Fragment() {
@@ -29,8 +30,8 @@ class NewsFilterFragment : Fragment() {
             .newsViewModelFactory()
     }
 
-    private val adapter: com.coolkosta.news.presentation.adapter.FilterAdapter by lazy {
-        com.coolkosta.news.presentation.adapter.FilterAdapter { position, isCheck ->
+    private val adapter: FilterAdapter by lazy {
+       FilterAdapter { position, isCheck ->
             viewModel.sendEvent(NewsFilterEvent.SwitchChanged(position, isCheck))
         }
     }

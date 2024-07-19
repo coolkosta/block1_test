@@ -1,7 +1,7 @@
 package com.coolkosta.search.presentation.screen
 
 import androidx.lifecycle.ViewModel
-import com.coolkosta.core.util.Generator
+import com.coolkosta.search.util.Generator
 import com.coolkosta.search.util.SearchCategory
 
 import kotlinx.coroutines.flow.MutableStateFlow

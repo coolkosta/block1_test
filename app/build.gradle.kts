@@ -80,6 +80,7 @@ dependencies {
     implementation(project(":features:news"))
     implementation(project(":features:help"))
     implementation(project(":features:search"))
+    implementation(project(":core"))
 
 
 

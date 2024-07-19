@@ -1,7 +1,8 @@
-package com.coolkosta.core.util
+package com.coolkosta.news.util
 
 import androidx.annotation.DrawableRes
-import com.coolkosta.core.R
+import com.coolkosta.news.R
+
 
 enum class ImageResource(@DrawableRes val resourceId: Int) {
     IMAGE_CHILD(R.drawable.img_child),

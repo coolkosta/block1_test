@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
+import com.coolkosta.news.presentation.adapter.NewsAdapter
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
 import com.coolkosta.news.presentation.screen.newsFilterFragment.NewsFilterFragment
 import com.coolkosta.news.presentation.screen.newsFilterFragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
@@ -31,11 +32,12 @@ class NewsFragment : Fragment() {
     private lateinit var progress: CircularProgressIndicator
 
     private val viewModel: NewsViewModel by viewModels {
-        (requireActivity().application as NewsComponentProvider).getNewsComponent()
+        (requireActivity().application as NewsComponentProvider)
+            .getNewsComponent()
             .newsViewModelFactory()
     }
-    private val adapter: com.coolkosta.news.presentation.adapter.NewsAdapter by lazy {
-        com.coolkosta.news.presentation.adapter.NewsAdapter { event ->
+    private val adapter: NewsAdapter by lazy {
+        NewsAdapter { event ->
             viewModel.sendEvent(NewsEvent.EventReaded(event))
             openFragment(EventDetailFragment.newInstance(event))
         }

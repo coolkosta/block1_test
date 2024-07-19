@@ -1,4 +1,4 @@
-package com.coolkosta.core.util
+package com.coolkosta.search.util
 
 class Generator {
 

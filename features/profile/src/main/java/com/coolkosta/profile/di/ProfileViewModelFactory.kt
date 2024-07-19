@@ -1,8 +1,9 @@
-package com.coolkosta.profile.presentation.viewmodel
+package com.coolkosta.profile.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.coolkosta.profile.presentation.viewmodel.ProfileViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 

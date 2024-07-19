@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.coolkosta.core.util.ImageResource
 import com.coolkosta.news.R
 import com.coolkosta.news.domain.model.EventEntity
+import com.coolkosta.news.util.ImageResource
 
 
 import kotlinx.datetime.Clock

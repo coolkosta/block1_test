@@ -2,4 +2,8 @@
 <resources>
     <string name="event_tab_label">По мероприятиям</string>
     <string name="nko_tab_label">По НКО</string>
+    <string name="search_example_label">Например,</string>
+    <string name="search_example_text"><u>мастер-класс, помощь</u></string>
+    <string name="empty_search_list_label_text">Напишите в строке поиска название\nмероприятия или ключевые слова.</string>
+    <string name="search_event_result_label">Ключевые слова: мастер-класс, помощь \nРезультаты поиска: 109 мероприятий</string>
 </resources>
