@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+   implementation( libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
@@ -92,6 +93,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     //LiveData
     implementation(libs.androidx.lifecycle.livedata.ktx)
     //Fragment

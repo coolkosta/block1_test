@@ -31,17 +31,7 @@
     <string name="help_category_label">Категории помощи</string>
     <string name="share">Поделиться</string>
     <string name="contact_us_label"><u>Напишите нам</u></string>
-    <string name="authorization_label">Авторизация</string>
-    <string name="forgot_pass_text"><u>Забыли пароль?</u></string>
-    <string name="registration_label_tv"><u>Регистрация</u></string>
-    <string name="auth_social_media_text">Для участия в мероприятиях войдите\nв приложение через социальые сети</string>
     <string name="vk">Vk</string>
     <string name="facebook">Facebook</string>
     <string name="ok">OK</string>
-    <string name="auth_app_text">Или авторизуйтесь через приложение</string>
-    <string name="e_mail">E-mail</string>
-    <string name="enter_email_text">Введите e-mail</string>
-    <string name="password">Пароль</string>
-    <string name="enter_pass">Введите пароль</string>
-    <string name="enter_text_btn">ВОЙТИ</string>
 </resources>

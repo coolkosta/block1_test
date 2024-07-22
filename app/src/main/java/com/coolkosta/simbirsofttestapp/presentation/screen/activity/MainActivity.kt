@@ -13,7 +13,7 @@ import com.coolkosta.news.util.EventFlow
 import com.coolkosta.profile.presentation.screen.ProfileFragment
 import com.coolkosta.search.presentation.screen.SearchFragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginScreenFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginFragment
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -34,7 +34,10 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.selectedItemId = R.id.help
             bottomNavigationView.visibility = View.GONE
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, LoginScreenFragment.newInstance()).commit()
+                .replace(
+                    R.id.fragment_container,
+                    LoginFragment.newInstance()
+                ).commit()
         }
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
