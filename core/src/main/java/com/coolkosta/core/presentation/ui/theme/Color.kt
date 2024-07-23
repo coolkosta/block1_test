@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.ui.theme
+package com.coolkosta.core.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

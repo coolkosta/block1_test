@@ -35,9 +35,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.ui.theme.Black54
-import com.coolkosta.simbirsofttestapp.presentation.ui.theme.Leaf
-import com.coolkosta.simbirsofttestapp.presentation.ui.theme.SimbirSoftTestAppTheme
+import com.coolkosta.core.presentation.ui.theme.Black54
+import com.coolkosta.core.presentation.ui.theme.Leaf
+import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 
 @Composable
 fun LoginFragmentDisplay(

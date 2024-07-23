@@ -1,4 +1,4 @@
-package com.coolkosta.simbirsofttestapp.presentation.ui.theme
+package com.coolkosta.core.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
@@ -10,7 +10,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.core.R
+
 
 val OfficingSans = FontFamily(Font(R.font.officina_sans_scc_extrabold))
 

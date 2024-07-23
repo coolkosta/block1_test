@@ -29,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import com.coolkosta.help.presentation.screen.HelpFragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.ui.theme.SimbirSoftTestAppTheme
-import com.coolkosta.simbirsofttestapp.presentation.ui.theme.TurtleGreen
+import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
+import com.coolkosta.core.presentation.ui.theme.TurtleGreen
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class LoginFragment : Fragment() {
