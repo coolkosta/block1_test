@@ -16,8 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,11 +42,12 @@ import com.coolkosta.news.domain.model.EventEntity
 fun NewsDisplay(
     modifier: Modifier = Modifier,
     newsViewModel: NewsViewModel,
+    onEventClick: (EventEntity) -> Unit
 ) {
     val state by newsViewModel.state.collectAsStateWithLifecycle()
     when (state) {
         is NewsState.Error -> {
-           
+
         }
 
         is NewsState.Loading -> {
@@ -63,9 +63,10 @@ fun NewsDisplay(
                     items = (state as NewsState.Success).eventEntities,
                     key = { event -> event.id }
                 ) { event ->
-                    NewsItem(event = event) {
-
-                    }
+                    NewsItem(
+                        event = event,
+                        onEventClick = { onEventClick(event) }
+                    )
                 }
             }
         }
@@ -77,10 +78,10 @@ fun NewsDisplay(
 fun NewsItem(
     event: EventEntity,
     modifier: Modifier = Modifier,
-    onCLickItem: () -> Unit
+    onEventClick: (EventEntity) -> Unit
 ) {
     Card(
-        onClick = onCLickItem,
+        onClick = { onEventClick(event) },
         modifier = modifier,
         shape = RoundedCornerShape(2.dp),
         elevation = CardDefaults.elevatedCardElevation(
@@ -170,6 +171,8 @@ fun NewsItemPreview() {
                 "",
                 "",
                 ""
-            ), onCLickItem = {})
+            ),
+            onEventClick = {}
+        )
     }
 }

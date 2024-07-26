@@ -21,7 +21,7 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayAt
 
 class NewsAdapter(
-    private var onItemClick: ((EventEntity) -> Unit),
+    private var onItemClick: (EventEntity) -> Unit
 ) : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
 
     private var items: List<EventEntity> = listOf()

@@ -24,11 +24,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
 import com.coolkosta.news.di.NewsComponentProvider
+import com.coolkosta.news.domain.model.EventEntity
+import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
 import com.coolkosta.news.presentation.screen.newsFilterFragment.NewsFilterFragment
+import com.coolkosta.news.presentation.screen.newsFilterFragment.NewsFilterFragment.Companion.FILTER_EXTRA_KEY
+import com.coolkosta.news.presentation.screen.newsFilterFragment.NewsFilterFragment.Companion.REQUEST_FILTER_RESULT_KEY
 
 class NewsFragmentComposable : Fragment() {
 
@@ -36,6 +41,14 @@ class NewsFragmentComposable : Fragment() {
         (requireActivity().application as NewsComponentProvider)
             .getNewsComponent()
             .newsViewModelFactory()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFragmentResultListener(REQUEST_FILTER_RESULT_KEY) { _, bundle ->
+            val filteredList = bundle.getIntegerArrayList(FILTER_EXTRA_KEY) as List<Int>
+            viewModel.sendEvent(NewsEvent.EventsFiltered(filteredList))
+        }
     }
 
     override fun onCreateView(
@@ -60,6 +73,10 @@ class NewsFragmentComposable : Fragment() {
                                     NewsFilterFragment.newInstance(emptyList())
                                 )
                             }
+                        },
+                        onEventClick = { event ->
+                            openFragment(EventDetailFragment.newInstance(event))
+                            viewModel.sendEvent(NewsEvent.EventReaded(event))
                         }
                     )
                 }
@@ -80,7 +97,11 @@ class NewsFragmentComposable : Fragment() {
 }
 
 @Composable
-fun NewsScreen(newsViewModel: NewsViewModel, onCLick: () -> Unit) {
+fun NewsScreen(
+    newsViewModel: NewsViewModel,
+    onCLick: () -> Unit,
+    onEventClick: (EventEntity) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -90,6 +111,7 @@ fun NewsScreen(newsViewModel: NewsViewModel, onCLick: () -> Unit) {
         NewsDisplay(
             modifier = Modifier.padding(it),
             newsViewModel = newsViewModel,
+            onEventClick = onEventClick
         )
     }
 }
