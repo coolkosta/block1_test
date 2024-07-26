@@ -32,6 +32,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
 }
 
 dependencies {
@@ -46,6 +52,16 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.constraintlayout)
 
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.animation)
+    implementation( libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.activity)
+
     //Retrofit
     implementation(libs.retrofit)
     //Gson
@@ -54,6 +70,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     //Fragment
     implementation(libs.androidx.fragment.ktx)
     //Coroutines
@@ -62,10 +79,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
     implementation(platform(libs.okhttp.bom))
 
     // define any required OkHttp artifacts without version
@@ -73,6 +86,7 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.glide)
+    implementation(libs.compose)
 
     //Room
     implementation(libs.androidx.room.runtime)
@@ -83,4 +97,10 @@ dependencies {
     //Dagger
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
+
 }

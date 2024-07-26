@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,11 +32,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.core.presentation.ui.theme.Black54
 import com.coolkosta.core.presentation.ui.theme.Leaf
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
+import com.coolkosta.simbirsofttestapp.R
 
 @Composable
 fun LoginFragmentDisplay(
@@ -96,7 +96,7 @@ fun AppAuthorization(
     loginFragmentViewModel: LoginFragmentViewModel = viewModel(),
     onClick: () -> Unit
 ) {
-    val loginState by loginFragmentViewModel.loginState.collectAsState()
+    val loginState by loginFragmentViewModel.loginState.collectAsStateWithLifecycle()
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     var isEnabled by rememberSaveable { mutableStateOf(false) }
     isEnabled = loginState.currentEmail.length >= 6 && loginState.currentPassword.length >= 6

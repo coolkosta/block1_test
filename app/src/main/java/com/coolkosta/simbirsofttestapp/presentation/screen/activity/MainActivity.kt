@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.help.presentation.screen.HelpFragment
-import com.coolkosta.news.presentation.screen.newsFragment.NewsFragment
+import com.coolkosta.news.presentation.screen.newsFragment.NewsFragmentComposable
 import com.coolkosta.news.util.EventFlow
 import com.coolkosta.profile.presentation.screen.ProfileFragment
 import com.coolkosta.search.presentation.screen.SearchFragment
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
-                R.id.news -> NewsFragment.newInstance()
+                R.id.news -> NewsFragmentComposable.newInstance()
                 R.id.search -> SearchFragment.newInstance()
                 R.id.help -> HelpFragment.newInstance()
                 R.id.profile -> ProfileFragment.newInstance()

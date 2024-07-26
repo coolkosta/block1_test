@@ -46,6 +46,17 @@ val Typography = Typography(
         textAlign = TextAlign.Center,
         textDecoration = TextDecoration.Underline,
         color = Leaf
+    ),
+    titleLarge = TextStyle(
+        fontFamily = OfficingSans,
+        fontSize = 22.sp,
+        color = Black87
+    ),
+    titleSmall = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontSize = 12.sp,
+        letterSpacing = 4.sp,
+        color = Color.White
     )
     /* Other default text styles to override
     titleLarge = TextStyle(
@@ -62,13 +73,6 @@ val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-    */
 
-    /*<style name="TextStyle7">
-    <item name="android:fontFamily">sans-serif</item>
-    <item name="android:textStyle">normal</item>
-    <item name="android:textSize">14sp</item>
-    <item name="android:lineSpacingExtra">6sp</item>
-    <item name="android:textColor">@color/leaf</item>
-    </style>*/
+    */
 )
