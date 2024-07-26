@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
+import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
@@ -77,6 +79,9 @@ class NewsFragmentComposable : Fragment() {
                         onEventClick = { event ->
                             openFragment(EventDetailFragment.newInstance(event))
                             viewModel.sendEvent(NewsEvent.EventReaded(event))
+                        },
+                        showErrorMessage = { message ->
+                            showToast(message)
                         }
                     )
                 }
@@ -91,6 +96,14 @@ class NewsFragmentComposable : Fragment() {
             .commit()
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.error_loading_toast) + " " + message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     companion object {
         fun newInstance() = NewsFragmentComposable()
     }
@@ -100,7 +113,8 @@ class NewsFragmentComposable : Fragment() {
 fun NewsScreen(
     newsViewModel: NewsViewModel,
     onCLick: () -> Unit,
-    onEventClick: (EventEntity) -> Unit
+    onEventClick: (EventEntity) -> Unit,
+    showErrorMessage: (String) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -111,7 +125,8 @@ fun NewsScreen(
         NewsDisplay(
             modifier = Modifier.padding(it),
             newsViewModel = newsViewModel,
-            onEventClick = onEventClick
+            onEventClick = onEventClick,
+            showErrorMessage = showErrorMessage
         )
     }
 }

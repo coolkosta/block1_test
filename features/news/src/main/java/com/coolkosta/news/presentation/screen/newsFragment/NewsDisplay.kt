@@ -37,17 +37,28 @@ import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
 import com.coolkosta.news.R
 import com.coolkosta.news.domain.model.EventEntity
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewsDisplay(
     modifier: Modifier = Modifier,
     newsViewModel: NewsViewModel,
-    onEventClick: (EventEntity) -> Unit
+    onEventClick: (EventEntity) -> Unit,
+    showErrorMessage: (String) -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val state by newsViewModel.state.collectAsStateWithLifecycle()
+
+    coroutineScope.launch {
+        newsViewModel.sideEffect.collect { state ->
+            if (state is NewsSideEffect.ShowErrorToast) {
+                showErrorMessage(state.message)
+            }
+        }
+    }
+
     when (state) {
         is NewsState.Error -> {
-
         }
 
         is NewsState.Loading -> {
