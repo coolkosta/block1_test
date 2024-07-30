@@ -19,4 +19,5 @@
     <dimen name="card_width_m">240dp</dimen>
     <dimen name="card_height_m">160dp</dimen>
     <dimen name="corner_radius">2dp</dimen>
+    <dimen name="progress_indicator_size">64dp</dimen>
 </resources>

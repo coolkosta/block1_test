@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +29,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
-import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
@@ -79,9 +78,6 @@ class NewsFragmentComposable : Fragment() {
                         onEventClick = { event ->
                             openFragment(EventDetailFragment.newInstance(event))
                             viewModel.sendEvent(NewsEvent.EventReaded(event))
-                        },
-                        showErrorMessage = { message ->
-                            showToast(message)
                         }
                     )
                 }
@@ -96,14 +92,6 @@ class NewsFragmentComposable : Fragment() {
             .commit()
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(
-            requireContext(),
-            getString(R.string.error_loading_toast) + " " + message,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
     companion object {
         fun newInstance() = NewsFragmentComposable()
     }
@@ -114,7 +102,6 @@ fun NewsScreen(
     newsViewModel: NewsViewModel,
     onCLick: () -> Unit,
     onEventClick: (EventEntity) -> Unit,
-    showErrorMessage: (String) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -126,7 +113,6 @@ fun NewsScreen(
             modifier = Modifier.padding(it),
             newsViewModel = newsViewModel,
             onEventClick = onEventClick,
-            showErrorMessage = showErrorMessage
         )
     }
 }
@@ -152,9 +138,11 @@ fun NewsScreenTopAppBar(modifier: Modifier = Modifier, onCLick: () -> Unit) {
                 tint = Color.White,
                 painter = painterResource(id = com.coolkosta.core.R.drawable.ic_filter),
                 contentDescription = null,
-                modifier = Modifier.clickable {
-                    onCLick()
-                }
+                modifier = Modifier
+                    .clickable {
+                        onCLick()
+                    }
+                    .padding(end = dimensionResource(id = com.coolkosta.core.R.dimen.spacing_l))
             )
         }
     )

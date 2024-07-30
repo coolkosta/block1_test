@@ -33,7 +33,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.coolkosta.core.presentation.ui.theme.Black54
 import com.coolkosta.core.presentation.ui.theme.Leaf
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
@@ -42,6 +41,7 @@ import com.coolkosta.simbirsofttestapp.R
 @Composable
 fun LoginFragmentDisplay(
     modifier: Modifier = Modifier,
+    loginFragmentViewModel: LoginFragmentViewModel,
     onClick: () -> Unit
 ) {
     Column(modifier = modifier) {
@@ -53,7 +53,8 @@ fun LoginFragmentDisplay(
                     end = dimensionResource(id = com.coolkosta.core.R.dimen.spacing_l),
                     top = dimensionResource(id = com.coolkosta.core.R.dimen.margin_xs)
                 ),
-            onClick = onClick
+            onClick = onClick,
+            loginFragmentViewModel = loginFragmentViewModel
         )
     }
 }
@@ -93,7 +94,7 @@ fun SocialMediaAuth(modifier: Modifier = Modifier) {
 @Composable
 fun AppAuthorization(
     modifier: Modifier = Modifier,
-    loginFragmentViewModel: LoginFragmentViewModel = viewModel(),
+    loginFragmentViewModel: LoginFragmentViewModel,
     onClick: () -> Unit
 ) {
     val loginState by loginFragmentViewModel.loginState.collectAsStateWithLifecycle()
@@ -194,6 +195,6 @@ fun AppAuthorization(
 @Composable
 fun LoginFragmentDisplayPreview() {
     SimbirSoftTestAppTheme {
-        LoginFragmentDisplay(onClick = {})
+        LoginFragmentDisplay(onClick = {}, loginFragmentViewModel = LoginFragmentViewModel())
     }
 }

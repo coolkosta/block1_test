@@ -27,13 +27,19 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
-import com.coolkosta.help.presentation.screen.HelpFragment
-import com.coolkosta.simbirsofttestapp.R
+import androidx.fragment.app.viewModels
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
+import com.coolkosta.help.presentation.screen.HelpFragment
+import com.coolkosta.simbirsofttestapp.R
+import com.coolkosta.simbirsofttestapp.app.App
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class LoginFragment : Fragment() {
+
+    private val viewModel: LoginFragmentViewModel by viewModels {
+        (requireActivity().application as App).appComponent.appViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +48,9 @@ class LoginFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 SimbirSoftTestAppTheme {
-                    LoginScreenFragmentComposable(navigateBack = { requireActivity().finish() },
+                    LoginScreenFragmentComposable(
+                        loginFragmentViewModel = viewModel,
+                        navigateBack = { requireActivity().finish() },
                         onClick = { loginButtonAction() }
                     )
                 }
@@ -64,7 +72,11 @@ class LoginFragment : Fragment() {
 }
 
 @Composable
-fun LoginScreenFragmentComposable(navigateBack: () -> Unit, onClick: () -> Unit) {
+fun LoginScreenFragmentComposable(
+    loginFragmentViewModel: LoginFragmentViewModel,
+    navigateBack: () -> Unit,
+    onClick: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -75,7 +87,8 @@ fun LoginScreenFragmentComposable(navigateBack: () -> Unit, onClick: () -> Unit)
     ) {
         LoginFragmentDisplay(
             modifier = Modifier.padding(it),
-            onClick = onClick
+            onClick = onClick,
+            loginFragmentViewModel = loginFragmentViewModel
         )
     }
 }
@@ -111,6 +124,9 @@ fun LoginScreenTopAppBar(navigateBack: () -> Unit, modifier: Modifier = Modifier
 @Composable
 fun LoginScreenPreview() {
     SimbirSoftTestAppTheme {
-        LoginScreenFragmentComposable(navigateBack = {}, onClick = {})
+        LoginScreenFragmentComposable(
+            loginFragmentViewModel = LoginFragmentViewModel(),
+            navigateBack = {},
+            onClick = {})
     }
 }
