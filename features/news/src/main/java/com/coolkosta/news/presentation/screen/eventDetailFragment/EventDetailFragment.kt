@@ -1,5 +1,6 @@
 package com.coolkosta.news.presentation.screen.eventDetailFragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ class EventDetailFragment : Fragment() {
     private lateinit var contactInfo: TextView
     private lateinit var imageView: ImageView
     private lateinit var description: TextView
+    private lateinit var donate: TextView
 
 
     override fun onCreateView(
@@ -68,6 +70,11 @@ class EventDetailFragment : Fragment() {
         contactInfo = view.findViewById(R.id.contact_phone_tv)
         imageView = view.findViewById(R.id.card_image_1)
         description = view.findViewById(R.id.event_description_tv)
+        donate = view.findViewById(R.id.donation)
+
+        donate.setOnClickListener{
+          showDonateDialog()
+        }
 
         currentEventEntity.let {
             toolbar.title = currentEventEntity.title
@@ -96,6 +103,14 @@ class EventDetailFragment : Fragment() {
             description.text = currentEventEntity.description
 
         }
+    }
+
+    private fun showDonateDialog() {
+        val dialogView =
+            LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_event_detail, null)
+        val dialog = AlertDialog.Builder(requireActivity())
+            .setView(dialogView)
+            .create()
     }
 
     companion object {
