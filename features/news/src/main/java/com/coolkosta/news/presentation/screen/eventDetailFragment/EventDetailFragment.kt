@@ -2,17 +2,22 @@ package com.coolkosta.news.presentation.screen.eventDetailFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import com.coolkosta.news.R
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.util.ImageResource
+import com.google.android.material.button.MaterialButtonToggleGroup
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -72,8 +77,8 @@ class EventDetailFragment : Fragment() {
         description = view.findViewById(R.id.event_description_tv)
         donate = view.findViewById(R.id.donation)
 
-        donate.setOnClickListener{
-          showDonateDialog()
+        donate.setOnClickListener {
+            showDonateDialog()
         }
 
         currentEventEntity.let {
@@ -111,6 +116,38 @@ class EventDetailFragment : Fragment() {
         val dialog = AlertDialog.Builder(requireActivity())
             .setView(dialogView)
             .create()
+
+        dialogView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<MaterialButtonToggleGroup>(R.id.toggleButton)
+            .addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (isChecked) {
+                    when (checkedId) {
+                        R.id.button1 -> {
+                            Log.d("Tester", "chose bt1")
+                        }
+
+                        R.id.button2 -> {
+                            Log.d("Tester", "chose bt2")
+                        }
+
+                        R.id.button3 -> {
+                            Log.d("Tester", "chose bt3")
+                        }
+
+                        R.id.button4 -> {
+                            Log.d("Tester", "chose bt4")
+                        }
+                    }
+                }
+            }
+        dialogView.findViewById<EditText>(R.id.sum_edit_text)
+
+
+        dialog.show()
+
     }
 
     companion object {

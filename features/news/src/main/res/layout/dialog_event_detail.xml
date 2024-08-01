@@ -30,45 +30,58 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_title_tv" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
+        android:backgroundTint="@color/leaf"
         android:id="@+id/toggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_s"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/choose_charity_tv">
+        app:layout_constraintTop_toBottomOf="@id/choose_charity_tv"
+        app:singleSelection="true">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button1"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100 ₽"
+            android:text="100₽"
             android:textColor="@color/leaf"
-            android:textSize="@dimen/text_size_s" />
+            android:textSize="10sp"
+            app:cornerRadius="2dp"
+            app:strokeColor="@color/leaf" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button2"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="500 ₽"
+            android:text="500₽"
             android:textColor="@color/leaf"
-            android:textSize="@dimen/text_size_s" />
+            android:textSize="10sp"
+            app:strokeColor="@color/leaf" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000 ₽"
+            android:text="1000₽"
             android:textColor="@color/leaf"
-            android:textSize="@dimen/text_size_s" />
+            android:textSize="10sp"
+            app:strokeColor="@color/leaf" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button4"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2000 ₽"
+            android:text="2000₽"
             android:textColor="@color/leaf"
-            android:textSize="@dimen/text_size_s" />
+            android:textSize="10sp"
+            app:cornerRadius="2dp"
+            app:strokeColor="@color/leaf" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
@@ -94,17 +107,20 @@
         app:layout_constraintTop_toBottomOf="@+id/enter_sum_tv">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:inputType="number"
             android:id="@+id/sum_edit_text"
             style="@style/TextStylePopupPlaceholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:gravity="center"
-            android:hint="Введите сумму" />
+            android:hint="Введите текст" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/cancel_button"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -117,6 +133,7 @@
 
     <Button
         android:id="@+id/send_button"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_m"
