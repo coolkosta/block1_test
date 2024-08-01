@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,10 +24,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
 import com.coolkosta.news.di.NewsComponentProvider
@@ -66,12 +67,9 @@ class NewsFragmentComposable : Fragment() {
                                 openFragment(
                                     NewsFilterFragment
                                         .newInstance(
-                                            (viewModel.state.value as NewsState.Success).filterCategories
+                                            (viewModel.state.value as NewsState.Success)
+                                                .filterCategories
                                         )
-                                )
-                            } else if (viewModel.state.value is NewsState.Error) {
-                                openFragment(
-                                    NewsFilterFragment.newInstance(emptyList())
                                 )
                             }
                         },
@@ -106,7 +104,10 @@ fun NewsScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            NewsScreenTopAppBar(onCLick = onCLick)
+            NewsScreenTopAppBar(
+                newsViewModel = newsViewModel,
+                onCLick = onCLick
+            )
         }
     ) {
         NewsDisplay(
@@ -119,7 +120,12 @@ fun NewsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsScreenTopAppBar(modifier: Modifier = Modifier, onCLick: () -> Unit) {
+fun NewsScreenTopAppBar(
+    newsViewModel: NewsViewModel,
+    modifier: Modifier = Modifier,
+    onCLick: () -> Unit
+) {
+    val state by newsViewModel.state.collectAsStateWithLifecycle()
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = TurtleGreen
@@ -134,25 +140,18 @@ fun NewsScreenTopAppBar(modifier: Modifier = Modifier, onCLick: () -> Unit) {
         },
         modifier = modifier,
         actions = {
-            Icon(
-                tint = Color.White,
-                painter = painterResource(id = com.coolkosta.core.R.drawable.ic_filter),
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable {
-                        onCLick()
-                    }
-                    .padding(end = dimensionResource(id = com.coolkosta.core.R.dimen.spacing_l))
-            )
+            if (state is NewsState.Success) {
+                Icon(
+                    tint = Color.White,
+                    painter = painterResource(id = com.coolkosta.core.R.drawable.ic_filter),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clickable {
+                            onCLick()
+                        }
+                        .padding(end = dimensionResource(id = com.coolkosta.core.R.dimen.spacing_l))
+                )
+            }
         }
     )
 }
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun NewsScreenPreview() {
-    SimbirSoftTestAppTheme {
-        NewsScreenTopAppBar(onCLick = {})
-    }
-}
-

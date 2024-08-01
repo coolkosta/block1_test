@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coolkosta.core.presentation.ui.theme.Black54
@@ -100,7 +101,7 @@ fun AppAuthorization(
     val loginState by loginFragmentViewModel.loginState.collectAsStateWithLifecycle()
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     var isEnabled by rememberSaveable { mutableStateOf(false) }
-    isEnabled = loginState.currentEmail.length >= 6 && loginState.currentPassword.length >= 6
+    isEnabled = loginState.isEnabled
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -123,7 +124,11 @@ fun AppAuthorization(
                 focusedContainerColor = Color.White
             ),
             value = loginState.currentEmail,
-            onValueChange = { loginFragmentViewModel.sendEvent(LoginEvent.EmailTextChanged(it)) },
+            onValueChange = {
+                loginFragmentViewModel.sendEvent(LoginEvent.EmailTextChanged(it))
+                loginFragmentViewModel.sendEvent(LoginEvent.LoginButtonEnabled)
+
+            },
             label = { Text(text = stringResource(id = R.string.e_mail)) }
         )
         TextField(
@@ -141,7 +146,10 @@ fun AppAuthorization(
                 focusedContainerColor = Color.White
             ),
             value = loginState.currentPassword,
-            onValueChange = { loginFragmentViewModel.sendEvent(LoginEvent.PasswordTextChanged(it)) },
+            onValueChange = {
+                loginFragmentViewModel.sendEvent(LoginEvent.PasswordTextChanged(it))
+                loginFragmentViewModel.sendEvent(LoginEvent.LoginButtonEnabled)
+            },
             label = {
                 Text(
                     text = stringResource(id = R.string.password),
@@ -180,10 +188,12 @@ fun AppAuthorization(
 
         ) {
             Text(
+                textDecoration = TextDecoration.Underline,
                 text = stringResource(id = R.string.forgot_pass_text),
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
+                textDecoration = TextDecoration.Underline,
                 text = stringResource(id = R.string.registration_label_tv),
                 style = MaterialTheme.typography.titleMedium
             )

@@ -62,10 +62,6 @@ fun NewsDisplay(
     }
 
     when (state) {
-        is NewsState.Error -> {
-
-        }
-
         is NewsState.Loading -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -79,6 +75,10 @@ fun NewsDisplay(
                         )
                 )
             }
+        }
+
+        is NewsState.Error -> {
+            Column(modifier = Modifier.fillMaxSize()) {}
         }
 
         is NewsState.Success -> {

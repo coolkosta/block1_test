@@ -20,6 +20,10 @@ class LoginFragmentViewModel @Inject constructor() : ViewModel() {
             is LoginEvent.PasswordTextChanged -> _loginState.update {
                 it.copy(currentPassword = loginEvent.password)
             }
+
+            is LoginEvent.LoginButtonEnabled -> _loginState.update {
+                it.copy(isEnabled = it.currentEmail.length >= 6 && it.currentPassword.length >= 6)
+            }
         }
     }
 }
