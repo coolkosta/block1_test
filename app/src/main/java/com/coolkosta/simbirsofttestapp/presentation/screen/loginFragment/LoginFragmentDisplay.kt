@@ -126,7 +126,6 @@ fun AppAuthorization(
             value = loginState.currentEmail,
             onValueChange = {
                 loginFragmentViewModel.sendEvent(LoginEvent.EmailTextChanged(it))
-                loginFragmentViewModel.sendEvent(LoginEvent.LoginButtonEnabled)
 
             },
             label = { Text(text = stringResource(id = R.string.e_mail)) }
@@ -148,7 +147,6 @@ fun AppAuthorization(
             value = loginState.currentPassword,
             onValueChange = {
                 loginFragmentViewModel.sendEvent(LoginEvent.PasswordTextChanged(it))
-                loginFragmentViewModel.sendEvent(LoginEvent.LoginButtonEnabled)
             },
             label = {
                 Text(

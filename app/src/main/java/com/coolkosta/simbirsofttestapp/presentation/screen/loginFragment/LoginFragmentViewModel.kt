@@ -13,17 +13,31 @@ class LoginFragmentViewModel @Inject constructor() : ViewModel() {
 
     fun sendEvent(loginEvent: LoginEvent) {
         when (loginEvent) {
-            is LoginEvent.EmailTextChanged -> _loginState.update {
-                it.copy(currentEmail = loginEvent.email)
+            is LoginEvent.EmailTextChanged -> {
+                _loginState.update {
+                    it.copy(
+                        currentEmail = loginEvent.email,
+                    )
+                }
+                updateButtonEnabled()
             }
 
-            is LoginEvent.PasswordTextChanged -> _loginState.update {
-                it.copy(currentPassword = loginEvent.password)
+            is LoginEvent.PasswordTextChanged -> {
+                _loginState.update {
+                    it.copy(
+                        currentPassword = loginEvent.password,
+                    )
+                }
+                updateButtonEnabled()
             }
+        }
+    }
 
-            is LoginEvent.LoginButtonEnabled -> _loginState.update {
-                it.copy(isEnabled = it.currentEmail.length >= 6 && it.currentPassword.length >= 6)
-            }
+    private fun updateButtonEnabled() {
+        _loginState.update {
+            it.copy(
+                isEnabled = _loginState.value.currentEmail.length >= 6 && _loginState.value.currentPassword.length >= 6
+            )
         }
     }
 }
