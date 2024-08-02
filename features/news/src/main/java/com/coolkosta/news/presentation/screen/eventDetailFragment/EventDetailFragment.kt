@@ -14,7 +14,9 @@ import android.widget.ToggleButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.coolkosta.news.R
+import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.util.ImageResource
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -35,6 +37,10 @@ class EventDetailFragment : Fragment() {
     private lateinit var description: TextView
     private lateinit var donate: TextView
 
+    private val viewModel: EventDetailViewModel by viewModels {
+        (requireActivity().application as NewsComponentProvider).getNewsComponent()
+            .newsViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +58,7 @@ class EventDetailFragment : Fragment() {
                 EVENT_DETAIL_KEY,
                 EventEntity::class.java
             ) as EventEntity
+        viewModel.sendEvent(EventDetailsEvent.CurrentEvent(currentEventEntity))
         val toolbar = view.findViewById<Toolbar>(R.id.event_detail_toolbar).apply {
             setNavigationIcon(com.coolkosta.core.R.drawable.ic_arrow_back)
             setNavigationOnClickListener {
@@ -80,6 +87,8 @@ class EventDetailFragment : Fragment() {
         donate.setOnClickListener {
             showDonateDialog()
         }
+
+
 
         currentEventEntity.let {
             toolbar.title = currentEventEntity.title
