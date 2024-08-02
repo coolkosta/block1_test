@@ -11,5 +11,5 @@ sealed interface NewsState {
         val filterCategories: List<Int>
     ) : NewsState
 
-    data object Error : NewsState
+    data object Error: NewsState
 }

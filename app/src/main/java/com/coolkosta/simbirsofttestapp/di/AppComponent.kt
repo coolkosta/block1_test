@@ -7,4 +7,6 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AppModule::class])
-interface AppComponent : ProfileDeps, NewsDeps
+interface AppComponent : ProfileDeps, NewsDeps {
+    fun appViewModelFactory(): AppViewModelFactory
+}

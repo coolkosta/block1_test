@@ -8,12 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.coolkosta.help.presentation.screen.HelpFragment
-import com.coolkosta.news.presentation.screen.newsFragment.NewsFragment
+import com.coolkosta.news.presentation.screen.newsFragment.NewsFragmentComposable
 import com.coolkosta.news.util.EventFlow
 import com.coolkosta.profile.presentation.screen.ProfileFragment
 import com.coolkosta.search.presentation.screen.SearchFragment
 import com.coolkosta.simbirsofttestapp.R
-import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginScreenFragment
+import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginFragment
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -34,11 +34,14 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.selectedItemId = R.id.help
             bottomNavigationView.visibility = View.GONE
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, LoginScreenFragment.newInstance()).commit()
+                .replace(
+                    R.id.fragment_container,
+                    LoginFragment.newInstance()
+                ).commit()
         }
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
-                R.id.news -> NewsFragment.newInstance()
+                R.id.news -> NewsFragmentComposable.newInstance()
                 R.id.search -> SearchFragment.newInstance()
                 R.id.help -> HelpFragment.newInstance()
                 R.id.profile -> ProfileFragment.newInstance()
