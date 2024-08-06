@@ -1,5 +1,6 @@
 package com.coolkosta.news.di
 
+import android.app.Application
 import android.content.Context
 import dagger.Component
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,4 +18,5 @@ fun interface NewsComponent {
 interface NewsDeps {
     val backgroundCoroutineDispatcher: CoroutineDispatcher
     val context: Context
+    val application: Application
 }

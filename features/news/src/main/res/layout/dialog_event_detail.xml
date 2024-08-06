@@ -107,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/enter_sum_tv">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:id="@+id/sum_edit_text"
             style="@style/TextStylePopupPlaceholder"
             android:layout_width="match_parent"
@@ -132,6 +132,7 @@
         app:layout_constraintTop_toBottomOf="@id/sum_input_layout" />
 
     <Button
+        android:enabled="false"
         android:id="@+id/send_button"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"

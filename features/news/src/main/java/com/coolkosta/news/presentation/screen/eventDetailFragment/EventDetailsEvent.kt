@@ -4,5 +4,6 @@ import com.coolkosta.news.domain.model.EventEntity
 
 sealed interface EventDetailsEvent {
     data class CurrentEvent(val eventEntity: EventEntity): EventDetailsEvent
-    data class DonationTransferred(val donation: Double): EventDetailsEvent
+    data class DonationQueryChanged(val donation: Int):EventDetailsEvent
+    data object DonationTransferred: EventDetailsEvent
 }
