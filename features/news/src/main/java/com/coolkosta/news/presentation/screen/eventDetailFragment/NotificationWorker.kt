@@ -2,6 +2,7 @@ package com.coolkosta.news.presentation.screen.eventDetailFragment
 
 import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +13,7 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.coolkosta.news.domain.model.EventEntity
@@ -34,27 +36,27 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(getPendingIntent(event))
             .setAutoCancel(true)
-        val notificationManager = NotificationManagerCompat.from(applicationContext)
-        if (ActivityCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+        with(NotificationManagerCompat.from(applicationContext)) {
+            if (ContextCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 ActivityCompat.requestPermissions(
+                    //нужен Activity
                     applicationContext as Activity,
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                     1
                 )
             }
-        } else {
-            notificationManager.notify(1, builder.build())
+            notify(1, builder.build())
         }
-
         return Result.success()
     }
 
-    private fun createNotificationChannel(){
+    private fun createNotificationChannel() {
         val name = "notification_name_channel"
         val descriptionText = "notification_description"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
