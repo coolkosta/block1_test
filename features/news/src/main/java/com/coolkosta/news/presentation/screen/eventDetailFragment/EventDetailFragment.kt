@@ -128,19 +128,19 @@ class EventDetailFragment : Fragment() {
             .addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (isChecked) {
                     when (checkedId) {
-                        R.id.button1 -> {
+                        R.id.amount_100_btn -> {
                             viewModel.sendEvent(EventDetailsEvent.DonationQueryChanged(100))
                         }
 
-                        R.id.button2 -> {
+                        R.id.amount_500_btn -> {
                             viewModel.sendEvent(EventDetailsEvent.DonationQueryChanged(500))
                         }
 
-                        R.id.button3 -> {
+                        R.id.amount_1000_btn -> {
                             viewModel.sendEvent(EventDetailsEvent.DonationQueryChanged(1000))
                         }
 
-                        R.id.button4 -> {
+                        R.id.amount_2000_btn -> {
                             viewModel.sendEvent(EventDetailsEvent.DonationQueryChanged(2000))
                         }
                     }

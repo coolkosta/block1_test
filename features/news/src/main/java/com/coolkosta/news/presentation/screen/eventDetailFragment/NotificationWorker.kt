@@ -1,19 +1,15 @@
 package com.coolkosta.news.presentation.screen.eventDetailFragment
 
 import android.Manifest
-import android.app.Activity
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.coolkosta.news.domain.model.EventEntity
@@ -37,22 +33,15 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             .setContentIntent(getPendingIntent(event))
             .setAutoCancel(true)
 
-        with(NotificationManagerCompat.from(applicationContext)) {
-            if (ContextCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    //нужен Activity
-                    applicationContext as Activity,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    1
-                )
-            }
-            notify(1, builder.build())
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationManager.notify(1, builder.build())
         }
+
         return Result.success()
     }
 
@@ -72,10 +61,10 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
 
     private fun getPendingIntent(event: EventEntity): PendingIntent? {
         val intent = Intent(applicationContext, NotificationReceiver::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("event", event)
 
-        return PendingIntent.getBroadcast(
+        return PendingIntent.getActivity(
             applicationContext,
             0,
             intent,
