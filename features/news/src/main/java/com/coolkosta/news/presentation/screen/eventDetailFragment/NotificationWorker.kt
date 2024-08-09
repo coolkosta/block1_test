@@ -1,6 +1,8 @@
 package com.coolkosta.news.presentation.screen.eventDetailFragment
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.Notification.EXTRA_NOTIFICATION_ID
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -34,7 +36,12 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
                 .setSmallIcon(com.coolkosta.core.R.drawable.ic_coins).setContentTitle(event.title)
                 .setContentText(applicationContext.getString(notification_description_tex, amount))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(getPendingIntent(event))
+                .setContentIntent(openDetailScreenPendingIntent(event))
+                .addAction(
+                    com.coolkosta.core.R.drawable.ic_history,
+                    "Напомнить позже",
+                    setReminderLater(event)
+                )
                 .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(applicationContext)
@@ -63,7 +70,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
 
     }
 
-    private fun getPendingIntent(event: EventEntity): PendingIntent {
+    private fun openDetailScreenPendingIntent(event: EventEntity): PendingIntent {
         val intent =
             (applicationContext as NewsComponentProvider).getNewsComponent().intentActivity()
                 .getActivityIntent()
@@ -75,11 +82,30 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         )
     }
 
+    private fun setReminderLater(event: EventEntity): PendingIntent {
+        val reminderIntent = Intent(applicationContext, NotificationReceiver::class.java).apply {
+            action = ACTION_REMINDER_LATER
+            putExtra(EXTRA_NOTIFICATION_ID, event)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            reminderIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val alarmManager =
+            applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val triggerTime = System.currentTimeMillis() + 1 * 60 * 1000
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+        return pendingIntent
+    }
+
     companion object {
-        private const val ID_CHANNEL_DONATION_NOTIFICATION = "ID_CHANNEL_DONATION_NOTIFICATION"
-        private const val ID_DONATION_NOTIFICATION = 1
+        const val ID_CHANNEL_DONATION_NOTIFICATION = "ID_CHANNEL_DONATION_NOTIFICATION"
+        const val ID_DONATION_NOTIFICATION = 1
         private const val NAME_CHANNEL_DONATION_NOTIFICATION = "donation notification"
         private const val DESCRIPTION_DONATION_NOTIFICATION = "notifications sent donations"
-
+        const val ACTION_REMINDER_LATER = "remind_later"
     }
 }
