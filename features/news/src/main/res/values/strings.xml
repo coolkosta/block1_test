@@ -15,12 +15,14 @@
     <string name="become_volunteer_text">Стать\nволонтером</string>
     <string name="professional_help_text">Проф.\nпомощь</string>
     <string name="help_money_text">Помочь\nденьгами</string>
-    <string name="amount_100_rub_text">100 ₽</string>
-    <string name="amount_500_rub_text">500 ₽</string>
-    <string name="amount_1000_rub_text">1000 ₽</string>
-    <string name="amount_2000_rub_text">2000 ₽</string>
+    <string name="amount_100_rub_text">100₽</string>
+    <string name="amount_500_rub_text">500₽</string>
+    <string name="amount_1000_rub_text">1000₽</string>
+    <string name="amount_2000_rub_text">2000₽</string>
     <string name="donation_dialog_label_text">Спасибо за решение помочь!</string>
     <string name="chose_size_donation_text">Выберите размер пожертвования</string>
     <string name="input_other_sum_text">или введите нужную сумму</string>
     <string name="input_text_label">Введите текст</string>
+    <string name="notification_description_tex">Спасибо, что пожертвовали %1$d ₽! Будем очень признательны, если вы сможете пожертвовать еще больше.</string>
+    <string name="notification_denied_text">Уведомления отключены.</string>
 </resources>

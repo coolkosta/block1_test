@@ -1,13 +1,22 @@
 package com.coolkosta.simbirsofttestapp.presentation.screen.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.coolkosta.core.util.Constants.NAME_EVENT_EXTRA
 import com.coolkosta.help.presentation.screen.HelpFragment
+import com.coolkosta.news.domain.model.EventEntity
+import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
 import com.coolkosta.news.presentation.screen.newsFragment.NewsFragmentComposable
 import com.coolkosta.news.util.EventFlow
 import com.coolkosta.profile.presentation.screen.ProfileFragment
@@ -30,15 +39,29 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        if (savedInstanceState == null) {
-            bottomNavigationView.selectedItemId = R.id.help
-            bottomNavigationView.visibility = View.GONE
+        val intent = intent
+        val data =
+            IntentCompat.getParcelableExtra(intent, NAME_EVENT_EXTRA, EventEntity::class.java)
+        if (data != null) {
             supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    LoginFragment.newInstance()
-                ).commit()
+                .replace(R.id.fragment_container, EventDetailFragment.newInstance(data))
+                .commit()
+            bottomNavigationView.visibility = View.VISIBLE
+            bottomNavigationView.selectedItemId = R.id.news
+        } else {
+            if (savedInstanceState == null) {
+                bottomNavigationView.selectedItemId = R.id.help
+                bottomNavigationView.visibility = View.GONE
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        LoginFragment.newInstance()
+                    ).commit()
+            }
         }
+
+        getRequestPermission()
+
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
                 R.id.news -> NewsFragmentComposable.newInstance()
@@ -47,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile -> ProfileFragment.newInstance()
                 else -> null
             }
-            // Переключение фрагмента
+
             fragment?.let {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, it)
                     .commit()
@@ -55,6 +78,21 @@ class MainActivity : AppCompatActivity() {
             true
         }
         getUnreadCountEvent()
+    }
+
+    private fun getRequestPermission() {
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        1
+                    )
+                }
+            }
+        }
     }
 
     private fun getUnreadCountEvent() {

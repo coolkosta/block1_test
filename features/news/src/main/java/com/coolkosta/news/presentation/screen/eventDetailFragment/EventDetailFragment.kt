@@ -88,30 +88,30 @@ class EventDetailFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
 
-                    toolbar.title = state.event?.title
-                    title.text = state.event?.title
+                    state.event?.let {
+                        toolbar.title = state.event.title
+                        title.text = state.event.title
+                        val today = Clock.System.todayAt(TimeZone.currentSystemDefault())
+                        val eventDay = LocalDate.parse(state.event.date)
+                        when (val daysLeft = today.daysUntil(eventDay)) {
+                            in 0..20 -> dateTime.text = getString(
+                                R.string.daytime_text_with_left_days,
+                                daysLeft,
+                                eventDay.toString()
+                            )
 
-                    val today = Clock.System.todayAt(TimeZone.currentSystemDefault())
-                    val eventDay = LocalDate.parse(state.event!!.date)
-                    when (val daysLeft = today.daysUntil(eventDay)) {
-                        in 0..20 -> dateTime.text = getString(
-                            R.string.daytime_text_with_left_days,
-                            daysLeft,
-                            eventDay.toString()
-                        )
-
-                        else -> dateTime.text = getString(
-                            R.string.daytime_text_without_left_days,
-                            eventDay.toString()
-                        )
+                            else -> dateTime.text = getString(
+                                R.string.daytime_text_without_left_days,
+                                eventDay.toString()
+                            )
+                        }
+                        foundation.text = state.event.foundation
+                        address.text = state.event.location
+                        contactInfo.text = state.event.contactInfo
+                        val imageResource = ImageResource.from(state.event.imageName)
+                        imageView.setImageResource(imageResource.resourceId)
+                        description.text = state.event.description
                     }
-
-                    foundation.text = state.event.foundation
-                    address.text = state.event.location
-                    contactInfo.text = state.event.contactInfo
-                    val imageResource = ImageResource.from(state.event.imageName)
-                    imageView.setImageResource(imageResource.resourceId)
-                    description.text = state.event.description
                 }
             }
         }
@@ -164,10 +164,7 @@ class EventDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
-                    val range = 1..9999999
-                    if (range.contains(state.currentAmount)) {
-                        sendButton.isEnabled = true
-                    }
+                    sendButton.isEnabled = state.isEnabled
                 }
             }
         }

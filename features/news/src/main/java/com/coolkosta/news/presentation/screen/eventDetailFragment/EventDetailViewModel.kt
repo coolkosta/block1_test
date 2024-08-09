@@ -1,12 +1,17 @@
 package com.coolkosta.news.presentation.screen.eventDetailFragment
 
 
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.coolkosta.news.R
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,15 +33,39 @@ class EventDetailViewModel @Inject constructor(private val application: Applicat
             }
 
             is EventDetailsEvent.DonationQueryChanged -> {
-
                 _state.update {
-                    it.copy(currentAmount = event.donation)
+                    it.copy(
+                        currentAmount = event.donation,
+                    )
                 }
+                updateButtonEnabled()
             }
 
             is EventDetailsEvent.DonationTransferred -> {
-                eventNotification()
+                when {
+                    ContextCompat.checkSelfPermission(
+                        application.applicationContext,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED -> {
+                        Toast.makeText(
+                            application.applicationContext,
+                            application.getString(R.string.notification_denied_text),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    else -> {
+                        eventNotification()
+                    }
+                }
             }
+        }
+    }
+
+    private fun updateButtonEnabled() {
+        val range = 1..9999999
+        _state.update {
+            it.copy(isEnabled = range.contains(_state.value.currentAmount))
         }
     }
 
