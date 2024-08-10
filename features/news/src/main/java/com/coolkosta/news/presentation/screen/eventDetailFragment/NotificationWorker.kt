@@ -15,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.coolkosta.core.util.Constants.NAME_EVENT_EXTRA
+import com.coolkosta.news.R
 import com.coolkosta.news.R.string.notification_description_tex
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
@@ -35,11 +36,15 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             NotificationCompat.Builder(applicationContext, ID_CHANNEL_DONATION_NOTIFICATION)
                 .setSmallIcon(com.coolkosta.core.R.drawable.ic_coins).setContentTitle(event.title)
                 .setContentText(applicationContext.getString(notification_description_tex, amount))
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .bigText(applicationContext.getString(notification_description_tex, amount))
+                )
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(openDetailScreenPendingIntent(event))
                 .addAction(
                     com.coolkosta.core.R.drawable.ic_history,
-                    "Напомнить позже",
+                    applicationContext.getString(R.string.remind_later_text),
                     setReminderLater(event)
                 )
                 .setAutoCancel(true)

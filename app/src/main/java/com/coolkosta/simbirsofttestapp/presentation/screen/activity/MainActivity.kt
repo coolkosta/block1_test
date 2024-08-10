@@ -1,9 +1,13 @@
 package com.coolkosta.simbirsofttestapp.presentation.screen.activity
 
 import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        getRequestPermission()
+        getRequestPermissions()
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
@@ -80,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         getUnreadCountEvent()
     }
 
-    private fun getRequestPermission() {
+    private fun getRequestPermissions() {
         when {
             ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED -> {
@@ -90,6 +94,17 @@ class MainActivity : AppCompatActivity() {
                         arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                         1
                     )
+                }
+            }
+
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                val alarmManager =
+                    applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    Intent().also { intent ->
+                        intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                        this.startActivity(intent)
+                    }
                 }
             }
         }
