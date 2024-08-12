@@ -2,8 +2,8 @@ package com.coolkosta.simbirsofttestapp.di
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import com.coolkosta.simbirsofttestapp.util.IntentAppActivity
+import com.coolkosta.core.util.ActivityUtils
+import com.coolkosta.simbirsofttestapp.util.ActivityUtilsImpl
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,7 +27,5 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideActivityIntent(): Intent =
-        IntentAppActivity(application).getIntentActivity()
-
+    fun provideActivityUtils(): ActivityUtils = ActivityUtilsImpl(application)
 }

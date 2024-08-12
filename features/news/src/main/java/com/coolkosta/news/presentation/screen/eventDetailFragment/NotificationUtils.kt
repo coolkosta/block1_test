@@ -16,7 +16,6 @@ import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
 
-//логику вынесли в отдельный класс, так как отображаем нотификацию и из NotificationWorker, и из NotificationReceiver
 class NotificationUtils {
 
     companion object {
@@ -30,18 +29,34 @@ class NotificationUtils {
 
             val builder =
                 NotificationCompat.Builder(context, ID_CHANNEL_DONATION_NOTIFICATION)
-                    .setSmallIcon(com.coolkosta.core.R.drawable.ic_coins).setContentTitle(event.title)
-                    .setContentText(context.getString(R.string.notification_description_tex, amount))
+                    .setSmallIcon(com.coolkosta.core.R.drawable.ic_coins)
+                    .setContentTitle(event.title)
+                    .setContentText(
+                        context.getString(
+                            R.string.notification_description_tex,
+                            amount
+                        )
+                    )
                     .setStyle(
                         NotificationCompat.BigTextStyle()
-                            .bigText(context.getString(R.string.notification_description_tex, amount))
+                            .bigText(
+                                context.getString(
+                                    R.string.notification_description_tex,
+                                    amount
+                                )
+                            )
                     )
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(openDetailScreenPendingIntent(context, event))
                     .addAction(
                         com.coolkosta.core.R.drawable.ic_history,
                         context.getString(R.string.remind_later_text),
-                        PendingIntent.getBroadcast(context, 0, reminderIntent, PendingIntent.FLAG_IMMUTABLE)
+                        PendingIntent.getBroadcast(
+                            context,
+                            0,
+                            reminderIntent,
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
                     )
                     .setAutoCancel(true)
 
@@ -103,10 +118,12 @@ class NotificationUtils {
             notificationManager.createNotificationChannel(channel)
         }
 
-        private fun openDetailScreenPendingIntent(context: Context, event: EventEntity): PendingIntent? {
-            val intent = 
-                (context.applicationContext as NewsComponentProvider).getNewsComponent().intentActivity()
-                    .getActivityIntent()
+        private fun openDetailScreenPendingIntent(
+            context: Context,
+            event: EventEntity,
+        ): PendingIntent? {
+            val intent = (context.applicationContext as NewsComponentProvider).getNewsComponent()
+                .activityIntent().getActivityIntent()
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra(Constants.NAME_EVENT_EXTRA, event)
 

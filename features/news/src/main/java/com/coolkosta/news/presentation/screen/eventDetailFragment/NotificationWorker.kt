@@ -8,8 +8,6 @@ import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailVie
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailViewModel.Companion.KEY_EVENT_DATA
 import com.google.gson.Gson
 
-//класс отвечает только за обработку запланированной задачи. Не нарушаем принципы Single responsibility.
-// Формирование и показ нотификации отдельно
 class NotificationWorker(private val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork(): Result {
