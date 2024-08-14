@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -129,6 +130,8 @@ class NotificationUtils {
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.putExtra(EVENT_EXTRA, event)
+
+            Log.d("NotificationTest", "Send data from Notification Utils: $event")
 
             return PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_IMMUTABLE

@@ -4,6 +4,7 @@ package com.coolkosta.news.presentation.screen.eventDetailFragment
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -83,7 +84,7 @@ class EventDetailViewModel @Inject constructor(private val application: Applicat
             .setConstraints(constraints)
             .setInputData(inputData)
             .build()
-
+        Log.d("NotificationTest", "EvenDetailViewModel send data: ${inputData.getString(KEY_EVENT_DATA)}" )
         WorkManager.getInstance(application.applicationContext).enqueue(workRequest)
     }
 

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -21,6 +22,7 @@ import com.coolkosta.core.util.Constants.EVENT_EXTRA
 import com.coolkosta.help.presentation.screen.HelpFragment
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
+import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailViewModel.Companion.KEY_EVENT_DATA
 import com.coolkosta.news.presentation.screen.newsFragment.NewsFragmentComposable
 import com.coolkosta.news.util.EventFlow
 import com.coolkosta.profile.presentation.screen.ProfileFragment
@@ -37,6 +39,15 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let {
+            Log.d(
+                "NotificationTest", "Get data from Notification ${
+                    IntentCompat.getParcelableExtra(
+                        it,
+                        EVENT_EXTRA,
+                        EventEntity::class.java
+                    ) as EventEntity
+                }"
+            )
             openDetailNewsFragment(
                 IntentCompat.getParcelableExtra(
                     it,
