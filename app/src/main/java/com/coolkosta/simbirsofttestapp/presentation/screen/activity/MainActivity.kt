@@ -17,7 +17,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.coolkosta.core.util.Constants.NAME_EVENT_EXTRA
+import com.coolkosta.core.util.Constants.EVENT_EXTRA
 import com.coolkosta.help.presentation.screen.HelpFragment
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
@@ -29,12 +29,24 @@ import com.coolkosta.simbirsofttestapp.R
 import com.coolkosta.simbirsofttestapp.presentation.screen.loginFragment.LoginFragment
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
-    private val disposables = CompositeDisposable()
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            openDetailNewsFragment(
+                IntentCompat.getParcelableExtra(
+                    it,
+                    EVENT_EXTRA,
+                    EventEntity::class.java
+                ) as EventEntity
+            )
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -43,26 +55,20 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        val intent = intent
-        val data =
-            IntentCompat.getParcelableExtra(intent, NAME_EVENT_EXTRA, EventEntity::class.java)
-        if (data != null) {
+        if (savedInstanceState == null) {
+            bottomNavigationView.selectedItemId = R.id.help
+            bottomNavigationView.visibility = View.GONE
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, EventDetailFragment.newInstance(data))
-                .commit()
-            bottomNavigationView.visibility = View.VISIBLE
-            bottomNavigationView.selectedItemId = R.id.news
-        } else {
-            if (savedInstanceState == null) {
-                bottomNavigationView.selectedItemId = R.id.help
-                bottomNavigationView.visibility = View.GONE
-                supportFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        LoginFragment.newInstance()
-                    ).commit()
-            }
+                .replace(
+                    R.id.fragment_container,
+                    LoginFragment.newInstance()
+                ).commit()
         }
+
+        IntentCompat.getParcelableExtra(intent, EVENT_EXTRA, EventEntity::class.java)?.let {
+            openDetailNewsFragment(it)
+        }
+
 
         getRequestPermissions()
 
@@ -110,6 +116,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun openDetailNewsFragment(event: EventEntity) {
+        bottomNavigationView.selectedItemId = R.id.news
+        bottomNavigationView.visibility = View.VISIBLE
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, EventDetailFragment.newInstance(event))
+            .commit()
+    }
+
+
     private fun getUnreadCountEvent() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -125,9 +140,5 @@ class MainActivity : AppCompatActivity() {
         badge.number = unreadCount
         badge.isVisible = unreadCount > 0
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
-    }
 }
+

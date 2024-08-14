@@ -75,7 +75,6 @@ class EventDetailViewModel @Inject constructor(private val application: Applicat
             .putString(KEY_EVENT_DATA, jsonEventString)
             .putInt(KEY_AMOUNT_DATA, _state.value.currentAmount)
             .build()
-
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)
             .build()
@@ -86,7 +85,6 @@ class EventDetailViewModel @Inject constructor(private val application: Applicat
             .build()
 
         WorkManager.getInstance(application.applicationContext).enqueue(workRequest)
-
     }
 
     companion object {

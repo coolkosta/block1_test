@@ -12,9 +12,10 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == ACTION_REMINDER_LATER) {
             intent.action = ACTION_SHOW
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent =
+                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
-            val triggerTime = System.currentTimeMillis() + 30 * 60 * 1000
+            val triggerTime = System.currentTimeMillis() + REMINDER_DELAY_MS
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
             NotificationUtils.cancelCurrent(context)
         } else if (intent.action == ACTION_SHOW) {
@@ -23,6 +24,7 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     companion object {
+        const val REMINDER_DELAY_MS = 30 * 60 * 1000
         const val ACTION_REMINDER_LATER = "remind_later"
         const val ACTION_SHOW = "action_show"
     }

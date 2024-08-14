@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.IntentCompat
 import com.coolkosta.core.util.Constants
+import com.coolkosta.core.util.Constants.EVENT_EXTRA
 import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
@@ -24,7 +25,7 @@ class NotificationUtils {
 
             val reminderIntent = Intent(context, NotificationReceiver::class.java).apply {
                 action = NotificationReceiver.ACTION_REMINDER_LATER
-                putExtra(EVENT_EXTRA, event)
+                putExtra(SNOOZE_EVENT_EXTRA, event)
             }
 
             val builder =
@@ -77,7 +78,7 @@ class NotificationUtils {
         fun showRemindedNotification(intent: Intent, context: Context) {
             IntentCompat.getParcelableExtra(
                 intent,
-                EVENT_EXTRA,
+                SNOOZE_EVENT_EXTRA,
                 EventEntity::class.java
             )?.let {
                 val builder = NotificationCompat.Builder(
@@ -121,11 +122,13 @@ class NotificationUtils {
         private fun openDetailScreenPendingIntent(
             context: Context,
             event: EventEntity,
-        ): PendingIntent? {
+        ): PendingIntent {
             val intent = (context.applicationContext as NewsComponentProvider).getNewsComponent()
                 .activityIntent().getActivityIntent()
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            intent.putExtra(Constants.NAME_EVENT_EXTRA, event)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.putExtra(EVENT_EXTRA, event)
 
             return PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_IMMUTABLE
@@ -136,6 +139,6 @@ class NotificationUtils {
         private const val ID_DONATION_NOTIFICATION = 1
         private const val NAME_CHANNEL_DONATION_NOTIFICATION = "donation notification"
         private const val DESCRIPTION_DONATION_NOTIFICATION = "notifications sent donations"
-        private const val EVENT_EXTRA = "event_extra"
+        private const val SNOOZE_EVENT_EXTRA = "SNOOZE_EVENT_EXTRA"
     }
 }
