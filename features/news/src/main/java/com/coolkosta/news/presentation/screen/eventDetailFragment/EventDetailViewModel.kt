@@ -4,7 +4,6 @@ package com.coolkosta.news.presentation.screen.eventDetailFragment
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
-import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -19,8 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-class EventDetailViewModel @Inject constructor(private val application: Application) :
-    ViewModel() {
+class EventDetailViewModel @Inject constructor(private val application: Application) : ViewModel() {
 
     private val _state = MutableStateFlow(EventState())
     val state = _state.asStateFlow()
@@ -84,7 +82,7 @@ class EventDetailViewModel @Inject constructor(private val application: Applicat
             .setConstraints(constraints)
             .setInputData(inputData)
             .build()
-        Log.d("NotificationTest", "EvenDetailViewModel send data: ${inputData.getString(KEY_EVENT_DATA)}" )
+
         WorkManager.getInstance(application.applicationContext).enqueue(workRequest)
     }
 

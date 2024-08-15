@@ -54,7 +54,7 @@ class ProfileViewModel @Inject constructor(private val application: Application)
     }
 
     private fun deletePhoto() {
-       _state.update { _state.value.copy(photoUri = null) }
+        _state.update { _state.value.copy(photoUri = null) }
     }
 
     private fun handlePermissionResult(isGranted: Boolean) {
