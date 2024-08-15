@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/dialog_title_tv"
+        style="@style/TextStylePopupHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_l"
+        android:gravity="center"
+        android:text="@string/donation_dialog_label_text"
+        android:textSize="@dimen/text_size_l"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/choose_charity_tv"
+        style="@style/TextStylePopupFieldTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_l"
+        android:gravity="center"
+        android:text="@string/chose_size_donation_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_title_tv" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_s"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choose_charity_tv"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/amount_100_btn"
+            style="@style/ToggleButtonGroupStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_100_rub_text"
+            app:cornerRadius="@dimen/corner_radius" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/amount_500_btn"
+            style="@style/ToggleButtonGroupStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_500_rub_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/amount_1000_btn"
+            style="@style/ToggleButtonGroupStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_1000_rub_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/amount_2000_btn"
+            style="@style/ToggleButtonGroupStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_2000_rub_text"
+            app:cornerRadius="@dimen/corner_radius" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/enter_sum_tv"
+        style="@style/TextStylePopupFieldTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_l"
+        android:gravity="center"
+        android:text="@string/input_other_sum_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toggleButton" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sum_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_s"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enter_sum_tv">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sum_edit_text"
+            style="@style/TextStylePopupPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:hint="@string/input_text_label"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/cancel_button"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/cancel_text"
+        android:textAllCaps="true"
+        android:textColor="@color/leaf"
+        android:textSize="@dimen/text_size_s"
+        app:layout_constraintEnd_toStartOf="@id/send_button"
+        app:layout_constraintTop_toBottomOf="@id/sum_input_layout" />
+
+    <Button
+        android:id="@+id/send_button"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:layout_marginBottom="@dimen/spacing_l"
+        android:enabled="false"
+        android:text="@string/send_money_text"
+        android:textAllCaps="true"
+        android:textColor="@color/leaf"
+        android:textSize="@dimen/text_size_s"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sum_input_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

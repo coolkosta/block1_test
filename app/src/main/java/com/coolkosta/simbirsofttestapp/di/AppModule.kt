@@ -2,6 +2,8 @@ package com.coolkosta.simbirsofttestapp.di
 
 import android.app.Application
 import android.content.Context
+import com.coolkosta.core.util.ActivityUtils
+import com.coolkosta.simbirsofttestapp.util.ActivityUtilsImpl
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,4 +24,8 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideBackgroundDispatchers(): CoroutineDispatcher = Dispatchers.IO
+
+    @Provides
+    @Singleton
+    fun provideActivityUtils(): ActivityUtils = ActivityUtilsImpl(application)
 }

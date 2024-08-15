@@ -34,4 +34,6 @@
     <string name="vk">Vk</string>
     <string name="facebook">Facebook</string>
     <string name="ok">OK</string>
+    <string name="cancel_text">Отмена</string>
+    <string name="send_money_text">Перевести</string>
 </resources>
