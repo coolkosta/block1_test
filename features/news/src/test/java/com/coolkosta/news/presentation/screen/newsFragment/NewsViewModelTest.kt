@@ -4,11 +4,18 @@ import com.coolkosta.news.domain.interactor.CategoryInteractor
 import com.coolkosta.news.domain.interactor.EventInteractor
 import com.coolkosta.news.domain.model.CategoryEntity
 import com.coolkosta.news.domain.model.EventEntity
+import com.coolkosta.news.util.EventFlow
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -27,7 +34,7 @@ class NewsViewModelTest {
     private val categoryInteractor = mockk<CategoryInteractor>()
     private val dispatcher: TestDispatcher = StandardTestDispatcher()
 
-    val events = listOf(
+   private val events = listOf(
         EventEntity(
             id = 1,
             categoryIds = listOf(1, 2),
@@ -52,7 +59,7 @@ class NewsViewModelTest {
             imageName = "image_kid"
         )
     )
-    val categories = listOf(
+   private val categories = listOf(
         CategoryEntity(
             id = 1,
             title = "Благотворительность"
@@ -69,6 +76,8 @@ class NewsViewModelTest {
         Dispatchers.setMain(dispatcher)
         coEvery { eventInteractor.getEventList() } returns events
         coEvery { categoryInteractor.getCategoryList() } returns categories
+        mockkObject(EventFlow)
+        every { EventFlow.publish(any()) } just Runs
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,11 +96,33 @@ class NewsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun newsViewModel_fetchNews_updateStateError() = runTest(dispatcher) {
-      coEvery { eventInteractor.getEventList()} throws CancellationException()
-         viewModel = NewsViewModel(eventInteractor, categoryInteractor)
+        coEvery { eventInteractor.getEventList() } throws CancellationException()
+        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
         advanceUntilIdle()
         assertEquals(NewsState.Error, viewModel.state.value)
 
+    }
+
+    @Test
+    fun newsViewModel_sendEventEventsFiltered_getFilteredList() {
+        val filteredList = listOf(1, 2)
+        val event = NewsEvent.EventsFiltered(filteredList)
+        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
+        viewModel.sendEvent(event)
+        assertEquals(filteredList, (viewModel.state.value as NewsState.Success).filterCategories)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun newsViewModel_sendEventReadEvent_countDecrease() = runTest(dispatcher) {
+        val event = events[0]
+        val newsEvent = NewsEvent.EventReaded(event)
+
+        launch { viewModel = NewsViewModel(eventInteractor, categoryInteractor) }
+        advanceUntilIdle()
+        verify { EventFlow.publish(2) }
+        viewModel.sendEvent(newsEvent)
+        verify { EventFlow.publish(1) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
