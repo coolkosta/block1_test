@@ -2,9 +2,8 @@ package com.coolkosta.news.presentation.screen.newsFragment
 
 import com.coolkosta.news.domain.interactor.CategoryInteractor
 import com.coolkosta.news.domain.interactor.EventInteractor
-import com.coolkosta.news.domain.model.CategoryEntity
-import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.util.EventFlow
+import com.coolkosta.news.util.SampleData
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
@@ -34,48 +33,12 @@ class NewsViewModelTest {
     private val categoryInteractor = mockk<CategoryInteractor>()
     private val dispatcher: TestDispatcher = StandardTestDispatcher()
 
-   private val events = listOf(
-        EventEntity(
-            id = 1,
-            categoryIds = listOf(1, 2),
-            foundation = "Фонд 'Подари жизнь'",
-            title = "Благотворительный концерт",
-            description = "Приглашаем всех на благотворительный концерт. Все собранные средства пойдут на лечение детей.",
-            date = "2024-04-20",
-            location = "Москва, Крокус Сити Холл",
-            contactInfo = "+7 (999) 354-34-24",
-            imageName = "image_child"
-
-        ),
-        EventEntity(
-            id = 2,
-            categoryIds = listOf(2),
-            foundation = "Фонд 'Нужна помощь'",
-            title = "Сбор средств для детей",
-            description = "Организуем сбор средств для помощи детям с редкими заболеваниями. Каждый рубль на счету!",
-            date = "2024-05-29",
-            location = "Санкт-Петербург, Дворцовая площадь",
-            contactInfo = "+7 (999) 354-34-24",
-            imageName = "image_kid"
-        )
-    )
-   private val categories = listOf(
-        CategoryEntity(
-            id = 1,
-            title = "Благотворительность"
-        ),
-        CategoryEntity(
-            id = 2,
-            title = "Дети"
-        )
-    )
-
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(dispatcher)
-        coEvery { eventInteractor.getEventList() } returns events
-        coEvery { categoryInteractor.getCategoryList() } returns categories
+        coEvery { eventInteractor.getEventList() } returns SampleData.events
+        coEvery { categoryInteractor.getCategoryList() } returns SampleData.categories
         mockkObject(EventFlow)
         every { EventFlow.publish(any()) } just Runs
     }
@@ -87,8 +50,8 @@ class NewsViewModelTest {
         advanceUntilIdle()
 
         val expectedState = NewsState.Success(
-            eventEntities = events,
-            filterCategories = categories.map { it.id }
+            eventEntities = SampleData.events,
+            filterCategories = SampleData.categories.map { it.id }
         )
         assertEquals(expectedState, viewModel.state.value)
     }
@@ -115,7 +78,7 @@ class NewsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun newsViewModel_sendEventReadEvent_countDecrease() = runTest(dispatcher) {
-        val event = events[0]
+        val event = SampleData.events[0]
         val newsEvent = NewsEvent.EventReaded(event)
 
         launch { viewModel = NewsViewModel(eventInteractor, categoryInteractor) }
