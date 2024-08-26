@@ -8,8 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -42,8 +44,7 @@ class NewsFilterViewModelTest {
     }
 
     @Test
-    fun newsFilterViewModel_sendEventSwitchChanged_addIdToFilteredList() =
-        runTest(dispatcher) {
+    fun newsFilterViewModel_sendEventSwitchChanged_addIdToFilteredList() {
             val idCategory = 1
             val isSwitchEnable = true
             val expected = listOf(idCategory)
@@ -52,8 +53,7 @@ class NewsFilterViewModelTest {
         }
 
     @Test
-    fun newsFilterViewModel_sendEventSwitchChanged_removeIdFromFilteredList() =
-        runTest(dispatcher) {
+    fun newsFilterViewModel_sendEventSwitchChanged_removeIdFromFilteredList() {
             val idCategory = 1
             val isSwitchEnable = true
             val expected = emptyList<Int>()
@@ -62,4 +62,9 @@ class NewsFilterViewModelTest {
             assertEquals(expected, viewModel.state.value.filteredList)
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // Reset the main dispatcher to the original Main dispatcher
+    }
 }
