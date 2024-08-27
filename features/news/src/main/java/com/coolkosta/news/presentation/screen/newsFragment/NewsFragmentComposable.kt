@@ -30,6 +30,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.core.presentation.ui.theme.TurtleGreen
+import com.coolkosta.news.R
 import com.coolkosta.news.di.NewsComponentProvider
 import com.coolkosta.news.domain.model.EventEntity
 import com.coolkosta.news.presentation.screen.eventDetailFragment.EventDetailFragment
@@ -144,7 +145,7 @@ fun NewsScreenTopAppBar(
                 Icon(
                     tint = Color.White,
                     painter = painterResource(id = com.coolkosta.core.R.drawable.ic_filter),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.filter_fragment_content_des),
                     modifier = Modifier
                         .clickable {
                             onCLick()
