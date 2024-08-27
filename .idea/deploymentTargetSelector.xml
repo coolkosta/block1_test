@@ -5,10 +5,10 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test()">
+      <SelectionState runConfigName="testTopAppBarTitle()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testTopAppBarTitle()">
+      <SelectionState runConfigName="testProfileImageDisplays()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
