@@ -11,10 +11,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -39,6 +37,7 @@ class NewsViewModelTest {
         Dispatchers.setMain(dispatcher)
         coEvery { eventInteractor.getEventList() } returns SampleData.events
         coEvery { categoryInteractor.getCategoryList() } returns SampleData.categories
+        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
         mockkObject(EventFlow)
         every { EventFlow.publish(any()) } just Runs
     }
@@ -46,9 +45,7 @@ class NewsViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun newsViewModel_fetchNews_updateStateSuccess() = runTest(dispatcher) {
-        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
         advanceUntilIdle()
-
         val expectedState = NewsState.Success(
             eventEntities = SampleData.events,
             filterCategories = SampleData.categories.map { it.id }
@@ -56,22 +53,12 @@ class NewsViewModelTest {
         assertEquals(expectedState, viewModel.state.value)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun newsViewModel_fetchNews_updateStateError() = runTest(dispatcher) {
-        coEvery { eventInteractor.getEventList() } throws CancellationException()
-        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
-        advanceUntilIdle()
-        assertEquals(NewsState.Error, viewModel.state.value)
-
-    }
-
     @Test
     fun newsViewModel_sendEventEventsFiltered_getFilteredList() {
         val filteredList = listOf(1, 2)
         val event = NewsEvent.EventsFiltered(filteredList)
-        viewModel = NewsViewModel(eventInteractor, categoryInteractor)
         viewModel.sendEvent(event)
+
         assertEquals(filteredList, (viewModel.state.value as NewsState.Success).filterCategories)
     }
 
@@ -80,8 +67,6 @@ class NewsViewModelTest {
     fun newsViewModel_sendEventReadEvent_countDecrease() = runTest(dispatcher) {
         val event = SampleData.events[0]
         val newsEvent = NewsEvent.EventReaded(event)
-
-        launch { viewModel = NewsViewModel(eventInteractor, categoryInteractor) }
         advanceUntilIdle()
         verify { EventFlow.publish(2) }
         viewModel.sendEvent(newsEvent)

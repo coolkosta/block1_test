@@ -49,6 +49,16 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
+
+    testOptions {
+        packaging {
+            jniLibs {
+                useLegacyPackaging = true
+            }
         }
     }
 }
@@ -70,10 +80,17 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation (libs.mockk.android)
+    androidTestImplementation (libs.androidx.fragment.testing)
+    debugImplementation (libs.androidx.fragment.testing.manifest)
+    debugImplementation(libs.androidx.fragment.testing.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -143,7 +160,6 @@ dependencies {
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
 
-    testImplementation(libs.junit.v412)
     testImplementation(libs.mockito.core)
 
 }
