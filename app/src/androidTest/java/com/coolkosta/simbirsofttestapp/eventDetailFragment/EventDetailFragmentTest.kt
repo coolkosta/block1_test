@@ -1,14 +1,14 @@
 package com.coolkosta.simbirsofttestapp.eventDetailFragment
 
-import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -20,7 +20,6 @@ import org.junit.Test
 private const val EVENT_DETAIL_KEY = "selected_event_key"
 
 class EventDetailFragmentTest {
-    private lateinit var application: Application
     private val event = EventEntity(
         id = 1,
         categoryIds = listOf(1, 2),
@@ -35,7 +34,6 @@ class EventDetailFragmentTest {
 
     @Before
     fun setup() {
-        application = ApplicationProvider.getApplicationContext()
 
         val bundle = Bundle().apply {
             putParcelable(
@@ -61,18 +59,24 @@ class EventDetailFragmentTest {
     @Test
     fun testDonationDialogIsClickable() {
         onView(withId(com.coolkosta.news.R.id.donation)).perform(click())
+        onView(withId(com.coolkosta.news.R.id.dialog_title_tv)).check(matches(isDisplayed()))
+        onView(withId(com.coolkosta.news.R.id.amount_500_btn)).check(matches(isClickable()))
         onView(withId(com.coolkosta.news.R.id.amount_500_btn)).perform(click())
+        onView(withId(com.coolkosta.news.R.id.send_button)).check(matches(isClickable()))
         onView(withId(com.coolkosta.news.R.id.send_button)).perform(click())
+        onView(withId(com.coolkosta.news.R.id.dialog_title_tv)).check(doesNotExist())
     }
 
     @Test
     fun testDonationDialogEditText() {
         val inputText = "450"
         onView(withId(com.coolkosta.news.R.id.donation)).perform(click())
+        onView(withId(com.coolkosta.news.R.id.dialog_title_tv)).check(matches(isDisplayed()))
         onView(withId(com.coolkosta.news.R.id.sum_edit_text)).perform(typeText(inputText))
             .perform(closeSoftKeyboard())
         onView(withId(com.coolkosta.news.R.id.sum_edit_text)).check(matches(withText(inputText)))
         onView(withId(com.coolkosta.news.R.id.send_button)).perform(click())
+        onView(withId(com.coolkosta.news.R.id.dialog_title_tv)).check(doesNotExist())
     }
 
 }
