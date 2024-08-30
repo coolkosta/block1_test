@@ -1,10 +1,10 @@
 package com.coolkosta.news.presentation.screen.newsFragment
 
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.coolkosta.core.presentation.ui.theme.SimbirSoftTestAppTheme
 import com.coolkosta.news.util.SampleData
 import io.mockk.every
@@ -33,38 +33,27 @@ class NewsFragmentComposableTest {
                 SampleData.categories.map { it.id })
         )
         every { viewModel.sideEffect } returns sideEffectChannel.receiveAsFlow()
-    }
-
-    @Test
-    fun testTopAppBarTitle() {
         composeTestRule.setContent {
             SimbirSoftTestAppTheme {
                 NewsScreen(newsViewModel = viewModel, onCLick = { }) {
                 }
             }
         }
+    }
+
+    @Test
+    fun testTopAppBarTitle() {
         composeTestRule.onNodeWithText("Новости").assertIsDisplayed()
     }
 
     @Test
     fun testFilterIconClick() {
-        composeTestRule.setContent {
-            SimbirSoftTestAppTheme {
-                NewsScreen(newsViewModel = viewModel, onCLick = { }) {
-                }
-            }
-        }
-        composeTestRule.onNodeWithContentDescription("Filter fragment").performClick()
+        composeTestRule.onNodeWithContentDescription("Filter fragment").assertHasClickAction()
+
     }
 
     @Test
     fun testEventClick() {
-        composeTestRule.setContent {
-            SimbirSoftTestAppTheme {
-                NewsScreen(newsViewModel = viewModel, onCLick = { }) {
-                }
-            }
-        }
-        composeTestRule.onNodeWithText("Благотворительный концерт").performClick()
+        composeTestRule.onNodeWithText("Благотворительный концерт").assertHasClickAction()
     }
 }
