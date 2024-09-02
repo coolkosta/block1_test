@@ -27,4 +27,5 @@
     <string name="notification_denied_text">Уведомления отключены.</string>
     <string name="snooze_notification_description_text">Напоминаем, что мы будем очень признательны, если вы сможете пожертвовать еще больше.</string>
     <string name="remind_later_text">Напомнить позже</string>
+    <string name="filter_fragment_content_des">Filter fragment</string>
 </resources>

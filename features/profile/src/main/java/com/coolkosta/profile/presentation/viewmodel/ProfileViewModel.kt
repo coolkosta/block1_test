@@ -50,7 +50,9 @@ class ProfileViewModel @Inject constructor(private val application: Application)
     private fun makePhoto() {
         photoUri = createImageUri()
         _state.update { _state.value.copy(photoUri = photoUri) }
-        _sideEffect.trySend(ProfileSideEffect.TakePhoto(photoUri!!))
+        photoUri?.let {
+            _sideEffect.trySend(ProfileSideEffect.TakePhoto(it))
+        }
     }
 
     private fun deletePhoto() {

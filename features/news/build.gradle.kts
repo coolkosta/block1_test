@@ -38,6 +38,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -55,7 +61,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.animation)
-    implementation( libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -102,8 +108,15 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation (libs.mockk.android)
+    androidTestImplementation (libs.androidx.fragment.testing)
+    debugImplementation (libs.androidx.fragment.testing.manifest)
 }

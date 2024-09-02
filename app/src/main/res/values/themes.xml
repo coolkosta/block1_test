@@ -1,11 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.SimbirSoftTestApp" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/turtle_green</item>
-        <item name="colorPrimaryDark">@color/leaf</item>
-        <item name="colorSecondary">?attr/colorPrimary</item>
-        <!-- Customize your light theme here. -->
-    </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <!-- Set the splash screen background, animated icon, and animation

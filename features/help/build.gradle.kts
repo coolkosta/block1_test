@@ -45,8 +45,10 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     //Fragment
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.junit.ktx)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.runner)
 }
